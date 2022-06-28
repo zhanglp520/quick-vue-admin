@@ -3,6 +3,9 @@ import { reactive, ref, defineProps, watch, defineEmits } from 'vue'
 import { addUser, updateUser } from '../../api/user'
 import { User } from '../../interface/user'
 
+// defineOptions({
+//   name: 'UserForm',
+// })
 const props = defineProps({
   isShowForm: {
     type: Boolean,

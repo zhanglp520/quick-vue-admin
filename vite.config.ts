@@ -1,11 +1,12 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import DefineOptions from 'unplugin-vue-define-options/vite'
 
 const path = require('path')
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [vue(), DefineOptions()],
   resolve: {
     alias: [
       {
@@ -27,6 +28,6 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
-    port: 3001,
+    port: 3101,
   },
 })

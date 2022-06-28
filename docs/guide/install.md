@@ -766,7 +766,7 @@ export const useUserStore = defineStore('userStore', {
 
 5.效果
 
-![mock服务使用例子图片](../public/images/pinia%E6%8C%81%E4%B9%85%E5%8C%96%E6%95%88%E6%9E%9C%E5%9B%BE.png)
+![mock服务使用例子图片](../public/images/pinia-1.png)
 
 ::: warning 警告
 
