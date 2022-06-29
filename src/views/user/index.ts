@@ -1,6 +1,20 @@
 import { Column } from '../../types/table'
-import { FormItem } from '../../types/form'
+import { FormItem, FormTitle } from '../../types/form'
 import { User } from '../../types/user'
+import { Page } from '../../types/page'
+
+export const page: Page = {
+  current: 1,
+  size: 10,
+  total: 0,
+  sizes: [100, 200, 300, 400],
+}
+
+export const formTitle: FormTitle = {
+  add: '创建用户',
+  edit: '修改用户',
+  detail: '用户详情',
+}
 
 export const searchFormItems: FormItem[] = [
   {
@@ -29,8 +43,8 @@ export const formItems: FormItem[] = [
     label: '用户编号',
     labelWidth: '80px',
     vModel: 'user_id',
-    readonly: true,
-    isEdit: false,
+    addHidden: true,
+    editReadonly: true,
   },
   {
     label: '用户名',

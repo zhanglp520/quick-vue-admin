@@ -59,6 +59,12 @@ const props = defineProps({
       return {}
     },
   },
+  page: {
+    type: Object,
+    default: () => {
+      return {}
+    },
+  },
 })
 
 const {
@@ -69,6 +75,7 @@ const {
   formModel,
   formItems,
   formTitle,
+  page,
 } = toRefs(props) as {
   tableData: Ref<any>
   tableColumns: Ref<Column[]>
@@ -77,6 +84,7 @@ const {
   formModel: Ref<any>
   formItems: Ref<FormItem[]>
   formTitle: Ref<FormTitle>
+  page: Ref<Page>
 }
 
 const emit = defineEmits([
@@ -94,12 +102,7 @@ const emit = defineEmits([
 const selectDataList = ref<Array<User>>([])
 const dialogFormVisible = ref(false)
 const dialogFormType = ref('')
-const page = ref<Page>({
-  current: 1,
-  size: 10,
-  total: 0,
-  sizes: [100, 200, 300, 400],
-})
+
 const handleSelectionChange = (val: User[]) => {
   selectDataList.value = val
 }

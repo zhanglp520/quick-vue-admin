@@ -2,12 +2,20 @@ import { User } from '../types/user'
 import request from '../utils/request'
 
 const Api = {
-  list: '/api/user/getUserList',
-  add: '/api/user/addUser',
-  update: '/api/user/updateUser',
-  remove: '/api/user/deleteUser',
+  pageList: '/api/user/getPageList',
+  list: '/api/user/getList',
+  add: '/api/user/add',
+  update: '/api/user/update',
+  remove: '/api/user/remove',
 }
-
+export const getUserPageList = (params) => {
+  return request({
+    url: Api.pageList,
+    // url:'https://console-mock.apipost.cn/app/mock/project/1cee3669-4ecb-431e-a7b7-67c5298e06ab/api/user/getUserList',
+    method: 'GET',
+    params,
+  })
+}
 export const getUserList = () => {
   return request({
     url: Api.list,
@@ -29,12 +37,12 @@ export const updateUser = (data: User) => {
     data,
   })
 }
-export const deleteUser = (id: string) => {
+export const deleteUser = (userId: string) => {
   return request({
     url: Api.remove,
     method: 'POST',
     params: {
-      id,
+      user_id: userId,
     },
   })
 }
