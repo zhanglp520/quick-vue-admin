@@ -69,7 +69,7 @@ const handleTabsEdit = (targetName: string, action: 'remove' | 'add') => {
           </el-card>
         </el-header>
         <el-main>
-          <el-card shadow="always">
+          <el-card shadow="always" style="height: 100%">
             <el-tabs
               v-model="editableTabsValue"
               type="card"
@@ -126,8 +126,9 @@ const handleTabsEdit = (targetName: string, action: 'remove' | 'add') => {
   height: 50px;
 }
 .el-main {
-  height: calc(100vh - 60px);
+  /* height: calc(100vh - 60px - 100px); */
   padding: 10px;
+  overflow: hidden;
 }
 .el-container {
   height: 100%;

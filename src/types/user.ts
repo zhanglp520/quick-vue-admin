@@ -4,10 +4,10 @@ export interface Page {
   pageTotal: number
 }
 export interface User {
-  userId: string
-  userName: string
+  user_id: string
+  user_name: string
   password: string
   email: string
   address: string
-  createTime: string
+  create_time: string
 }
