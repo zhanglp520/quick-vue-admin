@@ -1,8 +1,18 @@
 <script lang="ts" setup>
-import { defineProps, defineEmits, ref, onMounted, toRefs, Ref } from 'vue'
+import {
+  defineProps,
+  defineEmits,
+  ref,
+  onMounted,
+  toRefs,
+  Ref,
+  computed,
+} from 'vue'
+import { ElMessage } from 'element-plus'
 import { User } from '../../types/user'
 import { Column } from '../../types/table'
-import { FormItem } from '../../types/form'
+import { Page } from '../../types/page'
+import { FormItem, FormTitle } from '../../types/form'
 import QuickTable from '../QuickTable/index.vue'
 import QuickForm from '../QuickForm/index.vue'
 
@@ -43,6 +53,12 @@ const props = defineProps({
       return []
     },
   },
+  formTitle: {
+    type: Object,
+    default: () => {
+      return {}
+    },
+  },
 })
 
 const {
@@ -52,6 +68,7 @@ const {
   searchFormItems,
   formModel,
   formItems,
+  formTitle,
 } = toRefs(props) as {
   tableData: Ref<any>
   tableColumns: Ref<Column[]>
@@ -59,7 +76,9 @@ const {
   searchFormItems: Ref<FormItem[]>
   formModel: Ref<any>
   formItems: Ref<FormItem[]>
+  formTitle: Ref<FormTitle>
 }
+
 const emit = defineEmits([
   'onLoad',
   'onAdd',
@@ -74,24 +93,36 @@ const emit = defineEmits([
 ])
 const selectDataList = ref<Array<User>>([])
 const dialogFormVisible = ref(false)
-const currentPage = ref(4)
-const pageSize = ref(100)
-
+const dialogFormType = ref('')
+const page = ref<Page>({
+  current: 1,
+  size: 10,
+  total: 0,
+  sizes: [100, 200, 300, 400],
+})
 const handleSelectionChange = (val: User[]) => {
   selectDataList.value = val
 }
 const handleSearch = () => {
-  emit('onSearchFormSubmit', searchFormModel)
+  const { current, size } = page.value
+  const params = { ...searchFormModel.value, current, size }
+  emit('onLoad', params)
+  emit('onSearchFormSubmit', searchFormModel.value)
 }
 const handleReset = () => {
-  emit('onSearchFormReset', searchFormModel)
+  emit('onSearchFormReset', searchFormModel.value)
 }
 const handleAdd = () => {
+  dialogFormType.value = 'add'
   dialogFormVisible.value = true
 }
 const handleEdit = () => {
+  dialogFormType.value = 'edit'
   if (selectDataList.value.length !== 1) {
-    console.log('请选择一行')
+    ElMessage({
+      type: 'warning',
+      message: '请选择一行',
+    })
     return
   }
   dialogFormVisible.value = true
@@ -99,6 +130,13 @@ const handleEdit = () => {
   emit('onEdit', item)
 }
 const handleDelete = () => {
+  if (selectDataList.value.length !== 1) {
+    ElMessage({
+      type: 'warning',
+      message: '请选择一行',
+    })
+    return
+  }
   const item = selectDataList.value[0]
   emit('onDelete', item, () => {
     emit('onLoad')
@@ -106,10 +144,10 @@ const handleDelete = () => {
 }
 const handleCancel = () => {
   dialogFormVisible.value = false
-  emit('onFormCancel', formModel)
+  emit('onFormCancel', formModel.value)
 }
 const handleOk = () => {
-  emit('onFormSubmit', formModel, () => {
+  emit('onFormSubmit', formModel.value, () => {
     dialogFormVisible.value = false
     emit('onLoad')
   })
@@ -120,6 +158,18 @@ const handleSizeChange = (val: number) => {
 const handleCurrentChange = (val: number) => {
   emit('onCurrentChange', val)
 }
+const dialogTitle = computed(() => {
+  if (dialogFormType.value === 'add') {
+    return formTitle.value.add
+  }
+  if (dialogFormType.value === 'edit') {
+    return formTitle.value.edit
+  }
+  if (dialogFormType.value === 'detail') {
+    return formTitle.value.detail
+  }
+  return '标题'
+})
 onMounted(() => {
   emit('onLoad')
 })
@@ -130,6 +180,7 @@ onMounted(() => {
     :model="searchFormModel"
     class="demo-form-inline"
     :form-items="searchFormItems"
+    form-type="search"
   >
     <template #action>
       <el-form-item>
@@ -152,24 +203,29 @@ onMounted(() => {
   >
   </quick-table>
   <el-pagination
-    v-model:currentPage="currentPage"
-    v-model:page-size="pageSize"
-    :page-sizes="[100, 200, 300, 400]"
+    v-model:currentPage="page.current"
+    v-model:page-size="page.size"
+    :page-sizes="page.sizes"
     :small="false"
     :disabled="false"
     :background="false"
     layout="total, sizes, prev, pager, next, jumper"
-    :total="400"
+    :total="page.total"
     @size-change="handleSizeChange"
     @current-change="handleCurrentChange"
   />
   <el-dialog
     v-model="dialogFormVisible"
-    title="用户表单"
+    :title="dialogTitle"
     width="35%"
     @close="handleCancel()"
   >
-    <quick-form :model="formModel" :form-items="formItems"> </quick-form>
+    <quick-form
+      :model="formModel"
+      :form-items="formItems"
+      :form-type="dialogFormType"
+    >
+    </quick-form>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="handleCancel()">取消</el-button>

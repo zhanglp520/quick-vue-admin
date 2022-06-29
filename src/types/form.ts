@@ -1,3 +1,8 @@
+export interface FormTitle {
+  add: string
+  edit: string
+  detail: string
+}
 export interface Options {
   label: string
   value: string
@@ -10,8 +15,12 @@ export interface FormItem {
   placeholder?: string
   labelWidth?: string
   type?: string
-  readonly?: boolean
   autocomplete?: string
-  isEdit?: boolean
   options?: Options[]
+  addHidden?: boolean
+  editHidden?: boolean
+  detailHidden?: boolean
+  addReadonly?: boolean
+  editReadonly?: boolean
+  detailReadonly?: boolean
 }

@@ -1,8 +1,3 @@
-export interface Page {
-  pageNum: number
-  pageSize: number
-  pageTotal: number
-}
 export interface User {
   user_id: string
   user_name: string

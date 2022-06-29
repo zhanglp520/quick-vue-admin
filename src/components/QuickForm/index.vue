@@ -19,22 +19,33 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  formType: {
+    type: String,
+    default: '',
+  },
 })
 const {
   model,
   inline = false,
   formItems,
+  formType,
 } = toRefs(props) as {
   model: Ref<any>
   inline: Ref<boolean>
   formItems: Ref<FormItem[]>
+  formType: Ref<string>
 }
 </script>
 <template>
   <el-form :model="model" :inline="inline">
     <template v-for="(item, index) in formItems" :key="index">
       <el-form-item
-        v-if="!item.isEdit"
+        v-if="
+          formType === 'search' ||
+          (formType === 'add' && !item.addHidden) ||
+          (formType === 'edit' && !item.editHidden) ||
+          (formType === 'detail' && !item.detailHidden)
+        "
         :label="item.label"
         :label-width="item.labelWidth"
       >
@@ -51,11 +62,22 @@ const {
             />
           </el-select>
         </template>
+        <template v-else-if="item.type === 'textarea'">
+          <el-input
+            v-model="model[item.vModel]"
+            :autosize="{ minRows: 5, maxRows: 10 }"
+            type="textarea"
+          />
+        </template>
         <template v-else>
           <el-input
             v-model="model[item.vModel]"
             :autocomplete="item.autocomplete"
-            :readonly="item.readonly"
+            :readonly="
+              (formType === 'add' && item.addReadonly) ||
+              (formType === 'edit' && item.editReadonly) ||
+              (formType === 'detail' && item.detailReadonly)
+            "
           />
         </template>
       </el-form-item>
