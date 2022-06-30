@@ -102,15 +102,17 @@ const emit = defineEmits([
 const selectDataList = ref<Array<User>>([])
 const dialogFormVisible = ref(false)
 const dialogFormType = ref('')
-
+const load = () => {
+  const { current, size } = page.value
+  const params = { ...searchFormModel.value, current, size }
+  emit('onLoad', params)
+}
 const handleSelectionChange = (val: User[]) => {
   selectDataList.value = val
 }
 const handleSearch = () => {
-  const { current, size } = page.value
-  const params = { ...searchFormModel.value, current, size }
-  emit('onLoad', params)
   emit('onSearchFormSubmit', searchFormModel.value)
+  load()
 }
 const handleReset = () => {
   emit('onSearchFormReset', searchFormModel.value)
@@ -142,7 +144,7 @@ const handleDelete = () => {
   }
   const item = selectDataList.value[0]
   emit('onDelete', item, () => {
-    emit('onLoad')
+    load()
   })
 }
 const handleCancel = () => {
@@ -152,14 +154,18 @@ const handleCancel = () => {
 const handleOk = () => {
   emit('onFormSubmit', formModel.value, () => {
     dialogFormVisible.value = false
-    emit('onLoad')
+    load()
   })
 }
 const handleSizeChange = (val: number) => {
+  page.value.size = val
   emit('onSizeChange', val)
+  load()
 }
 const handleCurrentChange = (val: number) => {
+  page.value.current = val
   emit('onCurrentChange', val)
+  load()
 }
 const dialogTitle = computed(() => {
   if (dialogFormType.value === 'add') {
@@ -174,7 +180,7 @@ const dialogTitle = computed(() => {
   return '标题'
 })
 onMounted(() => {
-  emit('onLoad')
+  load()
 })
 </script>
 <template>

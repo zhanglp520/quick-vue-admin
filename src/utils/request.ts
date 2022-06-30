@@ -28,9 +28,12 @@ request.interceptors.response.use(
   (res: AxiosResponse) => {
     console.log('response', res)
     const { data } = res
-    const { status, data: payload, msg } = data
+    const { status, data: payload, page: pagination, msg } = data
     if (status === 0) {
-      return Promise.resolve(payload)
+      return Promise.resolve({
+        payload,
+        pagination,
+      })
     }
     return Promise.reject(msg)
   },

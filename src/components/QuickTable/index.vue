@@ -24,15 +24,16 @@ const { data, columns } = toRefs(props) as {
   columns: Ref<Column[]>
 }
 
-const handleSelectionChange = (val) => {
+const handleSelectionChange = (val: any) => {
   emit('selectionChange', val)
 }
 </script>
 <template>
+  <!-- show-summary 合计 -->
   <el-table
     :data="data"
     style="width: 100%"
-    show-summary
+    :height="500"
     stripe
     border
     @selection-change="handleSelectionChange"
@@ -46,7 +47,19 @@ const handleSelectionChange = (val) => {
       :label="item.label"
       :align="item.align"
       :formatter="item.format"
+      show-overflow-tooltip
     >
+      <template v-if="item.slot" #default="scope">
+        <template v-if="item.type === 'link' && item.label === 'QQ号'">
+          <el-link
+            target="_blank"
+            :href="`http://wpa.qq.com/msgrd?v=3&uin=${
+              item.format && item.format(scope.row)
+            }&site=1841031740&menu=yes`"
+            >({{ item.format && item.format(scope.row) }})加好友</el-link
+          >
+        </template>
+      </template>
     </el-table-column>
   </el-table>
 </template>
