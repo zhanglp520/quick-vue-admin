@@ -103,7 +103,7 @@ export const columns: Column[] = reactive([
 /**
  * 函数
  */
-export const load = (parmas: any) => {
+export const load = (parmas: object) => {
   getUserPageList(parmas).then((res) => {
     const { payload, pagination } = res
     page.total = pagination.total

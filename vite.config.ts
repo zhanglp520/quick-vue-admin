@@ -12,6 +12,7 @@ export default ({ command, mode }) => {
   const env = loadEnv(mode, root)
   const { VITE_APP_TITLE, VITE_PORT, VITE_APP_BASE_URL } = env
   return {
+    base: './',
     plugins: [
       vue(),
       DefineOptions(),

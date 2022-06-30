@@ -4,7 +4,8 @@
   "version": "quick-server",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vite build",
+    "build-tsc": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "lint": "eslint --ext .js,ts,.vue, src",
     "lint-fix": "eslint --ext .js,ts,.vue, src --fix",
