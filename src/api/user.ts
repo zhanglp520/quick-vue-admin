@@ -8,7 +8,7 @@ const Api = {
   update: '/api/user/update',
   remove: '/api/user/remove',
 }
-export const getUserPageList = (params) => {
+export const getUserPageList = (params: any) => {
   return request({
     url: Api.pageList,
     // url:'https://console-mock.apipost.cn/app/mock/project/1cee3669-4ecb-431e-a7b7-67c5298e06ab/api/user/getUserList',
