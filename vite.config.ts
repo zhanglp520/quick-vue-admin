@@ -53,7 +53,7 @@ export default ({ command, mode }) => {
           changeOrigin: false, // 开发模式，默认的origin是真实的 origin:localhost:3000 代理服务会把origin修改为目标地址
           secure: false, // 是否https接口
           ws: false, // 是否代理websockets
-          rewrite: (path) => path.replace(/^\/basic-api/, ''), // 路径重写
+          rewrite: (path) => path.replace(/^\/dev-api/, ''), // 路径重写
         },
       },
     },
