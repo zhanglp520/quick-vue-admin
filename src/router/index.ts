@@ -17,6 +17,14 @@ export const router = createRouter({
           path: '/user',
           component: () => import('../views/user/index.vue'),
         },
+        {
+          path: '/dictionaryType',
+          component: () => import('../views/dictionaryType/index.vue'),
+        },
+        {
+          path: '/dictionary',
+          component: () => import('../views/dictionary/index.vue'),
+        },
       ],
     },
   ],

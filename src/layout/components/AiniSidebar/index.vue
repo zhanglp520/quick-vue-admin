@@ -31,6 +31,7 @@ const handleClose = (key: string, keyPath: string[]) => {
       default-active="2"
       :collapse="isCollapse"
       text-color="#fff"
+      :router="true"
       @open="handleOpen"
       @close="handleClose"
     >
@@ -44,17 +45,21 @@ const handleClose = (key: string, keyPath: string[]) => {
           <el-menu-item index="1-4-1">用户列表</el-menu-item>
         </el-sub-menu>
       </el-sub-menu>
-      <el-menu-item index="2">
+      <el-menu-item index="/role">
         <el-icon><icon-menu /></el-icon>
         <span>角色管理</span>
       </el-menu-item>
-      <el-menu-item index="3" disabled>
-        <el-icon><document /></el-icon>
-        <span>权限管理</span>
-      </el-menu-item>
-      <el-menu-item index="4">
+      <el-menu-item index="/user">
         <el-icon><setting /></el-icon>
-        <span>菜单管理</span>
+        <span>用户管理</span>
+      </el-menu-item>
+      <el-menu-item index="/dictionaryType">
+        <el-icon><setting /></el-icon>
+        <span>字典分类</span>
+      </el-menu-item>
+      <el-menu-item index="/dictionary">
+        <el-icon><setting /></el-icon>
+        <span>字典管理</span>
       </el-menu-item>
     </el-menu>
   </div>
