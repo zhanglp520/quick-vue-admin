@@ -62,6 +62,16 @@ const {
             />
           </el-select>
         </template>
+        <template v-else-if="item.type === 'cascader'">
+          <el-cascader
+            v-model="model[item.vModel]"
+            :options="item.treeOptions"
+            :props="{
+              expandTrigger: 'hover',
+            }"
+            @change="item.change"
+          />
+        </template>
         <template v-else-if="item.type === 'textarea'">
           <el-input
             v-model="model[item.vModel]"

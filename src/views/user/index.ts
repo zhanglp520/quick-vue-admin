@@ -6,7 +6,6 @@ import { Page } from '../../types/page'
 import { User } from '../../types/user'
 import {
   getUserPageList,
-  getUserList,
   addUser,
   updateUser,
   deleteUser,
@@ -110,11 +109,6 @@ export const load = (parmas: object) => {
     dataList.length = 0
     dataList.push(...payload)
   })
-  // getUserList().then((res: any) => {
-  //   const { payload } = res
-  //   dataList.length = 0
-  //   dataList.push(...payload)
-  // })
 }
 export const handleSearch = () => {
   console.log('handleSearch!')
