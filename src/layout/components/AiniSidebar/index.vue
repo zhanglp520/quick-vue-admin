@@ -35,32 +35,16 @@ const handleClose = (key: string, keyPath: string[]) => {
       @open="handleOpen"
       @close="handleClose"
     >
-      <el-sub-menu index="1">
+      <el-sub-menu index="/system">
         <template #title>
-          <el-icon><location /></el-icon>
+          <el-icon><Setting /></el-icon>
           <span>系统管理</span>
         </template>
-        <el-sub-menu index="1-4">
-          <template #title>用户管理</template>
-          <el-menu-item index="1-4-1">用户列表</el-menu-item>
-        </el-sub-menu>
+        <el-menu-item index="/user">用户管理</el-menu-item>
+        <el-menu-item index="/role">角色管理</el-menu-item>
+        <el-menu-item index="/dictionaryType">字典分类</el-menu-item>
+        <el-menu-item index="/dictionary">字典管理</el-menu-item>
       </el-sub-menu>
-      <el-menu-item index="/role">
-        <el-icon><icon-menu /></el-icon>
-        <span>角色管理</span>
-      </el-menu-item>
-      <el-menu-item index="/user">
-        <el-icon><setting /></el-icon>
-        <span>用户管理</span>
-      </el-menu-item>
-      <el-menu-item index="/dictionaryType">
-        <el-icon><setting /></el-icon>
-        <span>字典分类</span>
-      </el-menu-item>
-      <el-menu-item index="/dictionary">
-        <el-icon><setting /></el-icon>
-        <span>字典管理</span>
-      </el-menu-item>
     </el-menu>
   </div>
 </template>
