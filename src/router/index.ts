@@ -7,22 +7,33 @@ export const router = createRouter({
     {
       path: '/',
       component: layout,
-      redirect: '/user',
+      redirect: '/home',
       children: [
         {
           path: '/home',
           component: () => import('../views/home/index.vue'),
         },
+      ],
+    },
+    {
+      path: '/system',
+      component: layout,
+      redirect: 'user',
+      children: [
         {
-          path: '/user',
+          path: 'user',
           component: () => import('../views/user/index.vue'),
         },
+        // {
+        //   path: 'role',
+        //   component: () => import('../views/role/index.vue'),
+        // },
         {
-          path: '/dictionaryType',
+          path: 'dictionaryType',
           component: () => import('../views/dictionaryType/index.vue'),
         },
         {
-          path: '/dictionary',
+          path: 'dictionary',
           component: () => import('../views/dictionary/index.vue'),
         },
       ],

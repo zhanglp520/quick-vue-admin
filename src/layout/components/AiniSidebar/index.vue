@@ -40,10 +40,10 @@ const handleClose = (key: string, keyPath: string[]) => {
           <el-icon><Setting /></el-icon>
           <span>系统管理</span>
         </template>
-        <el-menu-item index="/user">用户管理</el-menu-item>
-        <el-menu-item index="/role">角色管理</el-menu-item>
-        <el-menu-item index="/dictionaryType">字典分类</el-menu-item>
-        <el-menu-item index="/dictionary">字典管理</el-menu-item>
+        <el-menu-item index="/system/user">用户管理</el-menu-item>
+        <!-- <el-menu-item index="/role">角色管理</el-menu-item> -->
+        <el-menu-item index="/system/dictionaryType">字典分类</el-menu-item>
+        <el-menu-item index="/system/dictionary">字典管理</el-menu-item>
       </el-sub-menu>
     </el-menu>
   </div>
