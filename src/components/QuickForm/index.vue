@@ -53,6 +53,11 @@ const {
           <el-select
             v-model="model[item.vModel]"
             :placeholder="item.placeholder"
+            :disabled="
+              (formType === 'add' && item.addDisabled) ||
+              (formType === 'edit' && item.editDisabled) ||
+              (formType === 'detail' && item.detailDisabled)
+            "
           >
             <el-option
               v-for="(option, optionsIndex) in item.options"

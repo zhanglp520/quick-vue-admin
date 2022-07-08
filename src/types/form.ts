@@ -22,5 +22,8 @@ export interface FormItem {
   addReadonly?: boolean
   editReadonly?: boolean
   detailReadonly?: boolean
+  addDisabled?: boolean
+  editDisabled?: boolean
+  detailDisabled?: boolean
   change?: (value: string) => void
 }

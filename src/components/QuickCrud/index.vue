@@ -153,6 +153,7 @@ const emit = defineEmits([
   'onSizeChange',
   'onCurrentChange',
 ])
+const selectTree = ref<Tree>({})
 const treeRef = ref<InstanceType<typeof ElTree>>()
 const selectDataList = ref<Array<User>>([])
 const dialogFormVisible = ref(false)
@@ -168,10 +169,19 @@ const load = () => {
   const params = { ...searchFormModel.value, current, size }
   emit('onLoad', params)
 }
+const handleTreeNodeClick = (data: Tree) => {
+  selectTree.value = data
+  emit('onTreeClick', data, () => {
+    load()
+  })
+}
 const treeLoad = () => {
   emit('onTreeLoad', (id: string) => {
     nextTick(() => {
+      debugger
       treeRef.value?.setCurrentKey(id)
+      const node: Tree = treeRef.value?.getCurrentNode()
+      handleTreeNodeClick(node)
     })
     load()
   })
@@ -188,10 +198,25 @@ const handleReset = () => {
 }
 const handleAdd = () => {
   dialogFormType.value = 'add'
+  if (showTree.value && !selectTree.value.id) {
+    ElMessage({
+      type: 'warning',
+      message: '请选择节点',
+    })
+    return
+  }
   dialogFormVisible.value = true
+  emit('onAdd')
 }
 const handleEdit = () => {
   dialogFormType.value = 'edit'
+  if (showTree.value && !selectTree.value.id) {
+    ElMessage({
+      type: 'warning',
+      message: '请选择节点',
+    })
+    return
+  }
   if (selectDataList.value.length !== 1) {
     ElMessage({
       type: 'warning',
@@ -236,11 +261,6 @@ const handleCurrentChange = (val: number) => {
   emit('onCurrentChange', val)
   load()
 }
-const handleTreeNodeClick = (data: Tree) => {
-  emit('onTreeClick', data, () => {
-    load()
-  })
-}
 const dialogTitle = computed(() => {
   if (dialogFormType.value === 'add') {
     return formTitle.value.add
@@ -255,7 +275,7 @@ const dialogTitle = computed(() => {
 })
 onMounted(() => {
   // TODO:onMounted会执行两次，待解决
-  // console.log('onMounted')
+  console.log('onMounted-crud')
   if (showTree.value) {
     treeLoad()
   } else {

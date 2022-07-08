@@ -33,7 +33,7 @@ const handleSelectionChange = (val: any) => {
   <el-table
     :data="data"
     style="width: 100%"
-    :height="500"
+    :height="575"
     stripe
     border
     @selection-change="handleSelectionChange"
