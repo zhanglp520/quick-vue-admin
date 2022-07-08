@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { defineProps, toRefs, Ref } from 'vue'
+import { defineProps, toRefs, Ref, defineEmits } from 'vue'
 import { FormItem } from '../../types/form'
 
 const props = defineProps({
@@ -35,6 +35,13 @@ const {
   formItems: Ref<FormItem[]>
   formType: Ref<string>
 }
+const emit = defineEmits(['confirm', 'cancel'])
+const handleOk = () => {
+  emit('confirm')
+}
+const handleCancel = () => {
+  emit('cancel')
+}
 </script>
 <template>
   <el-form :model="model" :inline="inline">
@@ -44,7 +51,8 @@ const {
           formType === 'search' ||
           (formType === 'add' && !item.addHidden) ||
           (formType === 'edit' && !item.editHidden) ||
-          (formType === 'detail' && !item.detailHidden)
+          (formType === 'detail' && !item.detailHidden) ||
+          !formType
         "
         :label="item.label"
         :label-width="item.labelWidth"
@@ -84,10 +92,25 @@ const {
             type="textarea"
           />
         </template>
+        <template v-else-if="item.type === 'password'">
+          <el-input
+            v-model="model[item.vModel]"
+            :autocomplete="item.autocomplete"
+            :placeholder="item.placeholder"
+            type="password"
+            show-password
+            :readonly="
+              (formType === 'add' && item.addReadonly) ||
+              (formType === 'edit' && item.editReadonly) ||
+              (formType === 'detail' && item.detailReadonly)
+            "
+          />
+        </template>
         <template v-else>
           <el-input
             v-model="model[item.vModel]"
             :autocomplete="item.autocomplete"
+            :placeholder="item.placeholder"
             :readonly="
               (formType === 'add' && item.addReadonly) ||
               (formType === 'edit' && item.editReadonly) ||
@@ -97,6 +120,12 @@ const {
         </template>
       </el-form-item>
     </template>
-    <slot name="action"></slot>
+    <template v-if="actionSlot">
+      <slot name="action"></slot>
+    </template>
+    <template v-else>
+      <el-button type="primary" @click="handleOk">确定</el-button>
+      <el-button @click="handleCancel">取消</el-button>
+    </template>
   </el-form>
 </template>

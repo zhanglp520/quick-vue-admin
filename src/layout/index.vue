@@ -24,7 +24,7 @@ const editableTabs = ref([
     content: 'Tab 1 content',
   },
   {
-    title: '订单管理',
+    title: '用户管理',
     name: '2',
     content: 'Tab 2 content',
   },
@@ -63,7 +63,7 @@ const handleClick = (activeName: string) => {
     router.push('/home')
   }
   if (editableTabsValue.value === '2') {
-    router.push('/business/order')
+    router.push('/system/user')
   }
 }
 </script>

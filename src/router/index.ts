@@ -5,6 +5,15 @@ export const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     {
+      path: '/:catchAll(.*)',
+      name: '404',
+      component: () => import('@/pages/404/index.vue'),
+    },
+    {
+      path: '/login',
+      component: () => import('../pages/login/index.vue'),
+    },
+    {
       path: '/',
       component: layout,
       redirect: '/home',

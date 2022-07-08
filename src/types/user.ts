@@ -6,3 +6,8 @@ export interface User {
   address: string
   create_time: string
 }
+export interface Login {
+  tenant: string
+  userName: string
+  userPassword: string
+}

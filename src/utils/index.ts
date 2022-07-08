@@ -1,6 +1,10 @@
+import md5 from 'js-md5'
 import { Options, TreeOptions } from '../types/options'
 import { Tree } from '../types/tree'
 
+export const quickMd5 = (str: string) => {
+  return md5(str)
+}
 export const dicFormat = (data: any, options: Options) => {
   const arr: Options[] = []
   const defaultOptions = {
