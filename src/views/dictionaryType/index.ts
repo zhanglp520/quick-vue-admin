@@ -4,8 +4,8 @@ import { Column } from '../../types/table'
 import { FormItem, FormTitle } from '../../types/form'
 import { Page } from '../../types/page'
 import { DictionaryType } from '../../types/dictionaryType'
+import { useDictionaryTypeStore } from '../../store/modules/dictionaryType'
 import {
-  getDictionaryTypeList,
   addDictionaryType,
   updateDictionaryType,
   removeDictionaryType,
@@ -13,15 +13,13 @@ import {
 /**
  * 属性
  */
+const dictionaryTypeStore = useDictionaryTypeStore()
 export const dataList: DictionaryType[] = reactive([])
 export const searchForm = reactive({})
 export const form: DictionaryType = reactive({
-  dictionaryType_id: '',
-  dictionaryType_name: '',
-  password: '',
-  email: '',
-  address: '',
-  create_time: '',
+  id: '',
+  dicTypeId: '',
+  name: '',
 })
 export const page: Page = reactive({
   current: 1,
@@ -37,14 +35,14 @@ export const formTitle: FormTitle = reactive({
 export const searchFormItems: FormItem[] = reactive([
   {
     label: '字典分类',
-    vModel: 'dictionaryType_name',
+    vModel: 'name',
   },
 ])
 export const formItems: FormItem[] = reactive([
   {
     label: '字典分类编号',
     labelWidth: '80px',
-    vModel: 'dic_type_id',
+    vModel: 'dicTypeId',
     addHidden: true,
     editReadonly: true,
   },
@@ -76,10 +74,10 @@ export const columns: Column[] = reactive([
  * 函数
  */
 export const load = () => {
-  getDictionaryTypeList().then((res) => {
-    const { payload } = res
+  dictionaryTypeStore.getDictionaryTypeList().then(() => {
+    const { dictionaryTypeList } = dictionaryTypeStore.$state
     dataList.length = 0
-    dataList.push(...payload)
+    dataList.push(...dictionaryTypeList)
   })
 }
 export const handleSearch = () => {
@@ -89,12 +87,12 @@ export const handleReset = () => {
   console.log('handleReset!')
 }
 export const handleAdd = () => {
-  form.dic_type_id = ''
+  form.dicTypeId = ''
   form.id = ''
   form.name = ''
 }
 export const handleEdit = (item: DictionaryType) => {
-  form.dic_type_id = item.dic_type_id
+  form.dicTypeId = item.dicTypeId
   form.id = item.id
   form.name = item.name
 }

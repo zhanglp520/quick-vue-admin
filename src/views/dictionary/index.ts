@@ -5,6 +5,7 @@ import { FormItem, FormTitle } from '../../types/form'
 import { Page } from '../../types/page'
 import { Dictionary } from '../../types/dictionary'
 import { getDictionaryTypeList } from '../../api/dictionaryType'
+import { useDictionaryStore } from '../../store/modules/dictionary'
 import {
   getDictionaryList,
   addDictionary,
@@ -17,6 +18,7 @@ import { Tree } from '../../types/tree'
 /**
  * 属性
  */
+const dictionaryStore = useDictionaryStore()
 export const currentTreeData = ref<Tree>({
   id: '',
   label: '',
@@ -27,7 +29,9 @@ export const treeDataList: Tree[] = reactive([])
 export const dataList: Dictionary[] = reactive([])
 export const searchForm = reactive({})
 export const form: Dictionary = reactive({
-  dic_type_id: '',
+  id: '',
+  dicTypeId: '',
+  dicId: '',
   name: '',
 })
 export const page: Page = reactive({
@@ -93,18 +97,17 @@ export const columns: Column[] = reactive([
  * 函数
  */
 export const load = () => {
-  // getTypeList()
   const { id } = currentTreeData.value
-  getDictionaryList(id).then((res) => {
-    const { payload } = res
+  dictionaryStore.getDictionaryList(id).then(() => {
+    const { dictionaryList } = dictionaryStore.$state
     dataList.length = 0
-    dataList.push(...payload)
+    dataList.push(...dictionaryList)
   })
 }
 export const treeLoad = (done: any) => {
-  getDictionaryTypeList().then((res) => {
-    const { payload } = res
-    const data = treeFormat(payload, {
+  dictionaryStore.getDictionaryTypeList().then(() => {
+    const { dictionaryTypeList } = dictionaryStore.$state
+    const data = treeFormat(dictionaryTypeList, {
       id: 'dic_type_id',
       label: 'name',
       children: 'children',
@@ -122,15 +125,15 @@ export const handleReset = () => {
   console.log('handleReset!')
 }
 export const handleAdd = () => {
-  form.dic_type_id = ''
+  form.dicTypeId = ''
   form.id = ''
-  form.dic_id = ''
+  form.dicId = ''
   form.name = ''
 }
 export const handleEdit = (item: Dictionary) => {
-  form.dic_type_id = item.dic_type_id
+  form.dicTypeId = item.dicTypeId
   form.id = item.id
-  form.dic_id = item.dic_id
+  form.dicId = item.dicId
   form.name = item.name
 }
 

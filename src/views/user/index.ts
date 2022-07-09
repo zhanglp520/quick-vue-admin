@@ -4,6 +4,7 @@ import { Column } from '../../types/table'
 import { FormItem, FormTitle } from '../../types/form'
 import { Page } from '../../types/page'
 import { User } from '../../types/user'
+import { useUserStore } from '../../store/modules/user'
 import {
   getUserPageList,
   addUser,
@@ -13,15 +14,16 @@ import {
 /**
  * 属性
  */
+const userStore = useUserStore()
 export const dataList: User[] = reactive([])
 export const searchForm = reactive({})
 export const form: User = reactive({
-  user_id: '',
-  user_name: '',
+  userId: '',
+  userName: '',
   password: '',
   email: '',
   address: '',
-  create_time: '',
+  createTime: '',
 })
 export const page: Page = reactive({
   current: 1,
@@ -37,21 +39,21 @@ export const formTitle: FormTitle = reactive({
 export const searchFormItems: FormItem[] = reactive([
   {
     label: '用户名',
-    vModel: 'user_name',
+    vModel: 'userName',
   },
 ])
 export const formItems: FormItem[] = reactive([
   {
     label: '用户编号',
     labelWidth: '80px',
-    vModel: 'user_id',
+    vModel: 'userId',
     addHidden: true,
     editReadonly: true,
   },
   {
     label: '用户名',
     labelWidth: '80px',
-    vModel: 'user_name',
+    vModel: 'userName',
     autocomplete: 'off',
   },
   {
@@ -73,15 +75,15 @@ export const columns: Column[] = reactive([
   },
   {
     label: '编号',
-    prop: 'user_id',
+    prop: 'userId',
     width: '100',
     format: (row: User) => {
-      return `bh_${row.user_id}`
+      return `bh_${row.userId}`
     },
   },
   {
     label: '用户名',
-    prop: 'user_name',
+    prop: 'userName',
     width: '100',
   },
   {
@@ -91,7 +93,7 @@ export const columns: Column[] = reactive([
   },
   {
     label: '创建时间',
-    prop: 'create_time',
+    prop: 'createTime',
     width: '300',
   },
   {
@@ -103,11 +105,16 @@ export const columns: Column[] = reactive([
  * 函数
  */
 export const load = (parmas: object) => {
-  getUserPageList(parmas).then((res) => {
-    const { payload, pagination } = res
-    page.total = pagination.total
-    dataList.length = 0
-    dataList.push(...payload)
+  userStore.getUserPageList(parmas).then((res) => {
+    const { page: pagination } = res
+    const { userList } = userStore.$state
+    if (userList) {
+      dataList.length = 0
+      dataList.push(...userList)
+    }
+    if (pagination) {
+      page.total = pagination.total
+    }
   })
 }
 export const handleSearch = () => {
@@ -117,27 +124,27 @@ export const handleReset = () => {
   console.log('handleReset!')
 }
 export const handleAdd = () => {
-  form.user_id = ''
-  form.user_name = ''
+  form.userId = ''
+  form.userName = ''
   form.email = ''
-  form.create_time = ''
+  form.createTime = ''
   form.address = ''
 }
 export const handleEdit = (item: User) => {
-  form.user_id = item.user_id
-  form.user_name = item.user_name
+  form.userId = item.userId
+  form.userName = item.userName
   form.email = item.email
-  form.create_time = item.create_time
+  form.createTime = item.createTime
   form.address = item.address
 }
 
 export const handleDelete = (item: User, done: any) => {
-  ElMessageBox.confirm(`你真的删除【${item.user_name}】的用户吗？`, '警告', {
+  ElMessageBox.confirm(`你真的删除【${item.userName}】的用户吗？`, '警告', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
-    deleteUser(item.user_id).then(() => {
+    deleteUser(item.userId).then(() => {
       ElMessage({
         type: 'success',
         message: '用户删除成功',
@@ -150,7 +157,7 @@ export const handleCancel = () => {
   console.log('handleCancel')
 }
 export const handleOk = (item: User, done: any) => {
-  if (item.user_id) {
+  if (item.userId) {
     updateUser(item).then(() => {
       ElMessage({
         type: 'success',

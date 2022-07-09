@@ -1,7 +1,15 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { Page } from '../types/page'
+
+export interface QuickResponseData<T = any> {
+  status: number
+  msg: string
+  data: T
+  page: Page
+}
 
 const baseURL = import.meta.env.VITE_APP_BASE_URL
-const request: AxiosInstance = axios.create({
+const quickRequest: AxiosInstance = axios.create({
   baseURL,
   timeout: 1000 * 15,
   headers: {
@@ -10,8 +18,8 @@ const request: AxiosInstance = axios.create({
 })
 
 // 请求拦截器
-request.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
+quickRequest.interceptors.request.use(
+  (config) => {
     console.log('request', config)
     //   const token = ''
     //   config.headers.token = `Bearer ${token}`
@@ -24,15 +32,15 @@ request.interceptors.request.use(
 )
 
 // 响应拦截器
-request.interceptors.response.use(
-  (res: AxiosResponse) => {
+quickRequest.interceptors.response.use(
+  (res) => {
     console.log('response', res)
     const { data } = res
-    const { status, data: payload, page: pagination, msg } = data
+    const { status, data: payload, page, msg } = data as QuickResponseData<any>
     if (status === 0) {
       return Promise.resolve({
-        payload,
-        pagination,
+        data: payload,
+        page,
       })
     }
     return Promise.reject(msg)
@@ -42,5 +50,9 @@ request.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
+const request = <T>(config: AxiosRequestConfig): Promise<T> => {
+  return quickRequest.request<any, T>(config)
+}
 
 export default request

@@ -1,5 +1,5 @@
 export interface DictionaryType {
   id: string
-  dic_type_id: string
+  dicTypeId: string
   name: string
 }

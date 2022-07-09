@@ -1,5 +1,5 @@
 import { DictionaryType } from '../types/dictionaryType'
-import request from '../utils/request'
+import request, { QuickResponseData } from '../utils/request'
 
 const Api = {
   list: '/api/dictionaryType/getList',
@@ -7,13 +7,15 @@ const Api = {
   update: '/api/dictionaryType/update',
   remove: '/api/dictionaryType/remove',
 }
-export const getDictionaryTypeList = () => {
-  return request({
+export const getDictionaryTypeList = (): Promise<
+  QuickResponseData<Array<DictionaryType>>
+> => {
+  return request<QuickResponseData<Array<DictionaryType>>>({
     url: Api.list,
-    // url:'https://console-mock.apipost.cn/app/mock/project/1cee3669-4ecb-431e-a7b7-67c5298e06ab/api/dictionaryType/getDictionaryTypeList',
     method: 'GET',
   })
 }
+
 export const addDictionaryType = (data: DictionaryType) => {
   return request({
     url: Api.add,

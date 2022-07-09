@@ -1,10 +1,14 @@
 export interface User {
-  user_id: string
-  user_name: string
-  password: string
+  tenant: string
+  userId: string
+  avator: string
+  fullName: string
+  userName: string
+  phone: string
   email: string
   address: string
-  create_time: string
+  createTime?: string
+  token: string
 }
 export interface Login {
   tenant: string

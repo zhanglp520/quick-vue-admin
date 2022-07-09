@@ -1,14 +1,38 @@
-import { Login } from '../types/user'
-import request from '../utils/request'
+import { Login, User } from '../types/user'
+import request, { QuickResponseData } from '../utils/request'
 
 const Api = {
   login: '/api/login',
   loginOut: '/api/loginOut',
+  getUserInfo: '/api/getUserInfo',
+  changePassword: '/api/changePassword',
 }
-export const userLogin = (data: Login) => {
-  return request({
+export const userLogin = (data: Login): Promise<QuickResponseData<User>> => {
+  return request<QuickResponseData<User>>({
     url: Api.login,
-    // url:'https://console-mock.apipost.cn/app/mock/project/1cee3669-4ecb-431e-a7b7-67c5298e06ab/api/user/getUserList',
+    method: 'POST',
+    data,
+  })
+}
+export const userLoginOut = (data: Login) => {
+  return request({
+    url: Api.loginOut,
+    method: 'POST',
+    data,
+  })
+}
+export const getUserInfo = (userName: string) => {
+  return request({
+    url: Api.getUserInfo,
+    method: 'GET',
+    params: {
+      userName,
+    },
+  })
+}
+export const changePassword = (data: Login) => {
+  return request({
+    url: Api.changePassword,
     method: 'POST',
     data,
   })

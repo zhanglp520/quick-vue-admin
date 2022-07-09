@@ -14,6 +14,14 @@ export const router = createRouter({
       component: () => import('../pages/login/index.vue'),
     },
     {
+      path: '/personalInfo',
+      component: () => import('../views/personalInfo/index.vue'),
+    },
+    {
+      path: '/changePassword',
+      component: () => import('../views/changePassword/index.vue'),
+    },
+    {
       path: '/',
       component: layout,
       redirect: '/home',

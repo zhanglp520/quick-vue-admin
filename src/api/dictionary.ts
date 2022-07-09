@@ -1,5 +1,5 @@
 import { Dictionary } from '../types/dictionary'
-import request from '../utils/request'
+import request, { QuickResponseData } from '../utils/request'
 
 const Api = {
   list: '/api/dictionary/getList',
@@ -7,13 +7,14 @@ const Api = {
   update: '/api/dictionary/update',
   remove: '/api/dictionary/remove',
 }
-export const getDictionaryList = (dicTypeId: string) => {
-  return request({
+export const getDictionaryList = (
+  dicTypeId: string
+): Promise<QuickResponseData<Array<Dictionary>>> => {
+  return request<QuickResponseData<Array<Dictionary>>>({
     url: Api.list,
-    // url:'https://console-mock.apipost.cn/app/mock/project/1cee3669-4ecb-431e-a7b7-67c5298e06ab/api/dictionary/getDictionaryList',
     method: 'GET',
     params: {
-      dic_type_id: dicTypeId,
+      dicTypeId,
     },
   })
 }
