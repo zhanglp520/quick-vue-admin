@@ -1,19 +1,22 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 // import AiniBottom from './components/AiniBottom/index.vue'
+import { useRoute, useRouter } from 'vue-router'
 import AiniTop from './components/AiniTop/index.vue'
 import AiniSidebar from './components/AiniSidebar/index.vue'
 import { useAppStore } from '../store/modules/app'
 
+const route = useRoute()
+const router = useRouter()
 const appStore = useAppStore()
 const isCollapse = computed(() => appStore.getCollapse)
 
 const { t } = useI18n()
 console.log('i18n', t('title'))
 
-const tabIndex = 2
-const editableTabsValue = ref('2')
+const tabIndex = 1
+const editableTabsValue = ref('1')
 const editableTabs = ref([
   {
     title: '首页',
@@ -54,6 +57,15 @@ const handleTabsEdit = (targetName: string, action: 'remove' | 'add'): void => {
     editableTabs.value = tabs.filter((tab) => tab.name !== targetName)
   }
 }
+const handleClick = (activeName: string) => {
+  editableTabsValue.value = activeName
+  if (editableTabsValue.value === '1') {
+    router.push('/home')
+  }
+  if (editableTabsValue.value === '2') {
+    router.push('/system/user')
+  }
+}
 </script>
 
 <template>
@@ -69,13 +81,14 @@ const handleTabsEdit = (targetName: string, action: 'remove' | 'add'): void => {
           </el-card>
         </el-header>
         <el-main>
-          <el-card shadow="always" style="height: 100%">
+          <el-card shadow="always" :body-style="{ padding: 10 }">
             <el-tabs
               v-model="editableTabsValue"
               type="card"
               editable
               class="demo-tabs"
               @edit="handleTabsEdit"
+              @tab-change="handleClick"
             >
               <el-tab-pane
                 v-for="item in editableTabs"
@@ -83,7 +96,8 @@ const handleTabsEdit = (targetName: string, action: 'remove' | 'add'): void => {
                 :label="item.title"
                 :name="item.name"
               >
-                <router-view></router-view>
+                <!-- <router-view></router-view> -->
+                <router-view :key="route.fullPath" />
               </el-tab-pane>
             </el-tabs>
           </el-card>
@@ -127,8 +141,8 @@ const handleTabsEdit = (targetName: string, action: 'remove' | 'add'): void => {
 }
 .el-main {
   /* height: calc(100vh - 60px - 100px); */
-  padding: 10px;
-  overflow: hidden;
+  padding: 20px;
+  /* overflow: hidden; */
 }
 .el-container {
   height: 100%;

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ElMessageBox } from 'element-plus'
 import {
   // Document,
   // Location,
@@ -12,13 +13,45 @@ import {
   Phone,
 } from '@element-plus/icons-vue'
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 // import AiniLanguage from '@/components/AiniLanguage/index.vue'
 import { useAppStore } from '../../../store/modules/app'
 
+const router = useRouter()
 const appStore = useAppStore()
 const isCollapse = computed(() => appStore.getCollapse)
 const collapse = () => {
   appStore.setCollapse(!isCollapse.value)
+}
+const loginOut = () => {
+  ElMessageBox.confirm('你真的要退出系统吗?', '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    router.push('/login')
+  })
+}
+const personalInfo = () => {
+  router.push('/personalInfo')
+}
+const changePassword = () => {
+  router.push('/changePassword')
+}
+const handleCommand = (cmd: string) => {
+  switch (cmd) {
+    case 'loginOut':
+      loginOut()
+      break
+    case 'personalInfo':
+      personalInfo()
+      break
+    case 'changePassword':
+      changePassword()
+      break
+    default:
+      break
+  }
 }
 </script>
 
@@ -50,15 +83,21 @@ const collapse = () => {
         <el-icon><Phone /></el-icon>
       </span>
       <span class="test">
-        <el-dropdown>
+        <el-dropdown @command="handleCommand">
           <span class="el-dropdown-link">
             <el-avatar :size="30"> user </el-avatar>
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item :icon="Setting">个人资料</el-dropdown-item>
-              <el-dropdown-item :icon="Setting">修改密码 </el-dropdown-item>
-              <el-dropdown-item :icon="Setting">退出</el-dropdown-item>
+              <el-dropdown-item :icon="Setting" command="personalInfo">
+                个人资料
+              </el-dropdown-item>
+              <el-dropdown-item :icon="Setting" command="changePassword">
+                修改密码
+              </el-dropdown-item>
+              <el-dropdown-item :icon="Setting" command="loginOut">
+                退出
+              </el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>

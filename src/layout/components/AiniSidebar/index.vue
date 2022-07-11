@@ -31,31 +31,20 @@ const handleClose = (key: string, keyPath: string[]) => {
       default-active="2"
       :collapse="isCollapse"
       text-color="#fff"
+      :router="true"
       @open="handleOpen"
       @close="handleClose"
     >
-      <el-sub-menu index="1">
+      <el-sub-menu index="/system">
         <template #title>
-          <el-icon><location /></el-icon>
+          <el-icon><Setting /></el-icon>
           <span>系统管理</span>
         </template>
-        <el-sub-menu index="1-4">
-          <template #title>用户管理</template>
-          <el-menu-item index="1-4-1">用户列表</el-menu-item>
-        </el-sub-menu>
+        <el-menu-item index="/system/user">用户管理</el-menu-item>
+        <!-- <el-menu-item index="/role">角色管理</el-menu-item> -->
+        <el-menu-item index="/system/dictionaryType">字典分类</el-menu-item>
+        <el-menu-item index="/system/dictionary">字典管理</el-menu-item>
       </el-sub-menu>
-      <el-menu-item index="2">
-        <el-icon><icon-menu /></el-icon>
-        <span>角色管理</span>
-      </el-menu-item>
-      <el-menu-item index="3" disabled>
-        <el-icon><document /></el-icon>
-        <span>权限管理</span>
-      </el-menu-item>
-      <el-menu-item index="4">
-        <el-icon><setting /></el-icon>
-        <span>菜单管理</span>
-      </el-menu-item>
     </el-menu>
   </div>
 </template>

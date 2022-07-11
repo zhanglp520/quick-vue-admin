@@ -1,17 +1,19 @@
 import { User } from '../types/user'
-import request from '../utils/request'
+import request, { QuickResponseData } from '../utils/request'
 
 const Api = {
   pageList: '/api/user/getPageList',
   list: '/api/user/getList',
+  info: '/api/user/getInfo',
   add: '/api/user/add',
   update: '/api/user/update',
   remove: '/api/user/remove',
 }
-export const getUserPageList = (params: object) => {
-  return request({
+export const getUserPageList = (
+  params: object
+): Promise<QuickResponseData<Array<User>>> => {
+  return request<QuickResponseData<Array<User>>>({
     url: Api.pageList,
-    // url:'https://console-mock.apipost.cn/app/mock/project/1cee3669-4ecb-431e-a7b7-67c5298e06ab/api/user/getUserList',
     method: 'GET',
     params,
   })
@@ -19,8 +21,18 @@ export const getUserPageList = (params: object) => {
 export const getUserList = () => {
   return request({
     url: Api.list,
-    // url:'https://console-mock.apipost.cn/app/mock/project/1cee3669-4ecb-431e-a7b7-67c5298e06ab/api/user/getUserList',
     method: 'GET',
+  })
+}
+export const getUserInfo = (
+  userName: string
+): Promise<QuickResponseData<User>> => {
+  return request<QuickResponseData<User>>({
+    url: Api.info,
+    method: 'GET',
+    params: {
+      userName,
+    },
   })
 }
 export const addUser = (data: User) => {
@@ -42,7 +54,7 @@ export const deleteUser = (userId: string) => {
     url: Api.remove,
     method: 'POST',
     params: {
-      user_id: userId,
+      userId,
     },
   })
 }

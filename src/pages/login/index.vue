@@ -1,7 +1,18 @@
-<script setup lang="ts"></script>
+<script lang="ts" setup>
+import QuickForm from '../../components/QuickForm/index.vue'
+import { form, formItems, handleLogin } from './idnex'
+</script>
 
 <template>
-  <div>登录</div>
+  <div class="login">
+    <quick-form :model="form" :form-items="formItems" :action-slot="true">
+      <template #action>
+        <el-button type="primary" @click="handleLogin">登录</el-button>
+      </template>
+    </quick-form>
+  </div>
 </template>
 
-<style></style>
+<style lang="scss" scoped>
+@import './index.scss';
+</style>
