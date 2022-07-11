@@ -45,3 +45,21 @@ export const treeFormat = (data: any, options: TreeOptions) => {
   })
   return arr
 }
+
+// json的key下划线转驼峰
+export const toTuofeng = (str: string) => {
+  return str.replace(/"(\w)+":/g, (all) => {
+    if (all.indexOf('_') === -1) {
+      return all
+    }
+    let str1 = ''
+    all.split('_').forEach((element, index) => {
+      if (index <= 0) {
+        str1 += element
+      } else {
+        str1 += element.slice(0, 1).toUpperCase() + element.slice(1)
+      }
+    })
+    return str1
+  })
+}

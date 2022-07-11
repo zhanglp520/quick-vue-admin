@@ -25,5 +25,13 @@ export interface FormItem {
   addDisabled?: boolean
   editDisabled?: boolean
   detailDisabled?: boolean
+  actionUrl?: string
+  imgUrl?: string
+  prop?: string
+  rules?: any
+  maxLength?: string
+  format?: () => any
   change?: (value: string) => void
+  success?: () => void
+  beforeUpload?: () => void
 }

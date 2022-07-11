@@ -14,7 +14,7 @@ import {
   handleEdit,
   handleDelete,
   handleSearch,
-  handleReset,
+  handleClear,
   handleOk,
   handleCancel,
   handleSizeChange,
@@ -30,13 +30,15 @@ import {
     :search-form-model="searchForm"
     :search-form-items="searchFormItems"
     :form-title="formTitle"
+    :show-search="true"
+    :show-page="true"
     :page="page"
     @on-load="load"
     @on-add="handleAdd"
     @on-edit="handleEdit"
     @on-delete="handleDelete"
     @on-search-form-submit="handleSearch"
-    @on-search-form-reset="handleReset"
+    @on-search-form-clear="handleClear"
     @on-form-submit="handleOk"
     @on-form-cancel="handleCancel"
     @on-size-change="handleSizeChange"

@@ -5,18 +5,13 @@ import {
   dataList,
   columns,
   formItems,
-  searchFormItems,
   formTitle,
-  page,
-  searchForm,
   form,
   treeLoad,
   load,
   handleAdd,
   handleEdit,
   handleDelete,
-  handleSearch,
-  handleReset,
   handleOk,
   handleCancel,
   handleTreeClick,
@@ -31,19 +26,13 @@ import {
     :table-columns="columns"
     :form-model="form"
     :form-items="formItems"
-    :search-form-model="searchForm"
-    :search-form-items="searchFormItems"
     :form-title="formTitle"
-    :page="page"
-    :show-page="false"
     @on-tree-load="treeLoad"
     @on-tree-click="handleTreeClick"
     @on-load="load"
     @on-add="handleAdd"
     @on-edit="handleEdit"
     @on-delete="handleDelete"
-    @on-search-form-submit="handleSearch"
-    @on-search-form-reset="handleReset"
     @on-form-submit="handleOk"
     @on-form-cancel="handleCancel"
   ></quick-crud>

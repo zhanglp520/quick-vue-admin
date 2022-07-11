@@ -10,7 +10,7 @@ import {
   onActivated,
   nextTick,
 } from 'vue'
-import { ElMessage, ElTree } from 'element-plus'
+import { ElMessage, ElTree, FormInstance } from 'element-plus'
 import { User } from '../../types/user'
 import { Column } from '../../types/table'
 import { FormItem } from '../../types/form'
@@ -67,9 +67,13 @@ const props = defineProps({
       return {}
     },
   },
+  showSearch: {
+    type: Boolean,
+    default: false,
+  },
   showPage: {
     type: Boolean,
-    default: true,
+    default: false,
   },
   showTree: {
     type: Boolean,
@@ -114,6 +118,7 @@ const {
   formItems,
   formTitle,
   page,
+  showSearch,
   showPage,
   showTree,
   treeData,
@@ -130,6 +135,7 @@ const {
   formItems: Ref<FormItem[]>
   formTitle: Ref<any>
   page: Ref<any>
+  showSearch: Ref<boolean>
   showPage: Ref<boolean>
   showTree: Ref<boolean>
   treeData: Ref<any>
@@ -147,12 +153,13 @@ const emit = defineEmits([
   'onEdit',
   'onDelete',
   'onSearchFormSubmit',
-  'onSearchFormReset',
+  'onSearchFormClear',
   'onFormSubmit',
   'onFormCancel',
   'onSizeChange',
   'onCurrentChange',
 ])
+const quickFormRef = ref<InstanceType<typeof QuickForm>>()
 const selectTree = ref<Tree>({})
 const treeRef = ref<InstanceType<typeof ElTree>>()
 const selectDataList = ref<Array<User>>([])
@@ -178,9 +185,8 @@ const handleTreeNodeClick = (data: Tree) => {
 const treeLoad = () => {
   emit('onTreeLoad', (id: string) => {
     nextTick(() => {
-      debugger
       treeRef.value?.setCurrentKey(id)
-      const node: Tree = treeRef.value?.getCurrentNode()
+      const node = treeRef.value?.getCurrentNode() as Tree
       handleTreeNodeClick(node)
     })
     load()
@@ -193,8 +199,8 @@ const handleSearch = () => {
   emit('onSearchFormSubmit', searchFormModel.value)
   load()
 }
-const handleReset = () => {
-  emit('onSearchFormReset', searchFormModel.value)
+const handleClear = () => {
+  emit('onSearchFormClear', searchFormModel.value)
 }
 const handleAdd = () => {
   dialogFormType.value = 'add'
@@ -246,7 +252,12 @@ const handleCancel = () => {
   emit('onFormCancel', formModel.value)
 }
 const handleOk = () => {
-  emit('onFormSubmit', formModel.value, () => {
+  if (quickFormRef.value) {
+    quickFormRef.value.handleSubmit()
+  }
+}
+const handleSubmit = (formRef: FormInstance | undefined) => {
+  emit('onFormSubmit', formRef, formModel.value, () => {
     dialogFormVisible.value = false
     load()
   })
@@ -307,18 +318,20 @@ onActivated(() => {
     </el-col>
     <el-col :span="showTree ? 24 - treeSpan : 24">
       <quick-form
+        v-if="showSearch"
         :inline="true"
         :model="searchFormModel"
         class="demo-form-inline"
         :form-items="searchFormItems"
         form-type="search"
+        :action-slot="true"
       >
         <template #action>
           <el-form-item>
             <el-button type="primary" @click="handleSearch">查询</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button @click="handleReset">重置</el-button>
+            <el-button @click="handleClear">清空</el-button>
           </el-form-item>
         </template>
       </quick-form>
@@ -353,9 +366,12 @@ onActivated(() => {
         @close="handleCancel()"
       >
         <quick-form
+          ref="quickFormRef"
           :model="formModel"
           :form-items="formItems"
           :form-type="dialogFormType"
+          @submit="handleSubmit"
+          @clear="handleClear"
         >
         </quick-form>
         <template #footer>

@@ -2,62 +2,59 @@ import { reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Column } from '../../types/table'
 import { FormItem, FormTitle } from '../../types/form'
-import { Page } from '../../types/page'
 import { Dictionary } from '../../types/dictionary'
-import { getDictionaryTypeList } from '../../api/dictionaryType'
-import { useDictionaryStore } from '../../store/modules/dictionary'
 import {
-  getDictionaryList,
   addDictionary,
   updateDictionary,
   removeDictionary,
+  getDictionaryList,
 } from '../../api/dictionary'
-import { treeFormat } from '../../utils'
+import { dicFormat, treeFormat } from '../../utils'
 import { Tree } from '../../types/tree'
-
+import { getDictionaryTypeList } from '../../api/dictionaryType'
+import { Options } from '../../types/options'
 /**
  * 属性
  */
-const dictionaryStore = useDictionaryStore()
 export const currentTreeData = ref<Tree>({
   id: '',
   label: '',
   children: [],
 })
-
-export const treeDataList: Tree[] = reactive([])
-export const dataList: Dictionary[] = reactive([])
-export const searchForm = reactive({})
-export const form: Dictionary = reactive({
+const dicTypeList = reactive<Array<Options>>([])
+export const treeDataList = reactive<Array<Tree>>([])
+export const dataList = reactive<Array<Dictionary>>([])
+export const form = reactive<Dictionary>({
   id: '',
   dicTypeId: '',
   dicId: '',
   name: '',
 })
-export const page: Page = reactive({
-  current: 1,
-  size: 10,
-  total: 0,
-  sizes: [10, 20, 30, 40],
-})
-export const formTitle: FormTitle = reactive({
+export const formTitle = reactive<FormTitle>({
   add: '创建字典',
   edit: '修改字典',
   detail: '字典详情',
 })
-export const searchFormItems: FormItem[] = reactive([
-  {
-    label: '字典名称',
-    vModel: 'name',
-  },
-])
-export const formItems: FormItem[] = reactive([
+export const formItems = reactive<Array<FormItem>>([
+  // TODO:待字典类型完善后使用级联
+  // {
+  //   label: '字典类型',
+  //   labelWidth: '80px',
+  //   vModel: 'dicTypeId',
+  //   placeholder: '字典类型',
+  //   type: 'cascader',
+  //   treeOptions: treeDataList,
+  //   change: (val: string) => {
+  //     console.log('change', val)
+  //   },
+  // },
   {
     label: '字典类型',
     labelWidth: '80px',
-    vModel: 'dic_type_id',
-    type: 'cascader',
-    treeOptions: treeDataList,
+    vModel: 'dicTypeId',
+    placeholder: '字典类型',
+    type: 'select',
+    options: dicTypeList,
     change: (val: string) => {
       console.log('change', val)
     },
@@ -65,32 +62,30 @@ export const formItems: FormItem[] = reactive([
   {
     label: '字典编号',
     labelWidth: '80px',
-    vModel: 'dic_id',
-    addHidden: true,
+    vModel: 'dicId',
+    placeholder: '字典编号',
     editReadonly: true,
   },
   {
     label: '字典名称',
     labelWidth: '80px',
     vModel: 'name',
-    autocomplete: 'off',
+    placeholder: '字典名称',
   },
 ])
-export const columns: Column[] = reactive([
+export const columns = reactive<Array<Column>>([
   {
-    width: '100',
+    width: '50',
     type: 'selection',
-    align: 'center',
   },
   {
-    label: '编号',
-    prop: 'dic_id',
-    width: '100',
+    label: '字典编号',
+    prop: 'dicId',
+    width: '200',
   },
   {
     label: '字典名称',
     prop: 'name',
-    width: '100',
   },
 ])
 /**
@@ -98,36 +93,38 @@ export const columns: Column[] = reactive([
  */
 export const load = () => {
   const { id } = currentTreeData.value
-  dictionaryStore.getDictionaryList(id).then(() => {
-    const { dictionaryList } = dictionaryStore.$state
+  getDictionaryList(id).then((res) => {
+    const { data: dictionaryList } = res
     dataList.length = 0
     dataList.push(...dictionaryList)
   })
 }
 export const treeLoad = (done: any) => {
-  dictionaryStore.getDictionaryTypeList().then(() => {
-    const { dictionaryTypeList } = dictionaryStore.$state
+  getDictionaryTypeList().then((res) => {
+    const { data: dictionaryTypeList } = res
     const data = treeFormat(dictionaryTypeList, {
-      id: 'dic_type_id',
+      id: 'dicTypeId',
       label: 'name',
       children: 'children',
     })
     treeDataList.length = 0
     treeDataList.push(...data)
+
+    const data1 = dicFormat(dictionaryTypeList, {
+      value: 'dicTypeId',
+      label: 'name',
+    })
+    dicTypeList.length = 0
+    dicTypeList.push(...data1)
+
     currentTreeData.value.id = treeDataList[0].id
     done(currentTreeData.value.id)
   })
 }
-export const handleSearch = () => {
-  console.log('handleSearch!')
-}
-export const handleReset = () => {
-  console.log('handleReset!')
-}
 export const handleAdd = () => {
   form.dicTypeId = ''
   form.id = ''
-  form.dicId = ''
+  form.dicTypeId = currentTreeData.value.id
   form.name = ''
 }
 export const handleEdit = (item: Dictionary) => {
@@ -173,12 +170,6 @@ export const handleOk = (item: Dictionary, done: any) => {
       done()
     })
   }
-}
-export const handleSizeChange = (val: number) => {
-  console.log(`${val} items per page`)
-}
-export const handleCurrentChange = (val: number) => {
-  console.log(`current page: ${val}`)
 }
 export const handleTreeClick = (data: Tree, done: any) => {
   currentTreeData.value = data

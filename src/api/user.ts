@@ -4,6 +4,7 @@ import request, { QuickResponseData } from '../utils/request'
 const Api = {
   pageList: '/api/user/getPageList',
   list: '/api/user/getList',
+  info: '/api/user/getInfo',
   add: '/api/user/add',
   update: '/api/user/update',
   remove: '/api/user/remove',
@@ -21,6 +22,17 @@ export const getUserList = () => {
   return request({
     url: Api.list,
     method: 'GET',
+  })
+}
+export const getUserInfo = (
+  userName: string
+): Promise<QuickResponseData<User>> => {
+  return request<QuickResponseData<User>>({
+    url: Api.info,
+    method: 'GET',
+    params: {
+      userName,
+    },
   })
 }
 export const addUser = (data: User) => {

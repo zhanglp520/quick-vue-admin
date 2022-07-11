@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { toTuofeng } from './index'
 import { Page } from '../types/page'
 
 export interface QuickResponseData<T = any> {
@@ -38,8 +39,10 @@ quickRequest.interceptors.response.use(
     const { data } = res
     const { status, data: payload, page, msg } = data as QuickResponseData<any>
     if (status === 0) {
+      const jsonStr = toTuofeng(JSON.stringify(payload))
+      const result = JSON.parse(jsonStr)
       return Promise.resolve({
-        data: payload,
+        data: result,
         page,
       })
     }

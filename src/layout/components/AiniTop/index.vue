@@ -32,9 +32,25 @@ const loginOut = () => {
     router.push('/login')
   })
 }
+const personalInfo = () => {
+  router.push('/personalInfo')
+}
+const changePassword = () => {
+  router.push('/changePassword')
+}
 const handleCommand = (cmd: string) => {
-  if (cmd === 'loginOut') {
-    loginOut()
+  switch (cmd) {
+    case 'loginOut':
+      loginOut()
+      break
+    case 'personalInfo':
+      personalInfo()
+      break
+    case 'changePassword':
+      changePassword()
+      break
+    default:
+      break
   }
 }
 </script>
@@ -73,11 +89,15 @@ const handleCommand = (cmd: string) => {
           </span>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item :icon="Setting">个人资料</el-dropdown-item>
-              <el-dropdown-item :icon="Setting">修改密码 </el-dropdown-item>
-              <el-dropdown-item :icon="Setting" command="loginOut"
-                >退出</el-dropdown-item
-              >
+              <el-dropdown-item :icon="Setting" command="personalInfo">
+                个人资料
+              </el-dropdown-item>
+              <el-dropdown-item :icon="Setting" command="changePassword">
+                修改密码
+              </el-dropdown-item>
+              <el-dropdown-item :icon="Setting" command="loginOut">
+                退出
+              </el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
