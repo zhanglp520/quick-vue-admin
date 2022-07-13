@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { defineProps, defineEmits, toRefs, Ref } from 'vue'
-import { Column } from '../../types/table'
+import { Actions, Column } from '../../types/table'
 
 const props = defineProps({
   data: {
@@ -12,20 +12,42 @@ const props = defineProps({
   columns: {
     type: Array,
     default: () => {
+      return []
+    },
+  },
+  operate: {
+    type: Object,
+    default: () => {
       return {}
     },
   },
 })
 
-const emit = defineEmits(['selectionChange'])
+const emit = defineEmits([
+  'selectionChange',
+  'onRowEdit',
+  'onRowDelete',
+  'onRowDetail',
+  'onDone',
+])
 
-const { data, columns } = toRefs(props) as {
+const { data, columns, operate } = toRefs(props) as {
   data: Ref<any>
   columns: Ref<Column[]>
+  operate: Ref<Actions>
 }
 
 const handleSelectionChange = (val: any) => {
   emit('selectionChange', val)
+}
+const isShowActionBtn = (row: any, item: any) => {
+  if (item.hidden) {
+    return false
+  }
+  if (!item.render) {
+    return true
+  }
+  return item.render(row)
 }
 </script>
 <template>
@@ -58,6 +80,49 @@ const handleSelectionChange = (val: any) => {
             }&site=1841031740&menu=yes`"
             >({{ item.format && item.format(scope.row) }})加好友</el-link
           >
+        </template>
+      </template>
+    </el-table-column>
+    <el-table-column label="操作" :width="operate.width">
+      <template #default="scope">
+        <el-button
+          :link="true"
+          type="primary"
+          size="small"
+          @click.prevent="emit('onRowEdit', scope.row)"
+        >
+          编辑
+        </el-button>
+        <el-button
+          :link="true"
+          type="primary"
+          size="small"
+          @click.prevent="emit('onRowDelete', scope.row)"
+        >
+          删除
+        </el-button>
+        <el-button
+          :link="true"
+          type="primary"
+          size="small"
+          @click.prevent="emit('onRowDetail', scope.row)"
+        >
+          详情
+        </el-button>
+        <template v-for="(item, index) in operate.btns" :key="index">
+          <el-button
+            v-if="isShowActionBtn(scope.row, item)"
+            :link="item.link ? item.link : false"
+            :type="item.type ? item.type : 'default'"
+            :size="item.size"
+            @click.prevent="
+              item.click(scope.row, () => {
+                emit('onDone')
+              })
+            "
+          >
+            {{ item.name }}
+          </el-button>
         </template>
       </template>
     </el-table-column>

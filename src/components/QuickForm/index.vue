@@ -72,8 +72,8 @@ defineExpose({ handleSubmit })
         "
         :label="item.label"
         :label-width="item.labelWidth"
-        :prop="item.prop"
-        :rules="item.rules"
+        :prop="formType === 'detail' ? undefined : item.prop"
+        :rules="formType === 'detail' ? undefined : item.rules"
       >
         <template v-if="item.type === 'select'">
           <el-select
@@ -113,7 +113,7 @@ defineExpose({ handleSubmit })
             :readonly="
               (formType === 'add' && item.addReadonly) ||
               (formType === 'edit' && item.editReadonly) ||
-              (formType === 'detail' && item.detailReadonly)
+              formType === 'detail'
             "
           />
         </template>
@@ -127,7 +127,7 @@ defineExpose({ handleSubmit })
             :readonly="
               (formType === 'add' && item.addReadonly) ||
               (formType === 'edit' && item.editReadonly) ||
-              (formType === 'detail' && item.detailReadonly)
+              formType === 'detail'
             "
           />
         </template>
@@ -145,14 +145,14 @@ defineExpose({ handleSubmit })
         </template>
         <template v-else-if="item.type === 'number'">
           <el-input
-            v-model="model[item.vModel]"
+            v-model.number="model[item.vModel]"
             type="number"
             :autocomplete="item.autocomplete"
             :placeholder="item.placeholder"
             :readonly="
               (formType === 'add' && item.addReadonly) ||
               (formType === 'edit' && item.editReadonly) ||
-              (formType === 'detail' && item.detailReadonly)
+              formType === 'detail'
             "
           />
         </template>
@@ -164,7 +164,7 @@ defineExpose({ handleSubmit })
             :readonly="
               (formType === 'add' && item.addReadonly) ||
               (formType === 'edit' && item.editReadonly) ||
-              (formType === 'detail' && item.detailReadonly)
+              formType === 'detail'
             "
           />
         </template>

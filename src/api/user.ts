@@ -8,6 +8,10 @@ const Api = {
   add: '/api/user/add',
   update: '/api/user/update',
   remove: '/api/user/remove',
+  batchRemoveUser: '/api/user/batchRemove',
+  resetPassword: '/api/user/resetPassword',
+  enabled: '/api/user/enabled',
+  disable: '/api/user/disable',
 }
 export const getUserPageList = (
   params: object
@@ -49,12 +53,48 @@ export const updateUser = (data: User) => {
     data,
   })
 }
-export const deleteUser = (userId: string) => {
+export const removeUser = (id: string) => {
   return request({
     url: Api.remove,
     method: 'POST',
-    params: {
-      userId,
+    data: {
+      id,
+    },
+  })
+}
+export const batchRemoveUser = (ids: string) => {
+  return request({
+    url: Api.batchRemoveUser,
+    method: 'POST',
+    data: {
+      ids,
+    },
+  })
+}
+export const resetUserPassword = (id: string) => {
+  return request({
+    url: Api.resetPassword,
+    method: 'POST',
+    data: {
+      id,
+    },
+  })
+}
+export const enableUser = (id: string) => {
+  return request({
+    url: Api.enabled,
+    method: 'POST',
+    data: {
+      id,
+    },
+  })
+}
+export const disableUser = (id: string) => {
+  return request({
+    url: Api.disable,
+    method: 'POST',
+    data: {
+      id,
     },
   })
 }
