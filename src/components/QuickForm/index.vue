@@ -2,7 +2,7 @@
 import { defineProps, toRefs, Ref, defineEmits, ref, defineExpose } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { FormInstance } from 'element-plus'
-import { FormItem } from '../../types/form'
+import { FormItem } from '@/types/form'
 
 const formRef = ref<FormInstance>()
 const props = defineProps({
@@ -24,13 +24,13 @@ const props = defineProps({
   },
   formType: {
     type: String,
-    default: '',
+    default: 'form',
   },
   actionSlot: {
     type: Boolean,
     default: false,
   },
-  showAction: {
+  hiddenAction: {
     type: Boolean,
     default: false,
   },
@@ -41,14 +41,14 @@ const {
   formItems,
   formType,
   actionSlot = false,
-  showAction = false,
+  hiddenAction = false,
 } = toRefs(props) as {
   model: Ref<any>
   inline: Ref<boolean>
   formItems: Ref<FormItem[]>
   formType: Ref<string>
   actionSlot: Ref<boolean>
-  showAction: Ref<boolean>
+  hiddenAction: Ref<boolean>
 }
 const emit = defineEmits(['submit', 'clear'])
 const handleSubmit = () => {
@@ -68,7 +68,7 @@ defineExpose({ handleSubmit })
           (formType === 'add' && !item.addHidden) ||
           (formType === 'edit' && !item.editHidden) ||
           (formType === 'detail' && !item.detailHidden) ||
-          !formType
+          formType === 'form'
         "
         :label="item.label"
         :label-width="item.labelWidth"
@@ -170,16 +170,18 @@ defineExpose({ handleSubmit })
         </template>
       </el-form-item>
     </template>
-    <template v-if="showAction">
-      <template v-if="actionSlot">
-        <slot name="action" :form-ref="formRef">
-          {{ formRef }}
-        </slot>
-      </template>
-      <template v-else>
-        <el-button type="primary" @click="handleSubmit">提交</el-button>
-        <el-button @click="handleClear">清空</el-button>
-      </template>
+    <template v-if="!hiddenAction">
+      <el-form-item>
+        <template v-if="actionSlot">
+          <slot name="action" :form-ref="formRef">
+            {{ formRef }}
+          </slot>
+        </template>
+        <template v-else>
+          <el-button type="primary" @click="handleSubmit">提交</el-button>
+          <el-button @click="handleClear">清空</el-button>
+        </template>
+      </el-form-item>
     </template>
   </el-form>
 </template>
