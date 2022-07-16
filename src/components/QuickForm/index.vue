@@ -173,9 +173,7 @@ defineExpose({ handleSubmit })
     <template v-if="!hiddenAction">
       <el-form-item>
         <template v-if="actionSlot">
-          <slot name="action" :form-ref="formRef">
-            {{ formRef }}
-          </slot>
+          <slot name="action" :form-ref="formRef"></slot>
         </template>
         <template v-else>
           <el-button type="primary" @click="handleSubmit">提交</el-button>

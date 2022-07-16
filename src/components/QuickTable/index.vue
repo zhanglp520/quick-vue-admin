@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { defineProps, defineEmits, toRefs, Ref } from 'vue'
-import { Actions, Column } from '../../types/table'
+import { Column, Operates } from '../../types/table'
 
 const props = defineProps({
   data: {
@@ -15,14 +15,44 @@ const props = defineProps({
       return []
     },
   },
+  height: {
+    type: Number,
+    default: 575,
+  },
   operate: {
-    type: Object,
-    default: () => {
-      return {}
-    },
+    type: [Boolean, Object],
+    default: false,
+  },
+  rowEditName: {
+    type: String,
+    default: '编辑',
+  },
+  rowDeleteName: {
+    type: String,
+    default: '删除',
+  },
+  rowDetailName: {
+    type: String,
+    default: '详情',
   },
 })
-
+const {
+  data,
+  columns,
+  height,
+  operate,
+  rowEditName,
+  rowDeleteName,
+  rowDetailName,
+} = toRefs(props) as {
+  data: Ref<any>
+  columns: Ref<Column[]>
+  height: Ref<number>
+  operate: Ref<boolean | Operates>
+  rowEditName: Ref<string>
+  rowDeleteName: Ref<string>
+  rowDetailName: Ref<string>
+}
 const emit = defineEmits([
   'selectionChange',
   'onRowEdit',
@@ -30,36 +60,17 @@ const emit = defineEmits([
   'onRowDetail',
   'onDone',
 ])
-
-const { data, columns, operate } = toRefs(props) as {
-  data: Ref<any>
-  columns: Ref<Column[]>
-  operate: Ref<Actions>
-}
-
-const handleSelectionChange = (val: any) => {
-  emit('selectionChange', val)
-}
-const isShowActionBtn = (row: any, item: any) => {
-  if (item.hidden) {
-    return false
+const getOperateWidth = () => {
+  debugger
+  const oper = operate.value as Operates
+  if (oper.width) {
+    return oper.width
   }
-  if (!item.render) {
-    return true
-  }
-  return item.render(row)
+  return 150
 }
 </script>
 <template>
-  <!-- show-summary 合计 -->
-  <el-table
-    :data="data"
-    style="width: 100%"
-    :height="575"
-    stripe
-    border
-    @selection-change="handleSelectionChange"
-  >
+  <el-table :data="data" style="width: 100%" :height="height" stripe border>
     <el-table-column
       v-for="(item, index) in columns"
       :key="index"
@@ -70,48 +81,16 @@ const isShowActionBtn = (row: any, item: any) => {
       :align="item.align"
       :formatter="item.format"
       show-overflow-tooltip
-    >
-      <template v-if="item.slot" #default="scope">
-        <template v-if="item.type === 'link' && item.label === 'QQ号'">
-          <el-link
-            target="_blank"
-            :href="`http://wpa.qq.com/msgrd?v=3&uin=${
-              item.format && item.format(scope.row)
-            }&site=1841031740&menu=yes`"
-            >({{ item.format && item.format(scope.row) }})加好友</el-link
-          >
-        </template>
-      </template>
-    </el-table-column>
-    <el-table-column label="操作" :width="operate.width">
+    ></el-table-column>
+    <el-table-column v-if="operate" label="操作" :width="getOperateWidth()">
       <template #default="scope">
-        <el-button
-          :link="true"
-          type="primary"
-          size="small"
-          @click.prevent="emit('onRowEdit', scope.row)"
+        <slot name="leftOperate" :row="scope.row"></slot>
+        <template
+          v-for="(item, index) in (operate as Operates).btns"
+          :key="index"
         >
-          编辑
-        </el-button>
-        <el-button
-          :link="true"
-          type="primary"
-          size="small"
-          @click.prevent="emit('onRowDelete', scope.row)"
-        >
-          删除
-        </el-button>
-        <el-button
-          :link="true"
-          type="primary"
-          size="small"
-          @click.prevent="emit('onRowDetail', scope.row)"
-        >
-          详情
-        </el-button>
-        <template v-for="(item, index) in operate.btns" :key="index">
           <el-button
-            v-if="isShowActionBtn(scope.row, item)"
+            v-if="item.position === 'left'"
             :link="item.link ? item.link : false"
             :type="item.type ? item.type : 'default'"
             :size="item.size"
@@ -124,10 +103,50 @@ const isShowActionBtn = (row: any, item: any) => {
             {{ item.name }}
           </el-button>
         </template>
+        <el-button
+          :link="true"
+          type="primary"
+          size="small"
+          @click.prevent="emit('onRowEdit', scope.row)"
+        >
+          {{ rowEditName }}
+        </el-button>
+        <el-button
+          :link="true"
+          type="primary"
+          size="small"
+          @click.prevent="emit('onRowDelete', scope.row)"
+        >
+          {{ rowDeleteName }}
+        </el-button>
+        <el-button
+          :link="true"
+          type="primary"
+          size="small"
+          @click.prevent="emit('onRowDetail', scope.row)"
+        >
+          {{ rowDetailName }}
+        </el-button>
+        <template
+          v-for="(item, index) in (operate as Operates).btns"
+          :key="index"
+        >
+          <el-button
+            v-if="item.position !== 'left'"
+            :link="item.link ? item.link : false"
+            :type="item.type ? item.type : 'default'"
+            :size="item.size"
+            @click.prevent="
+              item.click(scope.row, () => {
+                emit('onDone')
+              })
+            "
+          >
+            {{ item.name }}
+          </el-button>
+        </template>
+        <slot name="rightOperate" :row="scope.row"></slot>
       </template>
     </el-table-column>
   </el-table>
 </template>
-<style lang="scss" scoped>
-@import './index.scss';
-</style>
