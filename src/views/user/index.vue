@@ -29,6 +29,7 @@ import {
 } from './index'
 </script>
 <template>
+  <!-- :table-tool-bar="tableToolBar" -->
   <quick-crud
     :form-model="form"
     :form-items="formItems"
@@ -38,7 +39,6 @@ import {
     :table-data="dataList"
     :table-columns="tableColumns"
     :table-operate="tableOperate"
-    :table-tool-bar="tableToolBar"
     :search-form-model="searchForm"
     :search-form-items="searchFormItems"
     @on-search-form-submit="handleSearch"

@@ -16,8 +16,14 @@ export interface Btns {
   click(item?: any, done?: any): void
   render?(row: any): boolean
 }
-export interface Operates {
+export interface Actionbar {
   width: number
+  editButtonName: string
+  deleteButtonName: string
+  detailButtonName: string
+  hiddenEditButton: boolean
+  hiddenDeleteButton: boolean
+  hiddenDetailButton: boolean
   btns: Array<Btns>
 }
 export interface ToolBar {
