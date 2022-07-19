@@ -1,5 +1,13 @@
 <script lang="ts" setup>
-import { defineProps, Ref, toRefs, reactive, ref, defineEmits } from 'vue'
+import {
+  defineProps,
+  Ref,
+  toRefs,
+  reactive,
+  ref,
+  defineEmits,
+  onMounted,
+} from 'vue'
 import { ElMessage, ElMessageBox, FormInstance } from 'element-plus'
 import QuickSearch from '@/components/QuickSearch/index.vue'
 import QuickTable from '@/components/QuickTable/index.vue'
@@ -12,10 +20,16 @@ import { Page } from '@/types/page'
 /**
  * 属性
  */
+const formTitle = reactive({
+  add: '添加',
+  edit: '编辑',
+  delete: '删除',
+  detail: '详情',
+})
+const title = ref('')
 const quickFormRef = ref<InstanceType<typeof QuickForm>>()
 const dialogFormVisible = ref(false)
 const dialogFormType = ref('')
-const dialogTitle = ref('')
 const checkDataList = reactive<Array<any>>([])
 /**
  * props
@@ -30,6 +44,10 @@ const props = defineProps({
     default: () => {
       return []
     },
+  },
+  dialogTitle: {
+    type: [Boolean, Object],
+    default: false,
   },
   formModel: {
     type: Object,
@@ -79,11 +97,13 @@ const {
   tableActionbar,
   tableToolbar,
   page,
+  dialogTitle,
   formModel,
   formItems,
 } = toRefs(props) as {
   searchFormModel: Ref<boolean | any>
   searchFormItems: Ref<FormItem[]>
+  dialogTitle: Ref<boolean | any>
   formModel: Ref<any>
   formItems: Ref<FormItem[]>
   tableData: Ref<any>
@@ -148,32 +168,24 @@ const handleSearchClear = () => {
  */
 const handleEdit = (row: any) => {
   dialogFormType.value = 'edit'
-  dialogTitle.value = '编辑用户'
+  formTitle.edit = dialogTitle.value ? dialogTitle.value.edit : formTitle.edit
+  title.value = formTitle.edit
   Object.keys(formModel.value).forEach((key) => {
     formModel.value[key] = row[key]
   })
   dialogFormVisible.value = true
 }
 const handleDelete = (row: any) => {
-  console.log('handleDelete', row)
-  ElMessageBox.confirm(`你真的删除【${row.userName}】的用户吗？`, '警告', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
+  emits('onDelete', row, () => {
+    load()
   })
-    .then(() => {
-      // done()
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '操作已取消',
-      })
-    })
 }
 const handleDetail = (row: any) => {
   dialogFormType.value = 'detail'
-  dialogTitle.value = '用户详情'
+  formTitle.detail = dialogTitle.value
+    ? dialogTitle.value.detail
+    : formTitle.detail
+  title.value = formTitle.detail
   Object.keys(formModel.value).forEach((key) => {
     formModel.value[key] = row[key]
   })
@@ -209,11 +221,11 @@ const handleSubmit = (formRef: FormInstance | undefined) => {
  */
 const handleAdd = () => {
   dialogFormType.value = 'add'
-  dialogTitle.value = '新增用户'
+  formTitle.add = dialogTitle.value ? dialogTitle.value.add : formTitle.add
+  title.value = formTitle.add
   dialogFormVisible.value = true
 }
 const handleBatchDelete = () => {
-  console.log('handleBatchDelete', checkDataList)
   if (checkDataList.length < 1) {
     ElMessage({
       type: 'warning',
@@ -226,35 +238,30 @@ const handleBatchDelete = () => {
       return x.id
     })
     .join(',')
-  ElMessageBox.confirm(`你真的删除选择的用户吗？`, '警告', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
+  emits('onBatchDelete', { checkDataList, ids }, () => {
+    load()
   })
-    .then(() => {
-      // 接口
-      load()
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '操作已取消',
-      })
-    })
 }
 const handleImport = () => {
   console.log('handleImport')
-  load()
+  emits('onImport', () => {
+    load()
+  })
 }
 const handleExport = () => {
   console.log('handleExport')
+  emits('onExport')
 }
 const handlePrint = () => {
   console.log('handlePrint')
+  emits('onPrint')
 }
 const handleRefresh = () => {
   console.log('handleRefresh')
   load()
+  // emits('onRefresh', () => {
+  //   load()
+  // })
 }
 /**
  * 选中
@@ -276,6 +283,9 @@ const handleCurrentChange = (val: number) => {
   emits('onCurrentChange', val)
   load()
 }
+onMounted(() => {
+  load()
+})
 </script>
 <template>
   <quick-search
@@ -338,15 +348,15 @@ const handleCurrentChange = (val: number) => {
   />
   <el-dialog
     v-model="dialogFormVisible"
-    :title="dialogTitle"
+    :title="title"
     width="35%"
     @close="handleCancel()"
   >
     <quick-form
       ref="quickFormRef"
       :model="formModel"
-      :form-model-items="formItems"
-      :form-model-type="dialogFormType"
+      :form-items="formItems"
+      :form-type="dialogFormType"
       :hidden-action="true"
       @submit="handleSubmit"
     >
