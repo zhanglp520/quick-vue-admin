@@ -263,6 +263,23 @@ const handleRefresh = () => {
   //   load()
   // })
 }
+const handleCustomToolbarClick = (done: any) => {
+  if (checkDataList.length < 1) {
+    ElMessage({
+      type: 'warning',
+      message: '至少选择一行',
+    })
+    return
+  }
+  const ids = checkDataList
+    .map((x) => {
+      return x.id
+    })
+    .join(',')
+  done({ checkDataList, ids }, () => {
+    load()
+  })
+}
 /**
  * 选中
  */
@@ -300,7 +317,7 @@ onMounted(() => {
   >
   </quick-search>
   <quick-toolbar
-    v-if="tableToolbar"
+    :table-toolbar="tableToolbar"
     :add-button-name="toolbar?.addButtonName"
     :batch-delete-button-name="toolbar?.batchDeleteButtonName"
     :import-button-name="toolbar?.importButtonName"
@@ -309,7 +326,7 @@ onMounted(() => {
     :refresh-button-name="toolbar?.refreshButtonName"
     :hidden-add-button="toolbar?.hiddenAddButton"
     :hidden-batch-delete-button="toolbar?.hiddenBatchDeleteButton"
-    :hidde-import-button="toolbar?.hiddenImportButton"
+    :hidden-import-button="toolbar?.hiddenImportButton"
     :hidden-export-button="toolbar?.hiddenExportButton"
     :hidden-print-button="toolbar?.hiddenPrintButton"
     :hidden-refres-hbutton="toolbar?.hiddenRefreshButton"
@@ -319,6 +336,7 @@ onMounted(() => {
     @on-export="handleExport"
     @on-print="handlePrint"
     @on-refresh="handleRefresh"
+    @on-custom-toolbar-click="handleCustomToolbarClick"
   ></quick-toolbar>
   <quick-table
     :data="tableData"

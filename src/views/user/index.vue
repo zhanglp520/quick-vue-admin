@@ -81,6 +81,7 @@ const formModel = reactive<User>({
   userName: '',
   password: '',
   createTime: '',
+  remark: '',
 })
 const formItems = reactive<Array<FormItem>>([
   {
@@ -420,7 +421,8 @@ const load = (parmas: object) => {
     @on-form-submit="handleFormSubmit"
     @on-delete="handleDelete"
     @on-batch-delete="handleBatchDelete"
-    @on-print="handlePrint"
+    @on-import="handleImport"
     @on-export="handleExport"
+    @on-print="handlePrint"
   ></quick-crud>
 </template>

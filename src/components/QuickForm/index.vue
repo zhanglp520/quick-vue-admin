@@ -97,7 +97,7 @@ defineExpose({ handleSubmit })
             :disabled="
               (formType === 'add' && item.addDisabled) ||
               (formType === 'edit' && item.editDisabled) ||
-              (formType === 'detail' && item.detailDisabled)
+              formType === 'detail'
             "
           >
             <el-option

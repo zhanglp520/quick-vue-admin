@@ -134,7 +134,11 @@ const handleSelectionChange = (val: any) => {
         <slot name="leftActionbar" :row="scope.row"></slot>
         <template v-for="(item, index) in actionbar.btns" :key="index">
           <el-button
-            v-if="item.position === 'left'"
+            v-if="
+              item.position &&
+              item.position === 'left' &&
+              (item.render ? item.render(scope.row) : true)
+            "
             :link="!item.link ? true : false || item.link ? item.link : false"
             :type="item.type ? item.type : 'text'"
             :size="item.size ? item.size : 'small'"
@@ -176,7 +180,10 @@ const handleSelectionChange = (val: any) => {
         </el-button>
         <template v-for="(item, index) in actionbar.btns" :key="index">
           <el-button
-            v-if="item.position !== 'left'"
+            v-if="
+              item.position !== 'left' &&
+              (item.render ? item.render(scope.row) : true)
+            "
             :link="!item.link ? true : false || item.link ? item.link : false"
             :type="item.type ? item.type : 'text'"
             :size="item.size ? item.size : 'small'"

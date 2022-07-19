@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { defineProps, defineEmits, toRefs, Ref } from 'vue'
+import { ToolBar } from '../../types/table'
 
 /**
  * props
@@ -53,6 +54,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  tableToolbar: {
+    type: [Boolean, Object],
+    default: false,
+  },
 })
 /**
  * props toRefs
@@ -70,6 +75,7 @@ const {
   hiddenExportButton,
   hiddenPrintButton,
   hiddenRefreshButton,
+  tableToolbar,
 } = toRefs(props) as {
   addButtonName: Ref<string>
   batchDeleteButtonName: Ref<string>
@@ -83,7 +89,12 @@ const {
   hiddenExportButton: Ref<boolean>
   hiddenPrintButton: Ref<boolean>
   hiddenRefreshButton: Ref<boolean>
+  tableToolbar: Ref<boolean | ToolBar>
 }
+/**
+ * 类型转换
+ */
+const toolbar = tableToolbar.value as ToolBar
 /**
  * emits
  */
@@ -94,20 +105,21 @@ const emits = defineEmits([
   'onExport',
   'onPrint',
   'onRefresh',
+  'onCustomToolbarClick',
 ])
+const handleCustomClick = (item: any) => {
+  // item.click(() => {
+  //   emits('onCustomToolbarClick', (data: any) => {
+  //     const { checkDataList, ids } = data
+  //     console.log('ids', ids)
+  //   })
+  // })
+  emits('onCustomToolbarClick', item.click)
+}
 </script>
 <template>
-  <div class="ml-4 toobar">
-    <slot name="leftActions"></slot>
-    <el-button v-if="!hiddenAddButton" type="primary" @click="emits('onAdd')">{{
-      addButtonName
-    }}</el-button>
-    <el-button
-      v-if="!hiddenBatchDeleteButton"
-      type="primary"
-      @click="emits('onBatchDelete')"
-      >{{ batchDeleteButtonName }}</el-button
-    >
+  <div v-if="tableToolbar" class="ml-4 toobar">
+    <slot name="leftToolbar"></slot>
     <el-button
       v-if="!hiddenImportButton"
       type="primary"
@@ -120,6 +132,33 @@ const emits = defineEmits([
       @click="emits('onExport')"
       >{{ exportButtonName }}</el-button
     >
+    <template v-for="(item, index) in toolbar.btns" :key="index">
+      <el-button
+        v-if="item.position === 'left'"
+        :type="item.type ? item.type : 'primary'"
+        @click.prevent="item.click()"
+      >
+        {{ item.name }}
+      </el-button>
+    </template>
+    <el-button v-if="!hiddenAddButton" type="primary" @click="emits('onAdd')">{{
+      addButtonName
+    }}</el-button>
+    <el-button
+      v-if="!hiddenBatchDeleteButton"
+      type="primary"
+      @click="emits('onBatchDelete')"
+      >{{ batchDeleteButtonName }}</el-button
+    >
+    <template v-for="(item, index) in toolbar.btns" :key="index">
+      <el-button
+        v-if="item.position !== 'left'"
+        :type="item.type ? item.type : 'primary'"
+        @click.prevent="handleCustomClick(item)"
+      >
+        {{ item.name }}
+      </el-button>
+    </template>
     <el-button
       v-if="!hiddenPrintButton"
       type="primary"
