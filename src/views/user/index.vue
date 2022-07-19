@@ -369,11 +369,17 @@ const tableActionbar = reactive<Actionbar>({
       click(item: any, done: any) {
         handleEnable(item, done)
       },
+      render(row: any) {
+        return row.enabled === 1
+      },
     },
     {
       name: '禁用',
       click(item: any, done: any) {
         handleDisable(item, done)
+      },
+      render(row: any) {
+        return row.enabled !== 1
       },
     },
   ],
