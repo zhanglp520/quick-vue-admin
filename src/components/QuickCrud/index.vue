@@ -7,8 +7,10 @@ import {
   ref,
   defineEmits,
   onMounted,
+  nextTick,
+  onActivated,
 } from 'vue'
-import { ElMessage, ElMessageBox, FormInstance } from 'element-plus'
+import { ElMessage, ElTree, FormInstance } from 'element-plus'
 import QuickSearch from '@/components/QuickSearch/index.vue'
 import QuickTable from '@/components/QuickTable/index.vue'
 import QuickToolbar from '@/components/QuickToolbar/index.vue'
@@ -16,6 +18,7 @@ import QuickForm from '@/components/QuickForm/index.vue'
 import { Actionbar, Toolbar } from '@/types/table'
 import { FormItem } from '@/types/form'
 import { Page } from '@/types/page'
+import { LeftTree, Tree } from '@/types/tree'
 
 /**
  * 属性
@@ -61,6 +64,10 @@ const props = defineProps({
       return []
     },
   },
+  leftTree: {
+    type: [Boolean, Object],
+    default: false,
+  },
   tableData: {
     type: Array,
     default: () => {
@@ -92,6 +99,7 @@ const props = defineProps({
 const {
   searchFormModel,
   searchFormItems,
+  leftTree,
   tableData,
   tableColumns,
   tableActionbar,
@@ -106,6 +114,7 @@ const {
   dialogTitle: Ref<boolean | any>
   formModel: Ref<any>
   formItems: Ref<FormItem[]>
+  leftTree: Ref<any>
   tableData: Ref<any>
   tableColumns: Ref<any>
   tableActionbar: Ref<boolean | Actionbar>
@@ -115,8 +124,18 @@ const {
 /**
  * 类型转换
  */
-const toolbar = tableToolbar as Toolbar
-const actionbar = tableToolbar as Toolbar
+const toolbar = tableToolbar.value as Toolbar
+const actionbar = tableActionbar.value as Actionbar
+const tree = leftTree.value as LeftTree
+const treeSpan = tree.treeSpan ? tree.treeSpan : 4
+const defaultTreeProps = tree.defaultTreeProps
+  ? tree.defaultTreeProps
+  : {
+      id: 'id',
+      label: 'label',
+      children: 'children',
+    }
+const treeData = tree.treeData ? tree.treeData : []
 /**
  * emits
  */
@@ -142,12 +161,33 @@ const emits = defineEmits([
   'onSelectionChange',
 ])
 /**
+ * 常规属性
+ */
+const selectTree = ref<Tree>({})
+const treeRef = ref<InstanceType<typeof ElTree>>()
+/**
  * 加载数据
  */
 const load = () => {
   const { current, size } = page.value
   const params = { ...searchFormModel.value, current, size }
   emits('onLoad', params)
+}
+const handleTreeNodeClick = (data: Tree) => {
+  selectTree.value = data
+  emits('onTreeClick', data, () => {
+    load()
+  })
+}
+const treeLoad = () => {
+  emits('onTreeLoad', (id: string) => {
+    nextTick(() => {
+      treeRef.value?.setCurrentKey(id)
+      const node = treeRef.value?.getCurrentNode() as Tree
+      handleTreeNodeClick(node)
+    })
+    load()
+  })
 }
 /**
  * 搜索
@@ -220,12 +260,34 @@ const handleSubmit = (formRef: FormInstance | undefined) => {
  * 工具栏
  */
 const handleAdd = () => {
+  if (leftTree.value && !selectTree.value.id) {
+    ElMessage({
+      type: 'warning',
+      message: '请选择节点',
+    })
+    return
+  }
+  Object.keys(formModel.value).forEach((key) => {
+    const index = formItems.value.findIndex(
+      (x) => x.vModel === key && x.type === 'select'
+    )
+    if (index !== -1) {
+      formModel.value[key] = selectTree.value.id
+    }
+  })
   dialogFormType.value = 'add'
   formTitle.add = dialogTitle.value ? dialogTitle.value.add : formTitle.add
   title.value = formTitle.add
   dialogFormVisible.value = true
 }
 const handleBatchDelete = () => {
+  if (leftTree.value && !selectTree.value.id) {
+    ElMessage({
+      type: 'warning',
+      message: '请选择节点',
+    })
+    return
+  }
   if (checkDataList.length < 1) {
     ElMessage({
       type: 'warning',
@@ -243,16 +305,37 @@ const handleBatchDelete = () => {
   })
 }
 const handleImport = () => {
+  if (leftTree.value && !selectTree.value.id) {
+    ElMessage({
+      type: 'warning',
+      message: '请选择节点',
+    })
+    return
+  }
   console.log('handleImport')
   emits('onImport', () => {
     load()
   })
 }
 const handleExport = () => {
+  if (leftTree.value && !selectTree.value.id) {
+    ElMessage({
+      type: 'warning',
+      message: '请选择节点',
+    })
+    return
+  }
   console.log('handleExport')
   emits('onExport')
 }
 const handlePrint = () => {
+  if (leftTree.value && !selectTree.value.id) {
+    ElMessage({
+      type: 'warning',
+      message: '请选择节点',
+    })
+    return
+  }
   console.log('handlePrint')
   emits('onPrint')
 }
@@ -264,6 +347,13 @@ const handleRefresh = () => {
   // })
 }
 const handleCustomToolbarClick = (done: any) => {
+  if (leftTree.value && !selectTree.value.id) {
+    ElMessage({
+      type: 'warning',
+      message: '请选择节点',
+    })
+    return
+  }
   if (checkDataList.length < 1) {
     ElMessage({
       type: 'warning',
@@ -304,95 +394,123 @@ const handleDone = () => {
   load()
 }
 onMounted(() => {
-  load()
+  if (leftTree.value) {
+    treeLoad()
+  } else {
+    load()
+  }
+  // if (autoReFefresh.value) {
+  //   timeCount.value = setInterval(() => {
+  //     load()
+  //   }, autoRefreshTime.value)
+  // }
+})
+onActivated(() => {
+  // clearInterval(timeCount.value)
 })
 </script>
 <template>
-  <quick-search
-    v-if="searchFormModel"
-    :model="searchFormModel"
-    :items="searchFormItems"
-    @on-search="handleSearchSubmit"
-    @on-clear="handleSearchClear"
-  >
-  </quick-search>
-  <quick-toolbar
-    :table-toolbar="tableToolbar"
-    :add-button-name="toolbar?.addButtonName"
-    :batch-delete-button-name="toolbar?.batchDeleteButtonName"
-    :import-button-name="toolbar?.importButtonName"
-    :export-button-name="toolbar?.exportButtonName"
-    :print-button-name="toolbar?.printButtonName"
-    :refresh-button-name="toolbar?.refreshButtonName"
-    :hidden-add-button="toolbar?.hiddenAddButton"
-    :hidden-batch-delete-button="toolbar?.hiddenBatchDeleteButton"
-    :hidden-import-button="toolbar?.hiddenImportButton"
-    :hidden-export-button="toolbar?.hiddenExportButton"
-    :hidden-print-button="toolbar?.hiddenPrintButton"
-    :hidden-refres-hbutton="toolbar?.hiddenRefreshButton"
-    @on-add="handleAdd"
-    @on-batch-delete="handleBatchDelete"
-    @on-import="handleImport"
-    @on-export="handleExport"
-    @on-print="handlePrint"
-    @on-refresh="handleRefresh"
-    @on-custom-toolbar-click="handleCustomToolbarClick"
-  ></quick-toolbar>
-  <quick-table
-    :data="tableData"
-    :columns="tableColumns"
-    :table-actionbar="tableActionbar"
-    :edit-button-name="actionbar?.editButtonName"
-    :delete-button-name="actionbar?.deleteButtonName"
-    :detail-button-name="actionbar?.detailButtonName"
-    :hidden-edit-button="actionbar?.hiddenEditButton"
-    :hidden-delete-button="actionbar?.hiddenDeleteButton"
-    :hidden-detail-button="actionbar?.hiddenDetailButton"
-    @on-row-edit="handleEdit"
-    @on-row-delete="handleDelete"
-    @on-row-detail="handleDetail"
-    @on-selection-change="handleSelectionChange"
-    @on-done="handleDone"
-  >
-  </quick-table>
-  <el-pagination
-    v-if="page"
-    v-model:currentPage="page.current"
-    v-model:page-size="page.size"
-    :page-sizes="page.sizes"
-    :small="false"
-    :disabled="false"
-    :background="false"
-    layout="total, sizes, prev, pager, next, jumper"
-    :total="page.total"
-    @size-change="handleSizeChange"
-    @current-change="handleCurrentChange"
-  />
-  <el-dialog
-    v-model="dialogFormVisible"
-    :title="title"
-    width="35%"
-    @close="handleCancel()"
-  >
-    <quick-form
-      ref="quickFormRef"
-      :model="formModel"
-      :form-items="formItems"
-      :form-type="dialogFormType"
-      :hidden-action="true"
-      @submit="handleSubmit"
-    >
-    </quick-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <template v-if="dialogFormType === 'detail'">
-          <el-button type="primary" @click="handleCancel()">关闭</el-button>
+  <el-row :gutter="40">
+    <el-col :span="leftTree ? treeSpan : 0">
+      <el-tree
+        v-if="leftTree"
+        ref="treeRef"
+        :data="treeData"
+        :props="defaultTreeProps"
+        node-key="id"
+        :highlight-current="true"
+        @node-click="handleTreeNodeClick"
+      >
+      </el-tree>
+    </el-col>
+    <el-col :span="leftTree ? 24 - treeSpan : 24">
+      <quick-search
+        v-if="searchFormModel"
+        :model="searchFormModel"
+        :items="searchFormItems"
+        @on-search="handleSearchSubmit"
+        @on-clear="handleSearchClear"
+      >
+      </quick-search>
+      <quick-toolbar
+        :table-toolbar="tableToolbar"
+        :add-button-name="toolbar?.addButtonName"
+        :batch-delete-button-name="toolbar?.batchDeleteButtonName"
+        :import-button-name="toolbar?.importButtonName"
+        :export-button-name="toolbar?.exportButtonName"
+        :print-button-name="toolbar?.printButtonName"
+        :refresh-button-name="toolbar?.refreshButtonName"
+        :hidden-add-button="toolbar?.hiddenAddButton"
+        :hidden-batch-delete-button="toolbar?.hiddenBatchDeleteButton"
+        :hidden-import-button="toolbar?.hiddenImportButton"
+        :hidden-export-button="toolbar?.hiddenExportButton"
+        :hidden-print-button="toolbar?.hiddenPrintButton"
+        :hidden-refres-hbutton="toolbar?.hiddenRefreshButton"
+        @on-add="handleAdd"
+        @on-batch-delete="handleBatchDelete"
+        @on-import="handleImport"
+        @on-export="handleExport"
+        @on-print="handlePrint"
+        @on-refresh="handleRefresh"
+        @on-custom-toolbar-click="handleCustomToolbarClick"
+      ></quick-toolbar>
+      <quick-table
+        :data="tableData"
+        :columns="tableColumns"
+        :table-actionbar="tableActionbar"
+        :edit-button-name="actionbar?.editButtonName"
+        :delete-button-name="actionbar?.deleteButtonName"
+        :detail-button-name="actionbar?.detailButtonName"
+        :hidden-edit-button="actionbar?.hiddenEditButton"
+        :hidden-delete-button="actionbar?.hiddenDeleteButton"
+        :hidden-detail-button="actionbar?.hiddenDetailButton"
+        @on-row-edit="handleEdit"
+        @on-row-delete="handleDelete"
+        @on-row-detail="handleDetail"
+        @on-selection-change="handleSelectionChange"
+        @on-done="handleDone"
+      >
+      </quick-table>
+      <el-pagination
+        v-if="page"
+        v-model:currentPage="page.current"
+        v-model:page-size="page.size"
+        :page-sizes="page.sizes"
+        :small="false"
+        :disabled="false"
+        :background="false"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="page.total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+      <el-dialog
+        v-model="dialogFormVisible"
+        :title="title"
+        width="35%"
+        @close="handleCancel()"
+      >
+        <quick-form
+          ref="quickFormRef"
+          :model="formModel"
+          :form-items="formItems"
+          :form-type="dialogFormType"
+          :hidden-action="true"
+          @submit="handleSubmit"
+        >
+        </quick-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <template v-if="dialogFormType === 'detail'">
+              <el-button type="primary" @click="handleCancel()">关闭</el-button>
+            </template>
+            <template v-else>
+              <el-button @click="handleCancel()">取消</el-button>
+              <el-button type="primary" @click="handleOk()">确定</el-button>
+            </template>
+          </span>
         </template>
-        <template v-else>
-          <el-button @click="handleCancel()">取消</el-button>
-          <el-button type="primary" @click="handleOk()">确定</el-button>
-        </template>
-      </span>
-    </template>
-  </el-dialog>
+      </el-dialog>
+    </el-col>
+  </el-row>
 </template>

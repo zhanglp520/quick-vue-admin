@@ -79,8 +79,6 @@ const {
 /**
  * 类型转换
  */
-console.log('tableActionbar', tableActionbar)
-
 const actionbar = tableActionbar.value as Actionbar
 /**
  * emits

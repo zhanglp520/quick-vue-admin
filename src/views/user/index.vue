@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
-import { ElMessage, ElMessageBox, FormInstance } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import QuickCrud from '@/components/QuickCrud/index.vue'
-import { Column, Actionbar, Toolbar, Btns } from '@/types/table'
+import { Column, Actionbar, Toolbar } from '@/types/table'
 import { User, SearchUser } from '@/types/user'
 import { FormItem } from '@/types/form'
 import { Page } from '@/types/page'
@@ -15,7 +15,7 @@ import {
   resetUserPassword,
   enableUser,
   disableUser,
-} from '../../api/user'
+} from '@/api/user'
 
 const userStore = useUserStore()
 const dataList = reactive<Array<User>>([])
@@ -25,7 +25,6 @@ const dataList = reactive<Array<User>>([])
 const dialogTitle = reactive({
   add: '添加用户',
   edit: '编辑用户',
-  delete: '删除用户',
   detail: '用户详情',
 })
 const validateUserId = (rule: any, value: string, callback: any) => {
