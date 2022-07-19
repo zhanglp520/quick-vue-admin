@@ -283,6 +283,9 @@ const handleCurrentChange = (val: number) => {
   emits('onCurrentChange', val)
   load()
 }
+const handleDone = () => {
+  load()
+}
 onMounted(() => {
   load()
 })
@@ -331,6 +334,7 @@ onMounted(() => {
     @on-row-delete="handleDelete"
     @on-row-detail="handleDetail"
     @on-selection-change="handleSelectionChange"
+    @on-done="handleDone"
   >
   </quick-table>
   <el-pagination

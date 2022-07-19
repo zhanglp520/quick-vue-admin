@@ -2,7 +2,7 @@
 import { reactive } from 'vue'
 import { ElMessage, ElMessageBox, FormInstance } from 'element-plus'
 import QuickCrud from '@/components/QuickCrud/index.vue'
-import { Column, Actionbar, Toolbar } from '@/types/table'
+import { Column, Actionbar, Toolbar, Btns } from '@/types/table'
 import { User, SearchUser } from '@/types/user'
 import { FormItem } from '@/types/form'
 import { Page } from '@/types/page'
@@ -272,6 +272,14 @@ const tableColumns = reactive<Array<Column>>([
     width: '200',
   },
   {
+    label: '是否启用',
+    prop: 'enabled',
+    width: '200',
+    format: (row: User) => {
+      return row.enabled === 1 ? '禁用' : '启用'
+    },
+  },
+  {
     label: '创建时间',
     prop: 'createTime',
     width: '200',
@@ -286,9 +294,6 @@ const tableColumns = reactive<Array<Column>>([
     prop: 'remark',
   },
 ])
-const tableActionbar = reactive<Actionbar>({
-  width: 200,
-})
 const handleDelete = (item: User, done: any) => {
   ElMessageBox.confirm(`你真的删除【${item.userName}】的用户吗？`, '警告', {
     confirmButtonText: '确定',
@@ -304,6 +309,74 @@ const handleDelete = (item: User, done: any) => {
     })
   })
 }
+const handleResetPassword = (item: User, done: any) => {
+  ElMessageBox.confirm(`你真的重置【${item.userName}】用户的密码吗？`, '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    resetUserPassword(item.id).then(() => {
+      ElMessage({
+        type: 'success',
+        message: '置用户密码重成功',
+      })
+      done()
+    })
+  })
+}
+const handleEnable = (item: User, done: any) => {
+  ElMessageBox.confirm(`你真的启用【${item.userName}】的用户吗？`, '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    enableUser(item.id).then(() => {
+      ElMessage({
+        type: 'success',
+        message: '用户启用成功',
+      })
+      done()
+    })
+  })
+}
+const handleDisable = (item: User, done: any) => {
+  ElMessageBox.confirm(`你真的禁用【${item.userName}】的用户吗？`, '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    disableUser(item.id).then(() => {
+      ElMessage({
+        type: 'success',
+        message: '用户禁用成功',
+      })
+      done()
+    })
+  })
+}
+const tableActionbar = reactive<Actionbar>({
+  width: 300,
+  btns: [
+    {
+      name: '重置密码',
+      click(item: any, done: any) {
+        handleResetPassword(item, done)
+      },
+    },
+    {
+      name: '启用',
+      click(item: any, done: any) {
+        handleEnable(item, done)
+      },
+    },
+    {
+      name: '禁用',
+      click(item: any, done: any) {
+        handleDisable(item, done)
+      },
+    },
+  ],
+})
 /**
  * 分页
  */

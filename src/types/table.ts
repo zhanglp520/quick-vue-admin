@@ -13,6 +13,7 @@ export interface Btns {
   type?: string
   size?: string
   hidden?: boolean
+  position?: string
   click(item?: any, done?: any): void
   render?(row: any): boolean
 }

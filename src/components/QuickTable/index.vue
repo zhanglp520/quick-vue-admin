@@ -135,9 +135,9 @@ const handleSelectionChange = (val: any) => {
         <template v-for="(item, index) in actionbar.btns" :key="index">
           <el-button
             v-if="item.position === 'left'"
-            :link="item.link ? item.link : false"
-            :type="item.type ? item.type : 'default'"
-            :size="item.size"
+            :link="!item.link ? true : false || item.link ? item.link : false"
+            :type="item.type ? item.type : 'text'"
+            :size="item.size ? item.size : 'small'"
             @click.prevent="
               item.click(scope.row, () => {
                 emits('onDone')
@@ -177,9 +177,9 @@ const handleSelectionChange = (val: any) => {
         <template v-for="(item, index) in actionbar.btns" :key="index">
           <el-button
             v-if="item.position !== 'left'"
-            :link="item.link ? item.link : false"
-            :type="item.type ? item.type : 'default'"
-            :size="item.size"
+            :link="!item.link ? true : false || item.link ? item.link : false"
+            :type="item.type ? item.type : 'text'"
+            :size="item.size ? item.size : 'small'"
             @click.prevent="
               item.click(scope.row, () => {
                 emits('onDone')
