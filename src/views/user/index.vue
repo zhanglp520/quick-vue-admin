@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, reactive } from 'vue'
+import { reactive } from 'vue'
 import { ElMessage, ElMessageBox, FormInstance } from 'element-plus'
 import QuickCrud from '@/components/QuickCrud/index.vue'
 import { Column, Actionbar, Toolbar } from '@/types/table'
@@ -10,8 +10,8 @@ import { useUserStore } from '@/store/modules/user'
 import {
   addUser,
   updateUser,
-  removeUser,
-  batchRemoveUser,
+  deleteUser,
+  batchDeleteUser,
   resetUserPassword,
   enableUser,
   disableUser,
@@ -219,7 +219,7 @@ const handleBatchDelete = (data: any, done: any) => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
-    batchRemoveUser(ids).then(() => {
+    batchDeleteUser(ids).then(() => {
       ElMessage({
         type: 'success',
         message: '用户删除成功',
@@ -295,7 +295,7 @@ const handleDelete = (item: User, done: any) => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
-    removeUser(item.id).then(() => {
+    deleteUser(item.id).then(() => {
       ElMessage({
         type: 'success',
         message: '用户删除成功',

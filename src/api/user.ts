@@ -7,8 +7,8 @@ const Api = {
   info: '/api/user/getInfo',
   add: '/api/user/add',
   update: '/api/user/update',
-  remove: '/api/user/remove',
-  batchRemoveUser: '/api/user/batchRemove',
+  delete: '/api/user/delete',
+  batchDeleteUser: '/api/user/batchRemove',
   resetPassword: '/api/user/resetPassword',
   enabled: '/api/user/enabled',
   disable: '/api/user/disable',
@@ -53,18 +53,18 @@ export const updateUser = (data: User) => {
     data,
   })
 }
-export const removeUser = (id: string) => {
+export const deleteUser = (id: string) => {
   return request({
-    url: Api.remove,
+    url: Api.delete,
     method: 'POST',
     data: {
       id,
     },
   })
 }
-export const batchRemoveUser = (ids: string) => {
+export const batchDeleteUser = (ids: string) => {
   return request({
-    url: Api.batchRemoveUser,
+    url: Api.batchDeleteUser,
     method: 'POST',
     data: {
       ids,
