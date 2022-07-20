@@ -254,6 +254,7 @@ const handleSubmit = (formRef: FormInstance | undefined) => {
       dialogFormVisible.value = false
       load()
     })
+    return true
   })
 }
 /**
