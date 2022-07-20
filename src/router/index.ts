@@ -15,11 +15,25 @@ export const router = createRouter({
     },
     {
       path: '/personalInfo',
-      component: () => import('../views/personalInfo/index.vue'),
+      component: layout,
+      redirect: '/personalInfo/index',
+      children: [
+        {
+          path: 'index',
+          component: () => import('../views/personalInfo/index.vue'),
+        },
+      ],
     },
     {
       path: '/changePassword',
-      component: () => import('../views/changePassword/index.vue'),
+      component: layout,
+      redirect: '/changePassword/index',
+      children: [
+        {
+          path: 'index',
+          component: () => import('../views/changePassword/index.vue'),
+        },
+      ],
     },
     {
       path: '/',

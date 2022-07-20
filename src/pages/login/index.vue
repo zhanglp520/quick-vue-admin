@@ -5,7 +5,12 @@ import { form, formItems, handleLogin } from './idnex'
 
 <template>
   <div class="login">
-    <quick-form :model="form" :form-items="formItems" :action-slot="true">
+    <quick-form
+      :model="form"
+      :form-items="formItems"
+      :show-action="true"
+      :action-slot="true"
+    >
       <template #action>
         <el-button type="primary" @click="handleLogin">登录</el-button>
       </template>

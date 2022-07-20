@@ -5,7 +5,7 @@ const Api = {
   list: '/api/dictionaryType/getList',
   add: '/api/dictionaryType/add',
   update: '/api/dictionaryType/update',
-  remove: '/api/dictionaryType/remove',
+  delete: '/api/dictionaryType/delete',
 }
 export const getDictionaryTypeList = (): Promise<
   QuickResponseData<Array<DictionaryType>>
@@ -30,11 +30,11 @@ export const updateDictionaryType = (data: DictionaryType) => {
     data,
   })
 }
-export const removeDictionaryType = (id: string) => {
+export const deleteDictionaryType = (id: string) => {
   return request({
-    url: Api.remove,
+    url: Api.delete,
     method: 'POST',
-    params: {
+    data: {
       id,
     },
   })

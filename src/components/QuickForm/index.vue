@@ -1,10 +1,16 @@
 <script lang="ts" setup>
-import { defineProps, toRefs, Ref, defineEmits, ref, defineExpose } from 'vue'
+import { defineExpose, defineProps, toRefs, Ref, defineEmits, ref } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { FormInstance } from 'element-plus'
-import { FormItem } from '../../types/form'
+import { FormItem } from '@/types/form'
 
+/**
+ * form
+ */
 const formRef = ref<FormInstance>()
+/**
+ * props
+ */
 const props = defineProps({
   model: {
     type: Object,
@@ -24,38 +30,47 @@ const props = defineProps({
   },
   formType: {
     type: String,
-    default: '',
+    default: 'form',
   },
   actionSlot: {
     type: Boolean,
     default: false,
   },
-  showAction: {
+  hiddenAction: {
     type: Boolean,
     default: false,
   },
 })
+/**
+ * props toRefs
+ */
 const {
   model,
   inline = false,
   formItems,
   formType,
   actionSlot = false,
-  showAction = false,
+  hiddenAction = false,
 } = toRefs(props) as {
   model: Ref<any>
   inline: Ref<boolean>
   formItems: Ref<FormItem[]>
   formType: Ref<string>
   actionSlot: Ref<boolean>
-  showAction: Ref<boolean>
+  hiddenAction: Ref<boolean>
 }
-const emit = defineEmits(['submit', 'clear'])
+/**
+ * emits
+ */
+const emits = defineEmits(['submit', 'clear'])
+/**
+ * 函数
+ */
 const handleSubmit = () => {
-  emit('submit', formRef.value)
+  emits('submit', formRef.value)
 }
 const handleClear = () => {
-  emit('clear')
+  emits('clear')
 }
 defineExpose({ handleSubmit })
 </script>
@@ -68,12 +83,12 @@ defineExpose({ handleSubmit })
           (formType === 'add' && !item.addHidden) ||
           (formType === 'edit' && !item.editHidden) ||
           (formType === 'detail' && !item.detailHidden) ||
-          !formType
+          formType === 'form'
         "
         :label="item.label"
         :label-width="item.labelWidth"
-        :prop="item.prop"
-        :rules="item.rules"
+        :prop="formType === 'detail' ? undefined : item.prop"
+        :rules="formType === 'detail' ? undefined : item.rules"
       >
         <template v-if="item.type === 'select'">
           <el-select
@@ -82,7 +97,7 @@ defineExpose({ handleSubmit })
             :disabled="
               (formType === 'add' && item.addDisabled) ||
               (formType === 'edit' && item.editDisabled) ||
-              (formType === 'detail' && item.detailDisabled)
+              formType === 'detail'
             "
           >
             <el-option
@@ -113,7 +128,7 @@ defineExpose({ handleSubmit })
             :readonly="
               (formType === 'add' && item.addReadonly) ||
               (formType === 'edit' && item.editReadonly) ||
-              (formType === 'detail' && item.detailReadonly)
+              formType === 'detail'
             "
           />
         </template>
@@ -127,7 +142,7 @@ defineExpose({ handleSubmit })
             :readonly="
               (formType === 'add' && item.addReadonly) ||
               (formType === 'edit' && item.editReadonly) ||
-              (formType === 'detail' && item.detailReadonly)
+              formType === 'detail'
             "
           />
         </template>
@@ -145,14 +160,14 @@ defineExpose({ handleSubmit })
         </template>
         <template v-else-if="item.type === 'number'">
           <el-input
-            v-model="model[item.vModel]"
+            v-model.number="model[item.vModel]"
             type="number"
             :autocomplete="item.autocomplete"
             :placeholder="item.placeholder"
             :readonly="
               (formType === 'add' && item.addReadonly) ||
               (formType === 'edit' && item.editReadonly) ||
-              (formType === 'detail' && item.detailReadonly)
+              formType === 'detail'
             "
           />
         </template>
@@ -164,25 +179,44 @@ defineExpose({ handleSubmit })
             :readonly="
               (formType === 'add' && item.addReadonly) ||
               (formType === 'edit' && item.editReadonly) ||
-              (formType === 'detail' && item.detailReadonly)
+              formType === 'detail'
             "
           />
         </template>
       </el-form-item>
     </template>
-    <template v-if="showAction">
-      <template v-if="actionSlot">
-        <slot name="action" :form-ref="formRef">
-          {{ formRef }}
-        </slot>
-      </template>
-      <template v-else>
-        <el-button type="primary" @click="handleSubmit">提交</el-button>
-        <el-button @click="handleClear">清空</el-button>
-      </template>
+    <template v-if="!hiddenAction">
+      <el-form-item>
+        <template v-if="actionSlot">
+          <slot name="action" :form-ref="formRef"></slot>
+        </template>
+        <template v-else>
+          <el-button type="primary" @click="handleSubmit">提交</el-button>
+          <el-button @click="handleClear">清空</el-button>
+        </template>
+      </el-form-item>
     </template>
   </el-form>
 </template>
 <style lang="scss">
-@import './index.scss';
+.avatar-uploader .el-upload {
+  border: 1px dashed var(--el-border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: var(--el-transition-duration-fast);
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: var(--el-color-primary);
+}
+
+.el-icon.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  text-align: center;
+}
 </style>

@@ -1,35 +1,56 @@
 <script lang="ts" setup>
 import {
   defineProps,
-  defineEmits,
-  ref,
-  onMounted,
-  toRefs,
   Ref,
-  computed,
-  onActivated,
+  toRefs,
+  reactive,
+  ref,
+  defineEmits,
+  onMounted,
   nextTick,
+  onActivated,
 } from 'vue'
 import { ElMessage, ElTree, FormInstance } from 'element-plus'
-import { User } from '../../types/user'
-import { Column } from '../../types/table'
-import { FormItem } from '../../types/form'
-import QuickTable from '../QuickTable/index.vue'
-import QuickForm from '../QuickForm/index.vue'
-import { Tree } from '../../types/tree'
+import QuickSearch from '@/components/QuickSearch/index.vue'
+import QuickTable from '@/components/QuickTable/index.vue'
+import QuickToolbar from '@/components/QuickToolbar/index.vue'
+import QuickForm from '@/components/QuickForm/index.vue'
+import { Actionbar, Toolbar } from '@/types/table'
+import { FormItem } from '@/types/form'
+import { Page } from '@/types/page'
+import { LeftTree, Tree } from '@/types/tree'
 
+/**
+ * 属性
+ */
+const formTitle = reactive({
+  add: '添加',
+  edit: '编辑',
+  delete: '删除',
+  detail: '详情',
+})
+const title = ref('')
+const quickFormRef = ref<InstanceType<typeof QuickForm>>()
+const dialogFormVisible = ref(false)
+const dialogFormType = ref('')
+const checkDataList = reactive<Array<any>>([])
+/**
+ * props
+ */
 const props = defineProps({
-  tableData: {
+  searchFormModel: {
+    type: [Boolean, Object],
+    default: false,
+  },
+  searchFormItems: {
     type: Array,
     default: () => {
       return []
     },
   },
-  tableColumns: {
-    type: Array,
-    default: () => {
-      return []
-    },
+  dialogTitle: {
+    type: [Boolean, Object],
+    default: false,
   },
   formModel: {
     type: Object,
@@ -43,147 +64,123 @@ const props = defineProps({
       return []
     },
   },
-  searchFormModel: {
-    type: Object,
-    default: () => {
-      return {}
-    },
+  leftTree: {
+    type: [Boolean, Object],
+    default: false,
   },
-  searchFormItems: {
+  tableData: {
     type: Array,
     default: () => {
       return []
     },
   },
-  formTitle: {
-    type: Object,
+  tableColumns: {
+    type: Array,
     default: () => {
-      return {}
+      return []
     },
+  },
+  tableActionbar: {
+    type: [Boolean, Object],
+    default: false,
+  },
+  tableToolbar: {
+    type: [Boolean, Object],
+    default: false,
   },
   page: {
-    type: Object,
-    default: () => {
-      return {}
-    },
-  },
-  showSearch: {
-    type: Boolean,
+    type: [Boolean, Object],
     default: false,
-  },
-  showPage: {
-    type: Boolean,
-    default: false,
-  },
-  showTree: {
-    type: Boolean,
-    default: false,
-  },
-  treeData: {
-    type: Array,
-    default: () => {
-      return []
-    },
-  },
-  defaultTreeProps: {
-    type: Object,
-    default: () => {
-      return {
-        id: 'id',
-        label: 'label',
-        children: 'children',
-      }
-    },
-  },
-  treeSpan: {
-    type: Number,
-    default: 4,
-  },
-  autoFefresh: {
-    type: Boolean,
-    default: false,
-  },
-  interval: {
-    type: Number,
-    default: 1000 * 30,
   },
 })
-
+/**
+ * props to ref
+ */
 const {
-  tableData,
-  tableColumns,
   searchFormModel,
   searchFormItems,
+  leftTree,
+  tableData,
+  tableColumns,
+  tableActionbar,
+  tableToolbar,
+  page,
+  dialogTitle,
   formModel,
   formItems,
-  formTitle,
-  page,
-  showSearch,
-  showPage,
-  showTree,
-  treeData,
-  defaultTreeProps,
-  treeSpan,
-  // autoReFefresh,
-  // autoRefreshTime,
 } = toRefs(props) as {
-  tableData: Ref<any>
-  tableColumns: Ref<Column[]>
-  searchFormModel: Ref<any>
+  searchFormModel: Ref<boolean | any>
   searchFormItems: Ref<FormItem[]>
+  dialogTitle: Ref<boolean | any>
   formModel: Ref<any>
   formItems: Ref<FormItem[]>
-  formTitle: Ref<any>
-  page: Ref<any>
-  showSearch: Ref<boolean>
-  showPage: Ref<boolean>
-  showTree: Ref<boolean>
-  treeData: Ref<any>
-  defaultTreeProps: Ref<any>
-  treeSpan: Ref<number>
-  // autoReFefresh: Ref<boolean>
-  // autoRefreshTime: Ref<number>
+  leftTree: Ref<any>
+  tableData: Ref<any>
+  tableColumns: Ref<any>
+  tableActionbar: Ref<boolean | Actionbar>
+  tableToolbar: Ref<boolean | Toolbar>
+  page: Ref<Page>
 }
-
-const emit = defineEmits([
+/**
+ * 类型转换
+ */
+const toolbar = tableToolbar.value as Toolbar
+const actionbar = tableActionbar.value as Actionbar
+const tree = leftTree.value as LeftTree
+const treeSpan = tree.treeSpan ? tree.treeSpan : 4
+const defaultTreeProps = tree.defaultTreeProps
+  ? tree.defaultTreeProps
+  : {
+      id: 'id',
+      label: 'label',
+      children: 'children',
+    }
+const treeData = tree.treeData ? tree.treeData : []
+/**
+ * emits
+ */
+const emits = defineEmits([
   'onTreeClick',
   'onLoad',
   'onTreeLoad',
   'onAdd',
   'onEdit',
   'onDelete',
+  'onDetail',
+  'onBatchDelete',
+  'onImport',
+  'onExport',
+  'onPrint',
+  'onRefresh',
   'onSearchFormSubmit',
   'onSearchFormClear',
   'onFormSubmit',
   'onFormCancel',
   'onSizeChange',
   'onCurrentChange',
+  'onSelectionChange',
 ])
-const quickFormRef = ref<InstanceType<typeof QuickForm>>()
+/**
+ * 常规属性
+ */
 const selectTree = ref<Tree>({})
 const treeRef = ref<InstanceType<typeof ElTree>>()
-const selectDataList = ref<Array<User>>([])
-const dialogFormVisible = ref(false)
-const dialogFormType = ref('')
-const autoReFefresh = ref(true)
-const timeCount = ref()
-const autoRefreshTime = ref(1000 * 60)
 /**
- * 函数
+ * 加载数据
  */
 const load = () => {
   const { current, size } = page.value
   const params = { ...searchFormModel.value, current, size }
-  emit('onLoad', params)
+  emits('onLoad', params)
 }
 const handleTreeNodeClick = (data: Tree) => {
   selectTree.value = data
-  emit('onTreeClick', data, () => {
+  emits('onTreeClick', data, () => {
     load()
   })
 }
 const treeLoad = () => {
-  emit('onTreeLoad', (id: string) => {
+  emits('onTreeLoad', (id: string) => {
     nextTick(() => {
       treeRef.value?.setCurrentKey(id)
       const node = treeRef.value?.getCurrentNode() as Tree
@@ -192,121 +189,231 @@ const treeLoad = () => {
     load()
   })
 }
-const handleSelectionChange = (val: User[]) => {
-  selectDataList.value = val
-}
-const handleSearch = () => {
-  emit('onSearchFormSubmit', searchFormModel.value)
+/**
+ * 搜索
+ */
+const handleSearchSubmit = () => {
+  emits('onSearchFormSubmit', searchFormModel.value)
   load()
 }
-const handleClear = () => {
-  emit('onSearchFormClear', searchFormModel.value)
+const handleSearchClear = () => {
+  Object.keys(searchFormModel.value).forEach((key) => {
+    searchFormModel.value[key] = ''
+  })
+  emits('onSearchFormClear', searchFormModel.value)
+  load()
 }
-const handleAdd = () => {
-  dialogFormType.value = 'add'
-  if (showTree.value && !selectTree.value.id) {
-    ElMessage({
-      type: 'warning',
-      message: '请选择节点',
-    })
-    return
-  }
-  dialogFormVisible.value = true
-  emit('onAdd')
-}
-const handleEdit = () => {
+/**
+ * 操作栏
+ */
+const handleEdit = (row: any) => {
   dialogFormType.value = 'edit'
-  if (showTree.value && !selectTree.value.id) {
-    ElMessage({
-      type: 'warning',
-      message: '请选择节点',
-    })
-    return
-  }
-  if (selectDataList.value.length !== 1) {
-    ElMessage({
-      type: 'warning',
-      message: '请选择一行',
-    })
-    return
-  }
+  formTitle.edit = dialogTitle.value ? dialogTitle.value.edit : formTitle.edit
+  title.value = formTitle.edit
+  Object.keys(formModel.value).forEach((key) => {
+    formModel.value[key] = row[key]
+  })
   dialogFormVisible.value = true
-  const item = selectDataList.value[0]
-  emit('onEdit', item)
 }
-const handleDelete = () => {
-  if (selectDataList.value.length !== 1) {
-    ElMessage({
-      type: 'warning',
-      message: '请选择一行',
-    })
-    return
-  }
-  const item = selectDataList.value[0]
-  emit('onDelete', item, () => {
+const handleDelete = (row: any) => {
+  emits('onDelete', row, () => {
     load()
   })
 }
-const handleCancel = () => {
-  dialogFormVisible.value = false
-  emit('onFormCancel', formModel.value)
+const handleDetail = (row: any) => {
+  dialogFormType.value = 'detail'
+  formTitle.detail = dialogTitle.value
+    ? dialogTitle.value.detail
+    : formTitle.detail
+  title.value = formTitle.detail
+  Object.keys(formModel.value).forEach((key) => {
+    formModel.value[key] = row[key]
+  })
+  dialogFormVisible.value = true
 }
+/**
+ * 表单
+ */
 const handleOk = () => {
   if (quickFormRef.value) {
     quickFormRef.value.handleSubmit()
   }
 }
+const handleCancel = () => {
+  dialogFormVisible.value = false
+}
 const handleSubmit = (formRef: FormInstance | undefined) => {
-  emit('onFormSubmit', formRef, formModel.value, () => {
-    dialogFormVisible.value = false
+  if (!formRef) return
+  formRef.validate((valid) => {
+    if (!valid) {
+      console.log('error submit!')
+      return false
+    }
+    console.log('submit!')
+    emits('onFormSubmit', formModel.value, () => {
+      dialogFormVisible.value = false
+      load()
+    })
+  })
+}
+/**
+ * 工具栏
+ */
+const handleAdd = () => {
+  if (leftTree.value && !selectTree.value.id) {
+    ElMessage({
+      type: 'warning',
+      message: '请选择节点',
+    })
+    return
+  }
+  Object.keys(formModel.value).forEach((key) => {
+    const index = formItems.value.findIndex(
+      (x) => x.vModel === key && x.type === 'select'
+    )
+    if (index !== -1) {
+      formModel.value[key] = selectTree.value.id
+    }
+  })
+  dialogFormType.value = 'add'
+  formTitle.add = dialogTitle.value ? dialogTitle.value.add : formTitle.add
+  title.value = formTitle.add
+  dialogFormVisible.value = true
+}
+const handleBatchDelete = () => {
+  if (leftTree.value && !selectTree.value.id) {
+    ElMessage({
+      type: 'warning',
+      message: '请选择节点',
+    })
+    return
+  }
+  if (checkDataList.length < 1) {
+    ElMessage({
+      type: 'warning',
+      message: '至少选择一行',
+    })
+    return
+  }
+  const ids = checkDataList
+    .map((x) => {
+      return x.id
+    })
+    .join(',')
+  emits('onBatchDelete', { checkDataList, ids }, () => {
     load()
   })
 }
+const handleImport = () => {
+  if (leftTree.value && !selectTree.value.id) {
+    ElMessage({
+      type: 'warning',
+      message: '请选择节点',
+    })
+    return
+  }
+  console.log('handleImport')
+  emits('onImport', () => {
+    load()
+  })
+}
+const handleExport = () => {
+  if (leftTree.value && !selectTree.value.id) {
+    ElMessage({
+      type: 'warning',
+      message: '请选择节点',
+    })
+    return
+  }
+  console.log('handleExport')
+  emits('onExport')
+}
+const handlePrint = () => {
+  if (leftTree.value && !selectTree.value.id) {
+    ElMessage({
+      type: 'warning',
+      message: '请选择节点',
+    })
+    return
+  }
+  console.log('handlePrint')
+  emits('onPrint')
+}
+const handleRefresh = () => {
+  console.log('handleRefresh')
+  load()
+  // emits('onRefresh', () => {
+  //   load()
+  // })
+}
+const handleCustomToolbarClick = (done: any) => {
+  if (leftTree.value && !selectTree.value.id) {
+    ElMessage({
+      type: 'warning',
+      message: '请选择节点',
+    })
+    return
+  }
+  if (checkDataList.length < 1) {
+    ElMessage({
+      type: 'warning',
+      message: '至少选择一行',
+    })
+    return
+  }
+  const ids = checkDataList
+    .map((x) => {
+      return x.id
+    })
+    .join(',')
+  done({ checkDataList, ids }, () => {
+    load()
+  })
+}
+/**
+ * 选中
+ */
+const handleSelectionChange = (userList: Array<any>) => {
+  checkDataList.length = 0
+  checkDataList.push(...userList)
+}
+/**
+ * 分页
+ */
 const handleSizeChange = (val: number) => {
   page.value.size = val
-  emit('onSizeChange', val)
+  emits('onSizeChange', val)
   load()
 }
 const handleCurrentChange = (val: number) => {
   page.value.current = val
-  emit('onCurrentChange', val)
+  emits('onCurrentChange', val)
   load()
 }
-const dialogTitle = computed(() => {
-  if (dialogFormType.value === 'add') {
-    return formTitle.value.add
-  }
-  if (dialogFormType.value === 'edit') {
-    return formTitle.value.edit
-  }
-  if (dialogFormType.value === 'detail') {
-    return formTitle.value.detail
-  }
-  return '标题'
-})
+const handleDone = () => {
+  load()
+}
 onMounted(() => {
-  // TODO:onMounted会执行两次，待解决
-  console.log('onMounted-crud')
-  if (showTree.value) {
+  if (leftTree.value) {
     treeLoad()
   } else {
     load()
   }
-  if (autoReFefresh.value) {
-    timeCount.value = setInterval(() => {
-      load()
-    }, autoRefreshTime.value)
-  }
+  // if (autoReFefresh.value) {
+  //   timeCount.value = setInterval(() => {
+  //     load()
+  //   }, autoRefreshTime.value)
+  // }
 })
 onActivated(() => {
-  clearInterval(timeCount.value)
+  // clearInterval(timeCount.value)
 })
 </script>
 <template>
   <el-row :gutter="40">
-    <el-col :span="showTree ? treeSpan : 0">
+    <el-col :span="leftTree ? treeSpan : 0">
       <el-tree
-        v-if="showTree"
+        v-if="leftTree"
         ref="treeRef"
         :data="treeData"
         :props="defaultTreeProps"
@@ -316,38 +423,56 @@ onActivated(() => {
       >
       </el-tree>
     </el-col>
-    <el-col :span="showTree ? 24 - treeSpan : 24">
-      <quick-form
-        v-if="showSearch"
-        :inline="true"
+    <el-col :span="leftTree ? 24 - treeSpan : 24">
+      <quick-search
+        v-if="searchFormModel"
         :model="searchFormModel"
-        class="demo-form-inline"
-        :form-items="searchFormItems"
-        form-type="search"
-        :action-slot="true"
+        :items="searchFormItems"
+        @on-search="handleSearchSubmit"
+        @on-clear="handleSearchClear"
       >
-        <template #action>
-          <el-form-item>
-            <el-button type="primary" @click="handleSearch">查询</el-button>
-          </el-form-item>
-          <el-form-item>
-            <el-button @click="handleClear">清空</el-button>
-          </el-form-item>
-        </template>
-      </quick-form>
-      <el-button-group class="ml-4 action">
-        <el-button type="primary" @click="handleAdd">新增</el-button>
-        <el-button type="primary" @click="handleEdit">编辑</el-button>
-        <el-button type="primary" @click="handleDelete">删除</el-button>
-      </el-button-group>
+      </quick-search>
+      <quick-toolbar
+        :table-toolbar="tableToolbar"
+        :add-button-name="toolbar?.addButtonName"
+        :batch-delete-button-name="toolbar?.batchDeleteButtonName"
+        :import-button-name="toolbar?.importButtonName"
+        :export-button-name="toolbar?.exportButtonName"
+        :print-button-name="toolbar?.printButtonName"
+        :refresh-button-name="toolbar?.refreshButtonName"
+        :hidden-add-button="toolbar?.hiddenAddButton"
+        :hidden-batch-delete-button="toolbar?.hiddenBatchDeleteButton"
+        :hidden-import-button="toolbar?.hiddenImportButton"
+        :hidden-export-button="toolbar?.hiddenExportButton"
+        :hidden-print-button="toolbar?.hiddenPrintButton"
+        :hidden-refres-hbutton="toolbar?.hiddenRefreshButton"
+        @on-add="handleAdd"
+        @on-batch-delete="handleBatchDelete"
+        @on-import="handleImport"
+        @on-export="handleExport"
+        @on-print="handlePrint"
+        @on-refresh="handleRefresh"
+        @on-custom-toolbar-click="handleCustomToolbarClick"
+      ></quick-toolbar>
       <quick-table
         :data="tableData"
         :columns="tableColumns"
-        @selection-change="handleSelectionChange"
+        :table-actionbar="tableActionbar"
+        :edit-button-name="actionbar?.editButtonName"
+        :delete-button-name="actionbar?.deleteButtonName"
+        :detail-button-name="actionbar?.detailButtonName"
+        :hidden-edit-button="actionbar?.hiddenEditButton"
+        :hidden-delete-button="actionbar?.hiddenDeleteButton"
+        :hidden-detail-button="actionbar?.hiddenDetailButton"
+        @on-row-edit="handleEdit"
+        @on-row-delete="handleDelete"
+        @on-row-detail="handleDetail"
+        @on-selection-change="handleSelectionChange"
+        @on-done="handleDone"
       >
       </quick-table>
       <el-pagination
-        v-if="showPage"
+        v-if="page"
         v-model:currentPage="page.current"
         v-model:page-size="page.size"
         :page-sizes="page.sizes"
@@ -361,7 +486,7 @@ onActivated(() => {
       />
       <el-dialog
         v-model="dialogFormVisible"
-        :title="dialogTitle"
+        :title="title"
         width="35%"
         @close="handleCancel()"
       >
@@ -370,20 +495,22 @@ onActivated(() => {
           :model="formModel"
           :form-items="formItems"
           :form-type="dialogFormType"
+          :hidden-action="true"
           @submit="handleSubmit"
-          @clear="handleClear"
         >
         </quick-form>
         <template #footer>
           <span class="dialog-footer">
-            <el-button @click="handleCancel()">取消</el-button>
-            <el-button type="primary" @click="handleOk()">确定</el-button>
+            <template v-if="dialogFormType === 'detail'">
+              <el-button type="primary" @click="handleCancel()">关闭</el-button>
+            </template>
+            <template v-else>
+              <el-button @click="handleCancel()">取消</el-button>
+              <el-button type="primary" @click="handleOk()">确定</el-button>
+            </template>
           </span>
         </template>
       </el-dialog>
     </el-col>
   </el-row>
 </template>
-<style lang="scss" scoped>
-@import './index.scss';
-</style>

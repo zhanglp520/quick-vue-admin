@@ -5,7 +5,7 @@ const Api = {
   list: '/api/dictionary/getList',
   add: '/api/dictionary/add',
   update: '/api/dictionary/update',
-  remove: '/api/dictionary/remove',
+  delete: '/api/dictionary/delete',
 }
 export const getDictionaryList = (
   dicTypeId: string
@@ -32,11 +32,11 @@ export const updateDictionary = (data: Dictionary) => {
     data,
   })
 }
-export const removeDictionary = (id: string) => {
+export const deleteDictionary = (id: string) => {
   return request({
-    url: Api.remove,
+    url: Api.delete,
     method: 'POST',
-    params: {
+    data: {
       id,
     },
   })

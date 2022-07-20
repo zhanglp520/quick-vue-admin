@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import { defineProps, defineEmits, toRefs, Ref } from 'vue'
-import { Column } from '../../types/table'
-
+import { Column, Actionbar } from '../../types/table'
+/**
+ * props
+ */
 const props = defineProps({
   data: {
     type: Array,
@@ -12,28 +14,100 @@ const props = defineProps({
   columns: {
     type: Array,
     default: () => {
-      return {}
+      return []
     },
   },
+  height: {
+    type: Number,
+    default: 575,
+  },
+  tableActionbar: {
+    type: [Boolean, Object],
+    default: false,
+  },
+  editButtonName: {
+    type: String,
+    default: '编辑',
+  },
+  deleteButtonName: {
+    type: String,
+    default: '删除',
+  },
+  detailButtonName: {
+    type: String,
+    default: '详情',
+  },
+  hiddenEditButton: {
+    type: Boolean,
+    default: false,
+  },
+  hiddenDeleteButton: {
+    type: Boolean,
+    default: false,
+  },
+  hiddenDetailButton: {
+    type: Boolean,
+    default: false,
+  },
 })
-
-const emit = defineEmits(['selectionChange'])
-
-const { data, columns } = toRefs(props) as {
+/**
+ * props toRefs
+ */
+const {
+  data,
+  columns,
+  height,
+  tableActionbar,
+  editButtonName,
+  deleteButtonName,
+  detailButtonName,
+  hiddenEditButton,
+  hiddenDeleteButton,
+  hiddenDetailButton,
+} = toRefs(props) as {
   data: Ref<any>
   columns: Ref<Column[]>
+  height: Ref<number>
+  tableActionbar: Ref<boolean | Actionbar>
+  editButtonName: Ref<string>
+  deleteButtonName: Ref<string>
+  detailButtonName: Ref<string>
+  hiddenEditButton: Ref<boolean>
+  hiddenDeleteButton: Ref<boolean>
+  hiddenDetailButton: Ref<boolean>
 }
-
+/**
+ * 类型转换
+ */
+const actionbar = tableActionbar.value as Actionbar
+/**
+ * emits
+ */
+const emits = defineEmits([
+  'onSelectionChange',
+  'onRowEdit',
+  'onRowDelete',
+  'onRowDetail',
+  'onDone',
+])
+/**
+ *函数
+ */
+const getActionbarWidth = () => {
+  if (actionbar.width) {
+    return actionbar.width
+  }
+  return 150
+}
 const handleSelectionChange = (val: any) => {
-  emit('selectionChange', val)
+  emits('onSelectionChange', val)
 }
 </script>
 <template>
-  <!-- show-summary 合计 -->
   <el-table
     :data="data"
     style="width: 100%"
-    :height="575"
+    :height="height"
     stripe
     border
     @selection-change="handleSelectionChange"
@@ -48,21 +122,80 @@ const handleSelectionChange = (val: any) => {
       :align="item.align"
       :formatter="item.format"
       show-overflow-tooltip
+    ></el-table-column>
+    <el-table-column
+      v-if="tableActionbar"
+      label="操作"
+      :width="getActionbarWidth()"
     >
-      <template v-if="item.slot" #default="scope">
-        <template v-if="item.type === 'link' && item.label === 'QQ号'">
-          <el-link
-            target="_blank"
-            :href="`http://wpa.qq.com/msgrd?v=3&uin=${
-              item.format && item.format(scope.row)
-            }&site=1841031740&menu=yes`"
-            >({{ item.format && item.format(scope.row) }})加好友</el-link
+      <template #default="scope">
+        <slot name="leftActionbar" :row="scope.row"></slot>
+        <template v-for="(item, index) in actionbar.btns" :key="index">
+          <el-button
+            v-if="
+              item.position &&
+              item.position === 'left' &&
+              (item.render ? item.render(scope.row) : true)
+            "
+            :link="!item.link ? true : false || item.link ? item.link : false"
+            :type="item.type ? item.type : 'text'"
+            :size="item.size ? item.size : 'small'"
+            @click.prevent="
+              item.click(scope.row, () => {
+                emits('onDone')
+              })
+            "
           >
+            {{ item.name }}
+          </el-button>
         </template>
+        <el-button
+          v-if="!hiddenEditButton"
+          :link="true"
+          type="primary"
+          size="small"
+          @click.prevent="emits('onRowEdit', scope.row)"
+        >
+          {{ editButtonName }}
+        </el-button>
+        <el-button
+          v-if="!hiddenDeleteButton"
+          :link="true"
+          type="primary"
+          size="small"
+          @click.prevent="emits('onRowDelete', scope.row)"
+        >
+          {{ deleteButtonName }}
+        </el-button>
+        <el-button
+          v-if="!hiddenDetailButton"
+          :link="true"
+          type="primary"
+          size="small"
+          @click.prevent="emits('onRowDetail', scope.row)"
+        >
+          {{ detailButtonName }}
+        </el-button>
+        <template v-for="(item, index) in actionbar.btns" :key="index">
+          <el-button
+            v-if="
+              item.position !== 'left' &&
+              (item.render ? item.render(scope.row) : true)
+            "
+            :link="!item.link ? true : false || item.link ? item.link : false"
+            :type="item.type ? item.type : 'text'"
+            :size="item.size ? item.size : 'small'"
+            @click.prevent="
+              item.click(scope.row, () => {
+                emits('onDone')
+              })
+            "
+          >
+            {{ item.name }}
+          </el-button>
+        </template>
+        <slot name="rightActionbar" :row="scope.row"></slot>
       </template>
     </el-table-column>
   </el-table>
 </template>
-<style lang="scss" scoped>
-@import './index.scss';
-</style>

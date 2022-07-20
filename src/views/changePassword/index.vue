@@ -13,6 +13,7 @@ onMounted(() => {
     <quick-form
       :model="form"
       :form-items="formItems"
+      :show-action="true"
       @submit="handleSubmit"
       @clear="handleClear"
     >
