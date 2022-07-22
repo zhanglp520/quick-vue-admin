@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import {
+  HomeFilled,
   // Document,
   Menu as IconMenu,
   // Location,
@@ -7,6 +8,7 @@ import {
 } from '@element-plus/icons-vue'
 import { computed } from 'vue'
 import { useAppStore } from '../../../store/modules/app'
+import AiniMenu from '../AiniMenu/index.vue'
 
 const appStore = useAppStore()
 const isCollapse = computed(() => appStore.getCollapse)
@@ -24,28 +26,7 @@ const handleClose = (key: string, keyPath: string[]) => {
       <img src="@/assets/logo.png" />
       <h5 v-if="!isCollapse">quick框架</h5>
     </div>
-    <el-menu
-      active-text-color="#ffd04b"
-      background-color="#545c64"
-      class="el-menu-vertical-demo"
-      default-active="2"
-      :collapse="isCollapse"
-      text-color="#fff"
-      :router="true"
-      @open="handleOpen"
-      @close="handleClose"
-    >
-      <el-sub-menu index="/system">
-        <template #title>
-          <el-icon><Setting /></el-icon>
-          <span>系统管理</span>
-        </template>
-        <el-menu-item index="/system/user">用户管理</el-menu-item>
-        <!-- <el-menu-item index="/role">角色管理</el-menu-item> -->
-        <el-menu-item index="/system/dictionaryType">字典分类</el-menu-item>
-        <el-menu-item index="/system/dictionary">字典管理</el-menu-item>
-      </el-sub-menu>
-    </el-menu>
+    <aini-menu></aini-menu>
   </div>
 </template>
 

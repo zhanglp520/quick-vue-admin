@@ -16,11 +16,6 @@ export interface User {
 export interface SearchUser {
   userName: string
 }
-export interface Login {
-  tenant: string
-  userName: string
-  userPassword: string
-}
 export interface ChangePassword {
   oldPassword: string
   newPassword: string

@@ -1,9 +1,11 @@
-import { User } from '../types/user'
+import { ChangePassword, User } from '../types/user'
 import request, { QuickResponseData } from '../utils/request'
 
 const Api = {
+  permission: '/api/user/getPermission',
+  getUserInfo: '/api/getUserInfo',
+  changePassword: '/api/changePassword',
   pageList: '/api/user/getPageList',
-  list: '/api/user/getList',
   info: '/api/user/getInfo',
   add: '/api/user/add',
   update: '/api/user/update',
@@ -13,6 +15,23 @@ const Api = {
   enabled: '/api/user/enabled',
   disable: '/api/user/disable',
 }
+export const getPermission = (userId: string) => {
+  return request({
+    url: Api.permission,
+    method: 'GET',
+    data: {
+      userId,
+    },
+  })
+}
+export const changePassword = (data: ChangePassword) => {
+  return request({
+    url: Api.changePassword,
+    method: 'POST',
+    data,
+  })
+}
+
 export const getUserPageList = (
   params: object
 ): Promise<QuickResponseData<Array<User>>> => {
@@ -20,12 +39,6 @@ export const getUserPageList = (
     url: Api.pageList,
     method: 'GET',
     params,
-  })
-}
-export const getUserList = () => {
-  return request({
-    url: Api.list,
-    method: 'GET',
   })
 }
 export const getUserInfo = (
