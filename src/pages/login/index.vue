@@ -72,6 +72,4 @@ const handleLogin = async (): Promise<void> => {
   </div>
 </template>
 
-<style lang="scss" scoped>
-@import './index.scss';
-</style>
+<style lang="scss" scoped></style>
