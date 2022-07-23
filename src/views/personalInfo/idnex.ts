@@ -29,6 +29,7 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
  */
 export const userStore = useUserStore()
 export const form = reactive<User>({
+  id: '',
   userId: '',
   avatar: '',
   fullName: '',
@@ -85,5 +86,9 @@ export const formItems = reactive<Array<FormItem>>([
 /**
  * 函数
  */
-export const handleSubmit = () => {}
-export const handleClear = () => {}
+export const handleSubmit = () => {
+  console.log('handleSubmit')
+}
+export const handleClear = () => {
+  console.log('handleClear')
+}

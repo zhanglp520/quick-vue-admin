@@ -1,69 +1,51 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { computed, onMounted, ref } from 'vue'
+import { computed, watch, ref } from 'vue'
 // import AiniBottom from './components/AiniBottom/index.vue'
 import { useRoute, useRouter } from 'vue-router'
 import AiniTop from './components/AiniTop/index.vue'
 import AiniSidebar from './components/AiniSidebar/index.vue'
 import { useAppStore } from '../store/modules/app'
+import { useMenuStore } from '../store/modules/menu'
+import { useTabStore } from '../store/modules/tab'
+import { Tab } from '../types/tab'
 
 const route = useRoute()
 const router = useRouter()
 const appStore = useAppStore()
+const menuStore = useMenuStore()
+const tabStore = useTabStore()
 const isCollapse = computed(() => appStore.getCollapse)
+const activeTab = computed(() => tabStore.getActiveTab)
+const menuList = computed(() => menuStore.getMenuList)
+const tabList = computed(() => tabStore.getTabList)
 
 const { t } = useI18n()
 console.log('i18n', t('title'))
-
-const tabIndex = 1
-const editableTabsValue = ref('1')
-const editableTabs = ref([
-  {
-    title: '首页',
-    name: '1',
-    content: 'Tab 1 content',
-  },
-  {
-    title: '用户管理',
-    name: '2',
-    content: 'Tab 2 content',
-  },
-])
+const editableTabsValue = ref('home')
+router.push('/home')
+const editableTabs = ref([])
+watch(activeTab, (val) => {
+  if (val) {
+    const { id, path } = val
+    editableTabsValue.value = id
+    router.push(path)
+  }
+})
+watch(tabList, (val) => {
+  editableTabs.value = val
+})
 
 const handleTabsEdit = (targetName: string, action: 'remove' | 'add'): void => {
-  if (action === 'add') {
-    const newTabName = `${tabIndex + 1}`
-    editableTabs.value.push({
-      title: 'New Tab',
-      name: newTabName,
-      content: 'New Tab content',
-    })
-    editableTabsValue.value = newTabName
-  } else if (action === 'remove') {
-    const tabs = editableTabs.value
-    let activeName = editableTabsValue.value
-    if (activeName === targetName) {
-      tabs.forEach((tab, index) => {
-        if (tab.name === targetName) {
-          const nextTab = tabs[index + 1] || tabs[index - 1]
-          if (nextTab) {
-            activeName = nextTab.name
-          }
-        }
-      })
-    }
-
-    editableTabsValue.value = activeName
-    editableTabs.value = tabs.filter((tab) => tab.name !== targetName)
+  if (action === 'remove') {
+    tabStore.deleteTab(targetName)
   }
 }
 const handleClick = (activeName: string) => {
-  editableTabsValue.value = activeName
-  if (editableTabsValue.value === '1') {
-    router.push('/home')
-  }
-  if (editableTabsValue.value === '2') {
-    router.push('/system/user')
+  const index = tabList.value.findIndex((x) => x.id === activeName)
+  if (index !== -1) {
+    tabStore.setActiveTab(tabList.value[index])
+    menuStore.setActiveMenuId(activeName)
   }
 }
 </script>
@@ -85,16 +67,16 @@ const handleClick = (activeName: string) => {
             <el-tabs
               v-model="editableTabsValue"
               type="card"
-              editable
+              closable
               class="demo-tabs"
               @edit="handleTabsEdit"
               @tab-change="handleClick"
             >
               <el-tab-pane
-                v-for="item in editableTabs"
-                :key="item.name"
-                :label="item.title"
-                :name="item.name"
+                v-for="item in tabList"
+                :key="item.id"
+                :label="item.name"
+                :name="item.id"
               >
                 <!-- <router-view></router-view> -->
                 <router-view :key="route.fullPath" />

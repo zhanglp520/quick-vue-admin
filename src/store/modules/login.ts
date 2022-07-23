@@ -1,18 +1,15 @@
 import { defineStore } from 'pinia'
-import { userLogin } from '../../api/login'
-import { Login, User } from '../../types/user'
-import { quickMd5 } from '../../utils'
-import { useUserStore } from './user'
+import { userLogin } from '@/api/login'
+import { Login } from '@/types/user'
+import { quickMd5 } from '@/utils'
 
-const userStore = useUserStore()
-
-interface UserState {
+interface LoginState {
   token: string
   tenant: string
   userName: string
 }
 export const useLoginStore = defineStore('loginStore', {
-  state: (): UserState => {
+  state: (): LoginState => {
     return {
       token: '',
       tenant: '',
@@ -25,7 +22,7 @@ export const useLoginStore = defineStore('loginStore', {
     },
   },
   actions: {
-    login(form: Login): Promise<User> {
+    login(form: Login): Promise<LoginState> {
       const { tenant, userName, userPassword } = form
       return new Promise((resolve, reject) => {
         userLogin({
@@ -34,15 +31,14 @@ export const useLoginStore = defineStore('loginStore', {
           userPassword: quickMd5(userPassword),
         })
           .then((res) => {
-            const { data: user } = res
-            const { token } = user
+            const { data: loginData } = res
+            const { token } = loginData
             if (token) {
               this.token = token
             }
             this.tenant = tenant
             this.userName = userName
-            userStore.getUserInfo(userName)
-            resolve(user)
+            resolve(this.$state)
           })
           .catch((err) => {
             reject(err)

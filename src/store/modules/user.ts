@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
-import { getUserInfo, getUserPageList } from '../../api/user'
-import { User } from '../../types/user'
-import { QuickResponseData } from '../../utils/request'
+import { getUserInfo, getUserPageList } from '@/api/user'
+import { User } from '@/types/user'
+import { QuickResponseData } from '@/utils/request'
 
 interface UserState {
   userList: Array<User>
@@ -30,6 +30,7 @@ export const useUserStore = defineStore('userStore', {
         getUserPageList(parmas).then((res) => {
           const { data: userList } = res
           this.userList = userList
+
           resolve(res)
         })
       })

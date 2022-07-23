@@ -55,10 +55,14 @@ export const router = createRouter({
           path: 'user',
           component: () => import('../views/user/index.vue'),
         },
-        // {
-        //   path: 'role',
-        //   component: () => import('../views/role/index.vue'),
-        // },
+        {
+          path: 'role',
+          component: () => import('../views/role/index.vue'),
+        },
+        {
+          path: 'menu',
+          component: () => import('../views/menu/index.vue'),
+        },
         {
           path: 'dictionaryType',
           component: () => import('../views/dictionaryType/index.vue'),

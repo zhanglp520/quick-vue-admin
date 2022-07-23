@@ -21,6 +21,10 @@ const props = defineProps({
     type: Number,
     default: 575,
   },
+  rowKey: {
+    type: String,
+    default: 'id',
+  },
   tableActionbar: {
     type: [Boolean, Object],
     default: false,
@@ -57,6 +61,7 @@ const {
   data,
   columns,
   height,
+  rowKey,
   tableActionbar,
   editButtonName,
   deleteButtonName,
@@ -68,6 +73,7 @@ const {
   data: Ref<any>
   columns: Ref<Column[]>
   height: Ref<number>
+  rowKey: Ref<string>
   tableActionbar: Ref<boolean | Actionbar>
   editButtonName: Ref<string>
   deleteButtonName: Ref<string>
@@ -110,6 +116,7 @@ const handleSelectionChange = (val: any) => {
     :height="height"
     stripe
     border
+    :row-key="rowKey"
     @selection-change="handleSelectionChange"
   >
     <el-table-column
@@ -138,7 +145,7 @@ const handleSelectionChange = (val: any) => {
               (item.render ? item.render(scope.row) : true)
             "
             :link="!item.link ? true : false || item.link ? item.link : false"
-            :type="item.type ? item.type : 'text'"
+            :type="item.type ? item.type : 'primary'"
             :size="item.size ? item.size : 'small'"
             @click.prevent="
               item.click(scope.row, () => {
@@ -183,7 +190,7 @@ const handleSelectionChange = (val: any) => {
               (item.render ? item.render(scope.row) : true)
             "
             :link="!item.link ? true : false || item.link ? item.link : false"
-            :type="item.type ? item.type : 'text'"
+            :type="item.type ? item.type : 'primary'"
             :size="item.size ? item.size : 'small'"
             @click.prevent="
               item.click(scope.row, () => {

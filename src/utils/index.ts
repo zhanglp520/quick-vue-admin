@@ -45,6 +45,49 @@ export const treeFormat = (data: any, options: TreeOptions) => {
   })
   return arr
 }
+export const tableTreeFormat = (data: any) => {
+  const forderArr = []
+  const menuArr = []
+  const btnArr = []
+  data.forEach((element) => {
+    if (element.menuType === 0) {
+      forderArr.push(element)
+    }
+    if (element.menuType === 1) {
+      menuArr.push(element)
+    }
+    if (element.menuType === 2) {
+      btnArr.push(element)
+    }
+  })
+  menuArr.forEach((element, index) => {
+    const children = btnArr.filter((x) => x.pid === element.id)
+    menuArr[index].children = children
+  })
+  forderArr.forEach((element, index) => {
+    const children = menuArr.filter((x) => x.pid === element.id)
+    forderArr[index].children = children
+  })
+  return forderArr
+}
+
+export const menuFormat = (data: any) => {
+  const forderArr = []
+  const menuArr = []
+  data.forEach((element) => {
+    if (element.menuType === 0) {
+      forderArr.push(element)
+    }
+    if (element.menuType === 1) {
+      menuArr.push(element)
+    }
+  })
+  forderArr.forEach((element, index) => {
+    const children = menuArr.filter((x) => x.pid === element.id)
+    forderArr[index].children = children
+  })
+  return forderArr
+}
 
 // json的key下划线转驼峰
 export const toTuofeng = (str: string) => {
