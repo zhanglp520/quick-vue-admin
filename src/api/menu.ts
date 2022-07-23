@@ -2,13 +2,25 @@ import { Menu } from '../types/menu'
 import request, { QuickResponseData } from '../utils/request'
 
 const Api = {
+  roleMenuLsit: '/api/menu/getRoleMenuLsit',
   permissionMenuList: '/api/menu/getPermission',
   list: '/api/menu/getList',
   add: '/api/menu/add',
   update: '/api/menu/update',
   delete: '/api/menu/delete',
+  assign: '/api/menu/assignPermission',
 }
-
+export const getRoleMenuLsit = (
+  roleId: string
+): Promise<QuickResponseData<Array<Menu>>> => {
+  return request<QuickResponseData<Array<Menu>>>({
+    url: Api.roleMenuLsit,
+    method: 'GET',
+    params: {
+      id: roleId,
+    },
+  })
+}
 export const getPermissionMenuList = (
   userId: string
 ): Promise<QuickResponseData<Array<Menu>>> => {
@@ -47,5 +59,13 @@ export const deleteMenu = (id: string) => {
     data: {
       id,
     },
+  })
+}
+
+export const assignPermission = (data: any) => {
+  return request({
+    url: Api.assign,
+    method: 'POST',
+    data,
   })
 }

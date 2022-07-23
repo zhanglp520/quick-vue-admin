@@ -1,13 +1,14 @@
 import { defineStore } from 'pinia'
 import { menuFormat } from '@/utils/index'
 import { QuickResponseData } from '@/utils/request'
-import { Menu, MenuBar } from '@/types/menu'
+import { Menu, MenuBar, MenuTree } from '@/types/menu'
 import { getPermissionMenuList } from '../../api/menu'
 
 interface MenuState {
   activeMenuId: string
   menuList: Array<MenuBar>
   permissionMenuList: Array<Menu>
+  permissionMenuTreeList: Array<MenuTree>
 }
 export const useMenuStore = defineStore('menuStore', {
   state: (): MenuState => {
@@ -15,6 +16,7 @@ export const useMenuStore = defineStore('menuStore', {
       activeMenuId: 'home',
       menuList: [],
       permissionMenuList: [],
+      permissionMenuTreeList: [],
     }
   },
   getters: {
@@ -23,6 +25,12 @@ export const useMenuStore = defineStore('menuStore', {
     },
     getMenuList(): Array<MenuBar> {
       return this.menuList
+    },
+    getPermissionMenuList(): Array<Menu> {
+      return this.permissionMenuList
+    },
+    getPermissionMenuTreeList(): Array<MenuTree> {
+      return this.permissionMenuTreeList
     },
   },
   actions: {
