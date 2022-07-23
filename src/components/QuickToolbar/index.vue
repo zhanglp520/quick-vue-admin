@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { defineProps, defineEmits, toRefs, Ref } from 'vue'
-import { ToolBar } from '../../types/table'
+import { Toolbar } from '../../types/table'
 
 /**
  * props
@@ -89,12 +89,12 @@ const {
   hiddenExportButton: Ref<boolean>
   hiddenPrintButton: Ref<boolean>
   hiddenRefreshButton: Ref<boolean>
-  tableToolbar: Ref<boolean | ToolBar>
+  tableToolbar: Ref<boolean | Toolbar>
 }
 /**
  * 类型转换
  */
-const toolbar = tableToolbar.value as ToolBar
+const toolbar = tableToolbar.value as Toolbar
 /**
  * emits
  */

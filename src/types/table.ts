@@ -27,6 +27,6 @@ export interface Actionbar {
   hiddenDetailButton: boolean
   btns: Array<Btns>
 }
-export interface ToolBar {
+export interface Toolbar {
   btns: Array<Btns>
 }

@@ -171,6 +171,9 @@ defineExpose({ handleSubmit })
             "
           />
         </template>
+        <template v-else-if="item.type === 'switch'">
+          <el-switch v-model="model[item.vModel]" />
+        </template>
         <template v-else>
           <el-input
             v-model="model[item.vModel]"
