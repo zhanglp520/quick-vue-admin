@@ -110,14 +110,20 @@ const formItems = reactive<Array<FormItem>>([
     editReadonly: true,
     prop: 'sort',
   },
+  // {
+  //   label: '父级菜单',
+  //   labelWidth: '80px',
+  //   vModel: 'pid',
+  //   placeholder: '父级菜单',
+  //   prop: 'pid',
+  //   type: 'select',
+  //   options: [],
+  // },
   {
     label: '父级菜单',
     labelWidth: '80px',
     vModel: 'pid',
     placeholder: '父级菜单',
-    prop: 'pid',
-    type: 'select',
-    options: [],
   },
   {
     label: '外链',
