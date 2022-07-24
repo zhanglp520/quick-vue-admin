@@ -411,107 +411,120 @@ onActivated(() => {
 })
 </script>
 <template>
-  <el-row :gutter="40">
-    <el-col :span="leftTree ? treeSpan : 0">
-      <el-tree
-        v-if="leftTree"
-        ref="treeRef"
-        :data="treeData"
-        :props="defaultTreeProps"
-        node-key="id"
-        :highlight-current="true"
-        @node-click="handleTreeNodeClick"
-      >
-      </el-tree>
-    </el-col>
-    <el-col :span="leftTree ? 24 - treeSpan : 24">
-      <quick-search
-        v-if="searchFormModel"
-        :model="searchFormModel"
-        :items="searchFormItems"
-        @on-search="handleSearchSubmit"
-        @on-clear="handleSearchClear"
-      >
-      </quick-search>
-      <quick-toolbar
-        :table-toolbar="tableToolbar"
-        :add-button-name="toolbar?.addButtonName"
-        :batch-delete-button-name="toolbar?.batchDeleteButtonName"
-        :import-button-name="toolbar?.importButtonName"
-        :export-button-name="toolbar?.exportButtonName"
-        :print-button-name="toolbar?.printButtonName"
-        :refresh-button-name="toolbar?.refreshButtonName"
-        :hidden-add-button="toolbar?.hiddenAddButton"
-        :hidden-batch-delete-button="toolbar?.hiddenBatchDeleteButton"
-        :hidden-import-button="toolbar?.hiddenImportButton"
-        :hidden-export-button="toolbar?.hiddenExportButton"
-        :hidden-print-button="toolbar?.hiddenPrintButton"
-        :hidden-refres-hbutton="toolbar?.hiddenRefreshButton"
-        @on-add="handleAdd"
-        @on-batch-delete="handleBatchDelete"
-        @on-import="handleImport"
-        @on-export="handleExport"
-        @on-print="handlePrint"
-        @on-refresh="handleRefresh"
-        @on-custom-toolbar-click="handleCustomToolbarClick"
-      ></quick-toolbar>
-      <quick-table
-        :data="tableData"
-        :columns="tableColumns"
-        :table-actionbar="tableActionbar"
-        :edit-button-name="actionbar?.editButtonName"
-        :delete-button-name="actionbar?.deleteButtonName"
-        :detail-button-name="actionbar?.detailButtonName"
-        :hidden-edit-button="actionbar?.hiddenEditButton"
-        :hidden-delete-button="actionbar?.hiddenDeleteButton"
-        :hidden-detail-button="actionbar?.hiddenDetailButton"
-        @on-row-edit="handleEdit"
-        @on-row-delete="handleDelete"
-        @on-row-detail="handleDetail"
-        @on-selection-change="handleSelectionChange"
-        @on-done="handleDone"
-      >
-      </quick-table>
-      <el-pagination
-        v-if="page"
-        v-model:currentPage="page.current"
-        v-model:page-size="page.size"
-        :page-sizes="page.sizes"
-        :small="false"
-        :disabled="false"
-        :background="false"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="page.total"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
-      <el-dialog
-        v-model="dialogFormVisible"
-        :title="title"
-        width="35%"
-        @close="handleCancel()"
-      >
-        <quick-form
-          ref="quickFormRef"
-          :model="formModel"
-          :form-items="formItems"
-          :form-type="dialogFormType"
-          :hidden-action="true"
-          @submit="handleSubmit"
+  <div class="quick-crud">
+    <el-row :gutter="40">
+      <el-col :span="leftTree ? treeSpan : 0">
+        <el-card shadow="never">
+          <el-tree
+            v-if="leftTree"
+            ref="treeRef"
+            :data="treeData"
+            :props="defaultTreeProps"
+            node-key="id"
+            :highlight-current="true"
+            @node-click="handleTreeNodeClick"
+          >
+          </el-tree>
+        </el-card>
+      </el-col>
+      <el-col :span="leftTree ? 24 - treeSpan : 24">
+        <quick-search
+          v-if="searchFormModel"
+          :model="searchFormModel"
+          :items="searchFormItems"
+          @on-search="handleSearchSubmit"
+          @on-clear="handleSearchClear"
         >
-        </quick-form>
-        <template #footer>
-          <span class="dialog-footer">
-            <template v-if="dialogFormType === 'detail'">
-              <el-button type="primary" @click="handleCancel()">关闭</el-button>
-            </template>
-            <template v-else>
-              <el-button @click="handleCancel()">取消</el-button>
-              <el-button type="primary" @click="handleOk()">确定</el-button>
-            </template>
-          </span>
-        </template>
-      </el-dialog>
-    </el-col>
-  </el-row>
+        </quick-search>
+        <quick-toolbar
+          :table-toolbar="tableToolbar"
+          :add-button-name="toolbar?.addButtonName"
+          :batch-delete-button-name="toolbar?.batchDeleteButtonName"
+          :import-button-name="toolbar?.importButtonName"
+          :export-button-name="toolbar?.exportButtonName"
+          :print-button-name="toolbar?.printButtonName"
+          :refresh-button-name="toolbar?.refreshButtonName"
+          :hidden-add-button="toolbar?.hiddenAddButton"
+          :hidden-batch-delete-button="toolbar?.hiddenBatchDeleteButton"
+          :hidden-import-button="toolbar?.hiddenImportButton"
+          :hidden-export-button="toolbar?.hiddenExportButton"
+          :hidden-print-button="toolbar?.hiddenPrintButton"
+          :hidden-refres-hbutton="toolbar?.hiddenRefreshButton"
+          @on-add="handleAdd"
+          @on-batch-delete="handleBatchDelete"
+          @on-import="handleImport"
+          @on-export="handleExport"
+          @on-print="handlePrint"
+          @on-refresh="handleRefresh"
+          @on-custom-toolbar-click="handleCustomToolbarClick"
+        ></quick-toolbar>
+        <quick-table
+          :data="tableData"
+          :columns="tableColumns"
+          :table-actionbar="tableActionbar"
+          :edit-button-name="actionbar?.editButtonName"
+          :delete-button-name="actionbar?.deleteButtonName"
+          :detail-button-name="actionbar?.detailButtonName"
+          :hidden-edit-button="actionbar?.hiddenEditButton"
+          :hidden-delete-button="actionbar?.hiddenDeleteButton"
+          :hidden-detail-button="actionbar?.hiddenDetailButton"
+          @on-row-edit="handleEdit"
+          @on-row-delete="handleDelete"
+          @on-row-detail="handleDetail"
+          @on-selection-change="handleSelectionChange"
+          @on-done="handleDone"
+        >
+        </quick-table>
+        <el-pagination
+          v-if="page"
+          v-model:currentPage="page.current"
+          v-model:page-size="page.size"
+          :page-sizes="page.sizes"
+          :small="false"
+          :disabled="false"
+          :background="false"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="page.total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+        <el-dialog
+          v-model="dialogFormVisible"
+          :title="title"
+          width="35%"
+          @close="handleCancel()"
+        >
+          <quick-form
+            ref="quickFormRef"
+            :model="formModel"
+            :form-items="formItems"
+            :form-type="dialogFormType"
+            :hidden-action="true"
+            @submit="handleSubmit"
+          >
+          </quick-form>
+          <template #footer>
+            <span class="dialog-footer">
+              <template v-if="dialogFormType === 'detail'">
+                <el-button type="primary" @click="handleCancel()"
+                  >关闭</el-button
+                >
+              </template>
+              <template v-else>
+                <el-button @click="handleCancel()">取消</el-button>
+                <el-button type="primary" @click="handleOk()">确定</el-button>
+              </template>
+            </span>
+          </template>
+        </el-dialog>
+      </el-col>
+    </el-row>
+  </div>
 </template>
+<style lang="scss" scoped>
+.quick-crud {
+  .el-card {
+    height: 100%;
+  }
+}
+</style>

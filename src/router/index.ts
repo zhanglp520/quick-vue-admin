@@ -73,5 +73,16 @@ export const router = createRouter({
         },
       ],
     },
+    {
+      path: '/permission',
+      component: layout,
+      redirect: 'rolePermission',
+      children: [
+        {
+          path: 'rolePermission',
+          component: () => import('../views/rolePermission/index.vue'),
+        },
+      ],
+    },
   ],
 })

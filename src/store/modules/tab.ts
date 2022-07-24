@@ -43,7 +43,6 @@ export const useTabStore = defineStore('tabStore', {
     },
     deleteTab(id: string) {
       if (id !== 'home') {
-        debugger
         const index = this.tabList.findIndex((x) => x.id === id)
         const activeTab = this.tabList[index + 1] || this.tabList[index - 1]
         this.setActiveTab(activeTab)

@@ -1,56 +1,57 @@
 <script lang="ts" setup>
-import {
-  HomeFilled,
-  // Document,
-  Menu as IconMenu,
-  // Location,
-  Setting,
-} from '@element-plus/icons-vue'
-import { computed, reactive, watch, ref } from 'vue'
-import { router } from '@/router'
+import { HomeFilled, Setting } from '@element-plus/icons-vue'
+import { computed, watch, ref } from 'vue'
 import { useAppStore } from '@/store/modules/app'
+import { useUserStore } from '@/store/modules/user'
 import { useMenuStore } from '@/store/modules/menu'
 import { useTabStore } from '@/store/modules/tab'
-import { MenuBar } from '@/types/menu'
-
-import AiniMenuItem from '../AiniMenuItem/index.vue'
-import { Tab } from '../../../types/tab'
+import { Menubar } from '@/types/menu'
+import { Tab } from '@/types/tab'
+import AiniMenuItem from '@/layout/components/AiniMenuItem/index.vue'
 
 const appStore = useAppStore()
+const userStore = useUserStore()
 const menuStore = useMenuStore()
 const tabStore = useTabStore()
-const defaultActive = ref('home')
-const menuNewList = reactive<Array<MenuBar>>([])
+
 const isCollapse = computed(() => appStore.getCollapse)
+
+const defaultActive = ref('home')
 const activeMenuId = computed(() => menuStore.getAciveMenuId)
-const menuList = computed(() => menuStore.getMenuList)
+const menuList = computed(() => userStore.getMenuList)
 const handleOpen = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
 const handleClose = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
-
-const menuClick = (menu: MenuBar) => {
+const menuClick = (menu: Menubar) => {
   const { id, menuName, path } = menu
   const tab: Tab = {
     id,
     name: menuName,
     path,
   }
-  // menuStore.setActiveMenu(menu)
   tabStore.setActiveTab(tab)
 }
 const homeMenuClick = () => {
-  const menu: MenuBar = {
+  const menu: Menubar = {
     id: 'home',
+    menuId: 'home',
     menuName: '首页',
+    menuType: '0',
+    icon: '',
+    sort: 0,
+    pid: '0',
+    link: 0,
+    enabled: 0,
+    status: 0,
     path: '/home',
+    children: [],
   }
   menuClick(menu)
 }
 watch(activeMenuId, (val: string) => {
-  debugger
   defaultActive.value = val
 })
 </script>

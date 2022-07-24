@@ -1,19 +1,17 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
-import { router } from '../../router'
-import { FormItem } from '../../types/form'
+import { router } from '@/router'
+import { FormItem } from '@/types/form'
 import { LoginParams } from '@/types/login'
-import { useLoginStore } from '../../store/modules/login'
-import { useUserStore } from '../../store/modules/user'
-import { useMenuStore } from '../../store/modules/menu'
+import { useLoginStore } from '@/store/modules/login'
+import { useUserStore } from '@/store/modules/user'
 
-import QuickForm from '../../components/QuickForm/index.vue'
+import QuickForm from '@/components/QuickForm/index.vue'
 /**
  * 属性
  */
 const loginStore = useLoginStore()
 const userStore = useUserStore()
-const menuStore = useMenuStore()
 const form = reactive<LoginParams>({
   tenant: '',
   userName: '',
@@ -51,7 +49,7 @@ const handleLogin = async (): Promise<void> => {
   const user = await userStore.getUserInfo(userName)
   if (user) {
     const { id } = user
-    await menuStore.getMenuListByUserId(id.toString())
+    userStore.getPermission(id.toString())
     router.push('/')
   }
 }

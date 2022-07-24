@@ -71,6 +71,32 @@ export const tableTreeFormat = (data: any) => {
   return forderArr
 }
 
+export const menuTreeFormat = (data: any) => {
+  const forderArr = []
+  const menuArr = []
+  const btnArr = []
+  data.forEach((element) => {
+    if (element.menuType === 0) {
+      forderArr.push(element)
+    }
+    if (element.menuType === 1) {
+      menuArr.push(element)
+    }
+    if (element.menuType === 2) {
+      btnArr.push(element)
+    }
+  })
+  menuArr.forEach((element, index) => {
+    const children = btnArr.filter((x) => x.pid === element.id)
+    menuArr[index].children = children
+  })
+  forderArr.forEach((element, index) => {
+    const children = menuArr.filter((x) => x.pid === element.id)
+    forderArr[index].children = children
+  })
+  return forderArr
+}
+
 export const menuFormat = (data: any) => {
   const forderArr = []
   const menuArr = []
