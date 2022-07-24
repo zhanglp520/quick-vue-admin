@@ -1,41 +1,35 @@
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
 import { computed, watch, ref } from 'vue'
-// import AiniBottom from './components/AiniBottom/index.vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
-import AiniTop from './components/AiniTop/index.vue'
-import AiniSidebar from './components/AiniSidebar/index.vue'
 import { useAppStore } from '../store/modules/app'
 import { useMenuStore } from '../store/modules/menu'
 import { useTabStore } from '../store/modules/tab'
-import { Tab } from '../types/tab'
+import { Tab } from '@/types/tab'
+import AiniTop from './components/AiniTop/index.vue'
+import AiniSidebar from './components/AiniSidebar/index.vue'
 
 const route = useRoute()
 const router = useRouter()
 const appStore = useAppStore()
 const menuStore = useMenuStore()
-const tabStore = useTabStore()
-const isCollapse = computed(() => appStore.getCollapse)
-const activeTab = computed(() => tabStore.getActiveTab)
-const menuList = computed(() => menuStore.getMenuList)
-const tabList = computed(() => tabStore.getTabList)
 
+/**
+ * 国际化
+ */
 const { t } = useI18n()
 console.log('i18n', t('title'))
-const editableTabsValue = ref('home')
-router.push('/home')
-const editableTabs = ref([])
-watch(activeTab, (val) => {
-  if (val) {
-    const { id, path } = val
-    editableTabsValue.value = id
-    router.push(path)
-  }
-})
-watch(tabList, (val) => {
-  editableTabs.value = val
-})
 
+const isCollapse = computed(() => appStore.getCollapse)
+router.push('/home')
+/**
+ * 选项卡
+ */
+const tabStore = useTabStore()
+const editableTabsValue = ref('home')
+const editableTabs = ref<Array<Tab>>([])
+const activeTab = computed(() => tabStore.getActiveTab)
+const tabList = computed(() => tabStore.getTabList)
 const handleTabsEdit = (targetName: string, action: 'remove' | 'add'): void => {
   if (action === 'remove') {
     tabStore.deleteTab(targetName)
@@ -48,6 +42,20 @@ const handleClick = (activeName: string) => {
     menuStore.setActiveMenuId(activeName)
   }
 }
+watch(activeTab, (val) => {
+  if (val) {
+    const { id, path } = val
+    if (id) {
+      editableTabsValue.value = id
+    }
+    if (path) {
+      router.push(path)
+    }
+  }
+})
+watch(tabList, (val) => {
+  editableTabs.value = val
+})
 </script>
 
 <template>
@@ -62,7 +70,7 @@ const handleClick = (activeName: string) => {
             <aini-top></aini-top>
           </el-card>
         </el-header>
-        <el-main>
+        <el-main class="content">
           <el-card shadow="always" :body-style="{ padding: 10 }">
             <el-tabs
               v-model="editableTabsValue"
@@ -78,7 +86,6 @@ const handleClick = (activeName: string) => {
                 :label="item.name"
                 :name="item.id"
               >
-                <!-- <router-view></router-view> -->
                 <router-view :key="route.fullPath" />
               </el-tab-pane>
             </el-tabs>
@@ -90,24 +97,16 @@ const handleClick = (activeName: string) => {
       </el-container>
     </el-container>
   </div>
-
-  <!-- <div class="aini-layout">
-    <aini-sidebar></aini-sidebar>
-    <aini-top></aini-top>
-    <div class="aini-layout-content">
-      <el-main>
-        <router-view></router-view>
-      </el-main>
-    </div>
-    <aini-bottom></aini-bottom>
-  </div> -->
 </template>
 
 <style lang="scss" scoped>
 .aini-layout {
   background: #f0f2f5;
   height: 100%;
-  .aini-layout-content {
+  .content {
+    .el-card {
+      height: 100%;
+    }
   }
 }
 </style>

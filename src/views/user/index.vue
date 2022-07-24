@@ -8,6 +8,7 @@ import { FormItem } from '@/types/form'
 import { Page } from '@/types/page'
 import { useUserStore } from '@/store/modules/user'
 import {
+  getUserPageList,
   addUser,
   updateUser,
   deleteUser,
@@ -396,9 +397,8 @@ const page = reactive<Page>({
  * 加载数据
  */
 const load = (parmas: object) => {
-  userStore.getUserPageList(parmas).then((res: any) => {
-    const { page: pagination } = res
-    const { userList } = userStore.$state
+  getUserPageList(parmas).then((res: any) => {
+    const { data: userList, page: pagination } = res
     if (userList) {
       dataList.length = 0
       dataList.push(...userList)

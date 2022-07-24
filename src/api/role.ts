@@ -1,12 +1,29 @@
+import { Menu } from '@/types/menu'
 import { Role } from '../types/role'
 import request, { QuickResponseData } from '../utils/request'
 
 const Api = {
+  menuList: '/api/role/getMenuPermission',
+  userList: '/api/role/getUserPermission',
   list: '/api/role/getList',
   add: '/api/role/add',
   update: '/api/role/update',
   delete: '/api/role/delete',
+  assignPermission: '/api/role/assignPermission',
+  assignUser: '/api/role/assignUser',
 }
+export const getMenuPermission = (
+  roleId: string
+): Promise<QuickResponseData<Array<Menu>>> => {
+  return request<QuickResponseData<Array<Menu>>>({
+    url: Api.menuList,
+    method: 'GET',
+    params: {
+      id: roleId,
+    },
+  })
+}
+
 export const getRoleList = (): Promise<QuickResponseData<Array<Role>>> => {
   return request<QuickResponseData<Array<Role>>>({
     url: Api.list,
@@ -35,5 +52,19 @@ export const deleteRole = (id: string) => {
     data: {
       id,
     },
+  })
+}
+export const assignPermission = (data: any) => {
+  return request({
+    url: Api.assignPermission,
+    method: 'POST',
+    data,
+  })
+}
+export const assignUser = (data: any) => {
+  return request({
+    url: Api.assignUser,
+    method: 'POST',
+    data,
   })
 }
