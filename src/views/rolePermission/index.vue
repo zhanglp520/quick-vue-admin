@@ -51,10 +51,15 @@ const roleTreeLoad = () => {
     roleTreeData.push(...roleTree)
   })
 }
-const roleId = ref('')
+const currentTreeData = ref<Tree>({
+  id: '',
+  label: '',
+  children: [],
+})
 const handleNodeClick = (data: any) => {
-  roleId.value = data.id
-  getMenuPermission(roleId.value).then((res) => {
+  currentTreeData.value = data
+  const { id } = currentTreeData.value
+  getMenuPermission(id).then((res) => {
     const { data: menuList } = res
     const value = menuList.map((x) => x.id)
     menuTreeData.length = 0
@@ -70,14 +75,15 @@ const handleNodeClick = (data: any) => {
  * 工具栏
  */
 const handleGrant = () => {
-  if (!roleId.value) {
+  const { id, label } = currentTreeData.value
+  if (!id) {
     ElMessage({
       type: 'warning',
       message: '请选择一个角色',
     })
     return
   }
-  ElMessageBox.confirm(`你真的要给${roleId.value}角色分配权限吗？`, {
+  ElMessageBox.confirm(`你真的要给【${label}】角色分配权限吗？`, {
     confirmButtonText: 'OK',
     cancelButtonText: 'Cancel',
     type: 'warning',
@@ -86,13 +92,10 @@ const handleGrant = () => {
       if (!treeRef.value) {
         return
       }
-      // const checkMenuIdArr: TreeKey[] = treeRef.value.getCheckedKeys(false)
-      // const parentMenuIdArr: TreeKey[] = treeRef.value.getHalfCheckedKeys()
-      // const menuIdArr = [...parentMenuIdArr, ...checkMenuIdArr]
       const menuIdArr = treeRef.value.getCheckedKeys(false)
       const menuIds = menuIdArr.join(',')
       assignPermission({
-        roleId: roleId.value,
+        roleId: id,
         menuIds,
       }).then(() => {
         ElMessage({

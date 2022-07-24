@@ -159,6 +159,7 @@ const emits = defineEmits([
   'onSizeChange',
   'onCurrentChange',
   'onSelectionChange',
+  'onTableRef',
 ])
 /**
  * 常规属性
@@ -377,6 +378,7 @@ const handleCustomToolbarClick = (done: any) => {
 const handleSelectionChange = (userList: Array<any>) => {
   checkDataList.length = 0
   checkDataList.push(...userList)
+  emits('onSelectionChange', checkDataList)
 }
 /**
  * 分页
@@ -393,6 +395,9 @@ const handleCurrentChange = (val: number) => {
 }
 const handleDone = () => {
   load()
+}
+const handleTbaleRef = (tableRef: any): void => {
+  emits('onTableRef', tableRef)
 }
 onMounted(() => {
   if (leftTree.value) {
@@ -473,6 +478,7 @@ onActivated(() => {
           @on-row-detail="handleDetail"
           @on-selection-change="handleSelectionChange"
           @on-done="handleDone"
+          @on-table-ref="handleTbaleRef"
         >
         </quick-table>
         <el-pagination
