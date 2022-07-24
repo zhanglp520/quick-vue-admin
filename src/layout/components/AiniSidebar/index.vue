@@ -1,23 +1,10 @@
 <script lang="ts" setup>
-import {
-  HomeFilled,
-  // Document,
-  Menu as IconMenu,
-  // Location,
-  Setting,
-} from '@element-plus/icons-vue'
 import { computed } from 'vue'
 import { useAppStore } from '../../../store/modules/app'
-import AiniMenu from '../AiniMenu/index.vue'
+import AiniMenu from '@/layout/components/AiniMenu/index.vue'
 
 const appStore = useAppStore()
 const isCollapse = computed(() => appStore.getCollapse)
-const handleOpen = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
-}
-const handleClose = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
-}
 </script>
 
 <template>

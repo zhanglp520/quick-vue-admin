@@ -14,6 +14,6 @@ export interface Menu {
 export interface MenuTree extends Menu {
   children: MenuTree[]
 }
-export interface MenuBar extends Menu {
-  children: MenuBar[]
+export interface Menubar extends Menu {
+  children: Menubar[]
 }

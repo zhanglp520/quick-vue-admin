@@ -1,63 +1,75 @@
 <script lang="ts" setup>
-import { computed, onMounted, reactive, ref, nextTick } from 'vue'
+import { nextTick, onMounted, reactive, ref } from 'vue'
 import { ElTree, ElMessage, ElMessageBox } from 'element-plus'
-import { getRoleList } from '@/api/role'
-import { getRoleMenuLsit, getMenuList, assignPermission } from '@/api/menu'
-import { menuTreeFormat } from '../../utils'
-import { MenuTree } from '../../types/menu'
+import { TreeKey } from 'element-plus/es/components/tree/src/tree.type'
+import { menuTreeFormat, treeFormat } from '@/utils'
+import { MenuTree } from '@/types/menu'
 import { Toolbar } from '@/types/table'
+import { Tree } from '@/types/tree'
+import { getRoleList, getMenuPermission, assignPermission } from '@/api/role'
+import { getMenuList } from '@/api/menu'
 import QuickToolbar from '@/components/QuickToolbar/index.vue'
 
 const treeRef = ref<InstanceType<typeof ElTree>>()
 
-const defaultProps = reactive({
-  id: 'roleId',
-  label: 'roleName',
-  children: 'children',
-})
+/**
+ * 菜单tree
+ */
 const menuProps = reactive({
   id: 'menuId',
   label: 'menuName',
   children: 'children',
 })
-const roleTreeData = reactive<Array<MenuTree>>([])
-const treeLoad = () => {
-  getRoleList().then((res) => {
-    const { data: roleList } = res
-    roleTreeData.length = 0
-    roleTreeData.push(...roleList)
-  })
-}
-
 const menuTreeData = reactive<Array<MenuTree>>([])
+const menuTreeList = reactive<Array<MenuTree>>([])
 const menuLoad = () => {
   getMenuList().then((res) => {
     const { data: menuList } = res
     const menuTree = menuTreeFormat(menuList)
-    menuTreeData.length = 0
-    menuTreeData.push(...menuTree)
+    menuTreeList.length = 0
+    menuTreeList.push(...menuTree)
   })
 }
-
-const setCheckedKeys = (val: any) => {
-  nextTick(() => {
-    treeRef.value!.setCheckedKeys(val, false)
+/**
+ * 角色tree
+ */
+const roleProps = reactive({
+  id: 'id',
+  label: 'label',
+  children: 'children',
+})
+const roleTreeData = reactive<Array<Tree>>([])
+const roleTreeLoad = () => {
+  getRoleList().then((res) => {
+    const { data: roleList } = res
+    const roleTree = treeFormat(roleList, {
+      id: 'id',
+      label: 'roleName',
+      children: 'children',
+    })
+    roleTreeData.length = 0
+    roleTreeData.push(...roleTree)
   })
 }
 const roleId = ref('')
 const handleNodeClick = (data: any) => {
   roleId.value = data.id
-  getRoleMenuLsit(roleId.value).then((res) => {
-    console.log(`menuLIst`, res)
+  getMenuPermission(roleId.value).then((res) => {
     const { data: menuList } = res
     const value = menuList.map((x) => x.id)
-    setCheckedKeys(value)
-    // const menuTree = menuTreeFormat(menuList)
-    // menuTreeData.length = 0
-    // menuTreeData.push(...menuTree)
+    menuTreeData.length = 0
+    menuTreeData.push(...menuTreeList)
+    nextTick(() => {
+      if (treeRef.value) {
+        treeRef.value.setCheckedKeys(value, false)
+      }
+    })
   })
 }
-const handleGrant = (data: any, done: any) => {
+/**
+ * 工具栏
+ */
+const handleGrant = () => {
   if (!roleId.value) {
     ElMessage({
       type: 'warning',
@@ -71,13 +83,18 @@ const handleGrant = (data: any, done: any) => {
     type: 'warning',
   })
     .then(() => {
-      const menuIdArr = treeRef.value!.getCheckedKeys(false)
-      console.log(`menuIdArr`, menuIdArr)
+      if (!treeRef.value) {
+        return
+      }
+      // const checkMenuIdArr: TreeKey[] = treeRef.value.getCheckedKeys(false)
+      // const parentMenuIdArr: TreeKey[] = treeRef.value.getHalfCheckedKeys()
+      // const menuIdArr = [...parentMenuIdArr, ...checkMenuIdArr]
+      const menuIdArr = treeRef.value.getCheckedKeys(false)
       const menuIds = menuIdArr.join(',')
       assignPermission({
         roleId: roleId.value,
         menuIds,
-      }).then((res) => {
+      }).then(() => {
         ElMessage({
           type: 'success',
           message: '分配权限成功',
@@ -98,47 +115,59 @@ const tableToolbar = reactive<Toolbar>({
       position: 'left',
       type: 'primary',
       size: 'small',
-      click(data: any, done: any) {
-        handleGrant(data, done)
+      click() {
+        handleGrant()
       },
     },
   ],
 })
-
 onMounted(() => {
-  treeLoad()
+  roleTreeLoad()
   menuLoad()
 })
 </script>
 
 <template>
-  <el-row>
-    <el-col :span="4">
-      <el-tree
-        :data="roleTreeData"
-        :props="defaultProps"
-        @node-click="handleNodeClick"
-      />
-    </el-col>
-    <el-col :span="20">
-      <quick-toolbar
-        :table-toolbar="tableToolbar"
-        :hidden-add-button="true"
-        :hidden-batch-delete-button="true"
-        :hidden-import-button="true"
-        :hidden-export-button="true"
-        :hidden-print-button="true"
-        :hidden-refresh-button="true"
-      ></quick-toolbar>
-      <!-- :default-checked-keys="" -->
-      <el-tree
-        ref="treeRef"
-        :data="menuTreeData"
-        :props="menuProps"
-        show-checkbox
-        node-key="id"
-        highlight-current
-      />
-    </el-col>
-  </el-row>
+  <div clas="content">
+    <el-row :gutter="20">
+      <el-col :span="4">
+        <el-card shadow="never">
+          <el-tree
+            :data="roleTreeData"
+            :props="roleProps"
+            @node-click="handleNodeClick"
+          />
+        </el-card>
+      </el-col>
+      <el-col :span="20">
+        <el-card shadow="never">
+          <quick-toolbar
+            :table-toolbar="tableToolbar"
+            :hidden-add-button="true"
+            :hidden-batch-delete-button="true"
+            :hidden-import-button="true"
+            :hidden-export-button="true"
+            :hidden-print-button="true"
+            :hidden-refresh-button="true"
+          ></quick-toolbar>
+          <!-- :default-checked-keys="" -->
+          <el-tree
+            ref="treeRef"
+            :data="menuTreeData"
+            :props="menuProps"
+            show-checkbox
+            node-key="id"
+            highlight-current
+          />
+        </el-card>
+      </el-col>
+    </el-row>
+  </div>
 </template>
+<style lang="scss" scoped>
+.content {
+  .el-card {
+    height: 575px;
+  }
+}
+</style>

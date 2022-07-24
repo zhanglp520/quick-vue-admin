@@ -19,13 +19,13 @@ export interface Btns {
 }
 export interface Actionbar {
   width: number
-  editButtonName: string
-  deleteButtonName: string
-  detailButtonName: string
-  hiddenEditButton: boolean
-  hiddenDeleteButton: boolean
-  hiddenDetailButton: boolean
-  btns: Array<Btns>
+  editButtonName?: string
+  deleteButtonName?: string
+  detailButtonName?: string
+  hiddenEditButton?: boolean
+  hiddenDeleteButton?: boolean
+  hiddenDetailButton?: boolean
+  btns?: Array<Btns>
 }
 export interface Toolbar {
   btns: Array<Btns>

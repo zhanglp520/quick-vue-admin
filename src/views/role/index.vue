@@ -120,7 +120,7 @@ const tableActionbar = reactive<Actionbar>({
 /**
  * 加载数据
  */
-const load = (parmas: object) => {
+const load = () => {
   getRoleList().then((res) => {
     const { data: roleList } = res
     dataList.length = 0

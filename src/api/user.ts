@@ -1,3 +1,4 @@
+import { Menu } from '@/types/menu'
 import { ChangePassword, User } from '../types/user'
 import request, { QuickResponseData } from '../utils/request'
 
@@ -15,12 +16,14 @@ const Api = {
   enabled: '/api/user/enabled',
   disable: '/api/user/disable',
 }
-export const getPermission = (userId: string) => {
+export const getPermission = (
+  userId: string
+): Promise<QuickResponseData<Array<Menu>>> => {
   return request({
     url: Api.permission,
     method: 'GET',
-    data: {
-      userId,
+    params: {
+      id: userId,
     },
   })
 }

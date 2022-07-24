@@ -1,17 +1,20 @@
 import { defineStore } from 'pinia'
-import { getUserInfo, getUserPageList } from '@/api/user'
+import { menuFormat } from '@/utils/index'
 import { User } from '@/types/user'
 import { QuickResponseData } from '@/utils/request'
+import { Menu, Menubar } from '@/types/menu'
+import { getUserInfo, getUserPageList, getPermission } from '@/api/user'
 
 interface UserState {
-  userList: Array<User>
   user: User
+  permissionMenuList: Array<Menu>
+  menuList: Array<Menubar>
 }
 export const useUserStore = defineStore('userStore', {
   state: (): UserState => {
     return {
-      userList: [],
       user: {
+        id: '',
         userId: '',
         userName: '',
         fullName: '',
@@ -21,10 +24,31 @@ export const useUserStore = defineStore('userStore', {
         address: '',
         createTime: '',
       },
+      permissionMenuList: [],
+      menuList: [],
     }
   },
-  getters: {},
+  getters: {
+    getMenuList(): Array<Menubar> {
+      return this.menuList
+    },
+    getPermissionMenuList(): Array<Menu> {
+      return this.permissionMenuList
+    },
+  },
   actions: {
+    getPermission(id: string): Promise<QuickResponseData<Array<Menu>>> {
+      return new Promise((resolve) => {
+        const userId = id
+        getPermission(userId).then((res) => {
+          const { data: userPermissionMenuList } = res
+          this.permissionMenuList = userPermissionMenuList
+          const userMenuList = menuFormat(userPermissionMenuList)
+          this.menuList = userMenuList
+          resolve(res)
+        })
+      })
+    },
     getUserPageList(parmas: object): Promise<QuickResponseData<Array<User>>> {
       return new Promise((resolve) => {
         getUserPageList(parmas).then((res) => {
