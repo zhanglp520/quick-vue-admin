@@ -1,4 +1,5 @@
 import { Menu } from '@/types/menu'
+import { User } from '@/types/user'
 import { Role } from '../types/role'
 import request, { QuickResponseData } from '../utils/request'
 
@@ -17,6 +18,17 @@ export const getMenuPermission = (
 ): Promise<QuickResponseData<Array<Menu>>> => {
   return request<QuickResponseData<Array<Menu>>>({
     url: Api.menuList,
+    method: 'GET',
+    params: {
+      id: roleId,
+    },
+  })
+}
+export const getUserPermission = (
+  roleId: string
+): Promise<QuickResponseData<Array<User>>> => {
+  return request<QuickResponseData<Array<User>>>({
+    url: Api.userList,
     method: 'GET',
     params: {
       id: roleId,
