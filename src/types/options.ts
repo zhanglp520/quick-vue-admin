@@ -3,7 +3,7 @@ export interface Options {
   value: string
 }
 export interface TreeOptions {
-  id: string
-  label: string
+  id?: string
+  label?: string
   children?: string
 }

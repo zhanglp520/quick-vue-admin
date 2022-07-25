@@ -1,5 +1,14 @@
 <script lang="ts" setup>
-import { defineProps, defineEmits, toRefs, Ref } from 'vue'
+import { ElTable } from 'element-plus'
+import {
+  defineProps,
+  defineEmits,
+  toRefs,
+  Ref,
+  ref,
+  onMounted,
+  nextTick,
+} from 'vue'
 import { Column, Actionbar } from '../../types/table'
 /**
  * props
@@ -86,6 +95,7 @@ const {
  * 类型转换
  */
 const actionbar = tableActionbar.value as Actionbar
+const tableRef = ref<InstanceType<typeof ElTable>>()
 /**
  * emits
  */
@@ -95,6 +105,7 @@ const emits = defineEmits([
   'onRowDelete',
   'onRowDetail',
   'onDone',
+  'onTableRef',
 ])
 /**
  *函数
@@ -108,9 +119,15 @@ const getActionbarWidth = () => {
 const handleSelectionChange = (val: any) => {
   emits('onSelectionChange', val)
 }
+onMounted(() => {
+  nextTick(() => {
+    emits('onTableRef', tableRef)
+  })
+})
 </script>
 <template>
   <el-table
+    ref="tableRef"
     :data="data"
     style="width: 100%"
     :height="height"

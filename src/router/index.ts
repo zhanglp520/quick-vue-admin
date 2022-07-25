@@ -82,6 +82,10 @@ export const router = createRouter({
           path: 'rolePermission',
           component: () => import('../views/rolePermission/index.vue'),
         },
+        {
+          path: 'assignUser',
+          component: () => import('../views/assignUser/index.vue'),
+        },
       ],
     },
   ],

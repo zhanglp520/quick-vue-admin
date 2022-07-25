@@ -18,7 +18,6 @@ import {
   disableUser,
 } from '@/api/user'
 
-const userStore = useUserStore()
 const dataList = reactive<Array<User>>([])
 /**
  * 表单
@@ -174,6 +173,7 @@ const formItems = reactive<Array<FormItem>>([
     type: 'textarea',
   },
 ])
+
 const handleFormSubmit = (form: User, done: any) => {
   console.log('handleFormSubmit', form)
   if (form.id) {

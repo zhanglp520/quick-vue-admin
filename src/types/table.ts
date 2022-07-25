@@ -28,5 +28,17 @@ export interface Actionbar {
   btns?: Array<Btns>
 }
 export interface Toolbar {
+  importButtonName?: string
+  exportButtonName?: string
+  addButtonName?: string
+  batchDeleteButtonName?: string
+  printButtonName?: string
+  refreshButtonName?: string
+  hiddenImportButton?: boolean
+  hiddenExportButton?: boolean
+  hiddenAddButton?: boolean
+  hiddenBatchDeleteButton?: boolean
+  hiddenPrintButton?: boolean
+  hiddenRefreshButton?: boolean
   btns: Array<Btns>
 }
