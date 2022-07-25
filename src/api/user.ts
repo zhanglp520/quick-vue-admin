@@ -7,6 +7,7 @@ const Api = {
   getUserInfo: '/api/getUserInfo',
   changePassword: '/api/changePassword',
   pageList: '/api/user/getPageList',
+  list: '/api/user/getList',
   info: '/api/user/getInfo',
   add: '/api/user/add',
   update: '/api/user/update',
@@ -42,6 +43,12 @@ export const getUserPageList = (
     url: Api.pageList,
     method: 'GET',
     params,
+  })
+}
+export const getUserList = (): Promise<QuickResponseData<Array<User>>> => {
+  return request<QuickResponseData<Array<User>>>({
+    url: Api.list,
+    method: 'GET',
   })
 }
 export const getUserInfo = (

@@ -375,9 +375,9 @@ const handleCustomToolbarClick = (done: any) => {
 /**
  * 选中
  */
-const handleSelectionChange = (userList: Array<any>) => {
+const handleSelectionChange = (selectList: Array<any>) => {
   checkDataList.length = 0
-  checkDataList.push(...userList)
+  checkDataList.push(...selectList)
   emits('onSelectionChange', checkDataList)
 }
 /**
@@ -454,7 +454,7 @@ onActivated(() => {
           :hidden-import-button="toolbar?.hiddenImportButton"
           :hidden-export-button="toolbar?.hiddenExportButton"
           :hidden-print-button="toolbar?.hiddenPrintButton"
-          :hidden-refres-hbutton="toolbar?.hiddenRefreshButton"
+          :hidden-refresh-button="toolbar?.hiddenRefreshButton"
           @on-add="handleAdd"
           @on-batch-delete="handleBatchDelete"
           @on-import="handleImport"

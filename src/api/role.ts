@@ -26,8 +26,8 @@ export const getMenuPermission = (
 }
 export const getUserPermission = (
   roleId: string
-): Promise<QuickResponseData<Array<User>>> => {
-  return request<QuickResponseData<Array<User>>>({
+): Promise<QuickResponseData<Array<string>>> => {
+  return request<QuickResponseData<Array<string>>>({
     url: Api.userList,
     method: 'GET',
     params: {

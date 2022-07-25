@@ -3,34 +3,24 @@ import { ElMessage, ElMessageBox, ElTable } from 'element-plus'
 import { reactive, ref } from 'vue'
 import { treeFormat } from '@/utils'
 import QuickCrud from '@/components/QuickCrud/index.vue'
-import { Column, Actionbar, Toolbar } from '@/types/table'
+import { Column, Toolbar } from '@/types/table'
 import { User } from '@/types/user'
-import { FormItem } from '@/types/form'
-import { Options } from '@/types/options'
 import { Tree, LeftTree } from '@/types/tree'
-import { Page } from '@/types/page'
-import { getRoleList, assignUser } from '@/api/role'
-import { getUserPageList } from '@/api/user'
+import { getRoleList, getUserPermission, assignUser } from '@/api/role'
+import { getUserList } from '@/api/user'
 
 /**
  * 常规属性
  */
-const dicTypeList = reactive<Array<Options>>([])
-const treeDataList = reactive<Array<Tree>>([])
-const dataList = reactive<Array<User>>([])
-const userList = reactive<Array<User>>([])
 const currentTreeData = ref<Tree>({
   id: '',
   label: '',
   children: [],
 })
-const multipleTableRef = ref<InstanceType<typeof ElTable>>()
-const checkDataList = ref<Array<User>>([])
-
 /**
  * 工具栏
  */
-const handleAssign = (data: any, done: any) => {
+const handleAssign = () => {
   const { id, label } = currentTreeData.value
   if (!id) {
     ElMessage({
@@ -73,9 +63,10 @@ const tableToolbar = reactive<Toolbar>({
   hiddenExportButton: true,
   hiddenPrintButton: true,
   hiddenAddButton: true,
+  hiddenRefreshButton: true,
   btns: [
     {
-      name: '分配',
+      name: '分配用户',
       position: 'left',
       type: 'primary',
       click(data: any, done: any) {
@@ -84,13 +75,48 @@ const tableToolbar = reactive<Toolbar>({
     },
   ],
 })
-
-const handleSelectionChange = (selectDataList: Array<User>) => {
-  checkDataList.value = selectDataList
-}
 /**
  * 表格
  */
+const dataList = reactive<Array<User>>([])
+const userList = reactive<Array<User>>([])
+const checkDataList = ref<Array<User>>([])
+const handleSelectionChange = (selectDataList: Array<User>) => {
+  checkDataList.value = selectDataList
+}
+const load = () => {
+  getUserList().then((res) => {
+    const { data: userDataList } = res
+    userList.length = 0
+    userList.push(...userDataList)
+  })
+}
+const tabRef = ref<InstanceType<typeof ElTable>>()
+const hanleTableRef = (instance: any) => {
+  tabRef.value = instance.value
+}
+const toggleRowSelection = (rows: Array<User>) => {
+  rows.forEach((row) => {
+    if (tabRef.value) {
+      tabRef.value.toggleRowSelection(row, true)
+    }
+  })
+}
+const clearSelection = () => {
+  if (tabRef.value) {
+    tabRef.value.clearSelection()
+  }
+}
+const getRows = (data: string[]) => {
+  const arr: User[] = []
+  data.forEach((element: string) => {
+    const user = userList.find((x) => x.id === element)
+    if (user) {
+      arr.push(user)
+    }
+  })
+  return arr
+}
 const tableColumns = reactive<Array<Column>>([
   {
     width: '50',
@@ -119,25 +145,10 @@ const tableColumns = reactive<Array<Column>>([
     width: '200',
   },
 ])
-const tableActionbar = reactive<Actionbar>({
-  width: 300,
-  hiddenDetailButton: true,
-})
-/**
- * 加载数据
- */
-const load = (parmas: object) => {
-  const { id } = currentTreeData.value
-  getUserPageList(parmas).then((res) => {
-    const { data: userDataList } = res
-    userList.length = 0
-    userList.push(...userDataList)
-    console.log(`userList`, userList)
-  })
-}
 /**
  * 左树
  */
+const treeDataList = reactive<Array<Tree>>([])
 const leftTree = reactive<LeftTree>({
   treeData: [],
   treeSpan: 6,
@@ -157,52 +168,20 @@ const treeLoad = (done: any) => {
     done(currentTreeData.value.id)
   })
 }
-
-const hanleTableRef = (tableRef: any) => {
-  multipleTableRef.value = tableRef
-}
-const toggleSelection = (rows?: User[]) => {
-  if (rows) {
-    rows.forEach((row) => {
-      multipleTableRef.value!.toggleRowSelection(row, true)
-    })
-  } else {
-    multipleTableRef.value!.clearSelection()
-  }
-}
 const handleTreeClick = (data: Tree, done: any) => {
-  debugger
-  console.log('userList1', userList)
+  clearSelection()
   currentTreeData.value = data
-  dataList.length = 0
-  dataList.push(...userList)
-  // const roleId = '1'
-  // getUserPermission(roleId).then((res) => {
-  //   const { data: userPermissionList } = res
-  //   const arr = []
-  //   userPermissionList.forEach((userId) => {
-  //     console.log('userId', userId)
-  //     const user = userList.filter((x) => {
-  //       console.log('xxxxx', x)
-  //       return x.id == userId
-  //     })
-  //     console.log(user, `user`)
-  //     arr.push(user)
-  //   })
-  //   toggleSelection(userPermissionList)
-  // })
+  const { id } = currentTreeData.value
+  const roleId = id
+  getUserPermission(roleId).then((res) => {
+    const { data: userPermissionList } = res
+    dataList.length = 0
+    dataList.push(...userList)
+    const rows = getRows(userPermissionList)
+    toggleRowSelection(rows)
+  })
   done()
 }
-
-/**
- * 分页
- */
-const page = reactive<Page>({
-  current: 1,
-  size: 100,
-  sizes: [10, 20, 30, 40, 50],
-  total: 100,
-})
 </script>
 <template>
   <quick-crud
@@ -211,7 +190,6 @@ const page = reactive<Page>({
     :table-toolbar="tableToolbar"
     dialog-titles="dialogTitles"
     :left-tree="leftTree"
-    :page="page"
     @on-selection-change="handleSelectionChange"
     @on-load="load"
     @on-tree-load="treeLoad"

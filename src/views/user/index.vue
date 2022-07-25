@@ -18,7 +18,6 @@ import {
   disableUser,
 } from '@/api/user'
 
-const userStore = useUserStore()
 const dataList = reactive<Array<User>>([])
 /**
  * 表单

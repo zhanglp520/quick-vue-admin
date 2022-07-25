@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { nextTick, onMounted, reactive, ref } from 'vue'
 import { ElTree, ElMessage, ElMessageBox } from 'element-plus'
-import { TreeKey } from 'element-plus/es/components/tree/src/tree.type'
+import { nextTick, onMounted, reactive, ref } from 'vue'
 import { menuTreeFormat, treeFormat } from '@/utils'
 import { MenuTree } from '@/types/menu'
 import { Toolbar } from '@/types/table'
@@ -10,11 +9,10 @@ import { getRoleList, getMenuPermission, assignPermission } from '@/api/role'
 import { getMenuList } from '@/api/menu'
 import QuickToolbar from '@/components/QuickToolbar/index.vue'
 
-const treeRef = ref<InstanceType<typeof ElTree>>()
-
 /**
  * 菜单tree
  */
+const menuTreeRef = ref<InstanceType<typeof ElTree>>()
 const menuProps = reactive({
   id: 'menuId',
   label: 'menuName',
@@ -33,24 +31,13 @@ const menuLoad = () => {
 /**
  * 角色tree
  */
+const roleTreeRef = ref<InstanceType<typeof ElTree>>()
 const roleProps = reactive({
   id: 'id',
   label: 'label',
   children: 'children',
 })
 const roleTreeData = reactive<Array<Tree>>([])
-const roleTreeLoad = () => {
-  getRoleList().then((res) => {
-    const { data: roleList } = res
-    const roleTree = treeFormat(roleList, {
-      id: 'id',
-      label: 'roleName',
-      children: 'children',
-    })
-    roleTreeData.length = 0
-    roleTreeData.push(...roleTree)
-  })
-}
 const currentTreeData = ref<Tree>({
   id: '',
   label: '',
@@ -65,9 +52,27 @@ const handleNodeClick = (data: any) => {
     menuTreeData.length = 0
     menuTreeData.push(...menuTreeList)
     nextTick(() => {
-      if (treeRef.value) {
-        treeRef.value.setCheckedKeys(value, false)
+      if (menuTreeRef.value) {
+        menuTreeRef.value.setCheckedKeys(value, false)
       }
+    })
+  })
+}
+const roleTreeLoad = () => {
+  getRoleList().then((res) => {
+    const { data: roleList } = res
+    const roleTree = treeFormat(roleList, {
+      id: 'id',
+      label: 'roleName',
+      children: 'children',
+    })
+    roleTreeData.length = 0
+    roleTreeData.push(...roleTree)
+    nextTick(() => {
+      const key = roleTree[0].id
+      roleTreeRef.value?.setCurrentKey(key)
+      const node = roleTreeRef.value?.getCurrentNode() as Tree
+      handleNodeClick(node)
     })
   })
 }
@@ -89,10 +94,10 @@ const handleGrant = () => {
     type: 'warning',
   })
     .then(() => {
-      if (!treeRef.value) {
+      if (!menuTreeRef.value) {
         return
       }
-      const menuIdArr = treeRef.value.getCheckedKeys(false)
+      const menuIdArr = menuTreeRef.value.getCheckedKeys(false)
       const menuIds = menuIdArr.join(',')
       assignPermission({
         roleId: id,
@@ -136,8 +141,11 @@ onMounted(() => {
       <el-col :span="4">
         <el-card shadow="never">
           <el-tree
+            ref="roleTreeRef"
             :data="roleTreeData"
             :props="roleProps"
+            node-key="id"
+            :highlight-current="true"
             @node-click="handleNodeClick"
           />
         </el-card>
@@ -155,7 +163,7 @@ onMounted(() => {
           ></quick-toolbar>
           <!-- :default-checked-keys="" -->
           <el-tree
-            ref="treeRef"
+            ref="menuTreeRef"
             :data="menuTreeData"
             :props="menuProps"
             show-checkbox

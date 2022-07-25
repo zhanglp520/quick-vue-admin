@@ -6,8 +6,6 @@ import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default ({ command, mode }) => {
-  console.log(command)
-  console.log(mode)
   const root = process.cwd()
   const env = loadEnv(mode, root)
   const { VITE_APP_TITLE, VITE_PORT, VITE_APP_BASE_URL } = env
