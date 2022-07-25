@@ -1,11 +1,10 @@
 <div align="center"> <a href="https://gitee.com/zhanglp520/quick-vue3-admin.git"> <img alt="quick-vue3-admin Logo" width="200" height="200" src="https://vitejs.cn/logo.svg"> </a> <br> <br>
-</div>
 
 **中文** | [English](./README.en.md)
 
 ## 简介
 
-quick-vue3-admin 是一款免费开源快速速搭建后台系统框架。本框架基于 vite2+element-plus 等最新主流技术并封装了通用的组件方便开发者提高效率。后期也会通过版本升级的方式来维护并更新，使开发者拥有一款长期并且稳定的脚手架。
+quick-vue3-admin 是一款免费开源快速搭建中后台系统框架。本框架基于 vite2+element-plus 等最新主流技术并封装了通用的组件方便开发者提高工作效率。后期也会通过版本升级的方式来维护并更新，使开发者拥有一款长期并且稳定的脚手架。
 
 ## 软件特色
 
@@ -20,7 +19,7 @@ quick-vue3-admin 是一款免费开源快速速搭建后台系统框架。本框
 
 ## 预览
 
-- [quick-vue3-admin](http://110.42.130.88:3101/) - 框架演示
+- [quick-vue3-admin](https://ainiteam.com:3101/) - 框架演示
 
 演示账号密码：admin/123456
 
@@ -81,14 +80,14 @@ pnpm run build
 3.  提交代码
 4.  新建 Pull Request
 5.  点个 star 把
-6.  如果项目对你有很大帮助支持下
+6.  如果你觉得这个项目对你有帮助，你可以帮作者买一杯咖啡表示支持!
     ![donate](./public/payImages/alipay.jpg)
 
 ## 寻求帮助
 
-1. 发起 Issue
-2. 加 quick 框架 QQ 群：558795174
-3. 私信 qq：1841031740
+1. 百度尝试解决
+2. 发起 Issue
+3. 加 quick 框架 QQ 群：558795174
 
 ## License
 
