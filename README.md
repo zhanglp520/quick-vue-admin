@@ -74,16 +74,6 @@ pnpm run build
 
 官方提供后端接口项目：https://gitee.com/zhanglp520/quick-node-express.git
 
-## 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-5.  点个 star 把
-6.  如果你觉得这个项目对你有帮助，你可以帮作者买一杯咖啡表示支持!
-    ![donate](./public/payImages/alipay.jpg)
-
 ## 寻求帮助
 
 1. 百度尝试解决
@@ -93,3 +83,13 @@ pnpm run build
 ## License
 
 [MIT © quick-vue3-admin](./LICENSE)
+
+## 参与贡献
+
+1.  Fork 本仓库
+2.  新建 Feat_xxx 分支
+3.  提交代码
+4.  新建 Pull Request
+5.  点个 star 把
+6.  如果你觉得这个项目对你有帮助，你可以帮作者买一杯咖啡表示支持!
+    ![donate](./public/payImages/alipay.jpg)
