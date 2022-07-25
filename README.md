@@ -82,7 +82,7 @@ pnpm run build
 4.  新建 Pull Request
 5.  点个 star 把
 6.  如果项目对你有很大帮助支持下
-    ![donate](https://anncwb.github.io/anncwb/images/sponsor.png)
+    ![donate](./payImages/alipay.jpg)
 
 ## 寻求帮助
 
