@@ -12,6 +12,7 @@ import { getUserList } from '@/api/user'
 /**
  * 常规属性
  */
+const checkDataList = ref<Array<User>>([])
 const currentTreeData = ref<Tree>({
   id: '',
   label: '',
@@ -80,7 +81,6 @@ const tableToolbar = reactive<Toolbar>({
  */
 const dataList = reactive<Array<User>>([])
 const userList = reactive<Array<User>>([])
-const checkDataList = ref<Array<User>>([])
 const handleSelectionChange = (selectDataList: Array<User>) => {
   checkDataList.value = selectDataList
 }

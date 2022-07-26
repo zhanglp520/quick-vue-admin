@@ -1,52 +1,32 @@
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { UserFilled, Lock } from '@element-plus/icons-vue'
+import { reactive, ref } from 'vue'
 import { router } from '@/router'
-import { FormItem } from '@/types/form'
 import { LoginParams } from '@/types/login'
 import { useLoginStore } from '@/store/modules/login'
 import { useUserStore } from '@/store/modules/user'
 
-import QuickForm from '@/components/QuickForm/index.vue'
 /**
  * 属性
  */
 const loginStore = useLoginStore()
 const userStore = useUserStore()
+const loading = ref(false)
 const form = reactive<LoginParams>({
   tenant: '',
   userName: '',
   userPassword: '',
 })
-const formItems = reactive<Array<FormItem>>([
-  {
-    label: '租户',
-    labelWidth: '80px',
-    vModel: 'tenant',
-    type: 'text',
-    placeholder: '租户',
-  },
-  {
-    label: '用户名',
-    labelWidth: '80px',
-    vModel: 'userName',
-    type: 'text',
-    placeholder: '用户名',
-  },
-  {
-    label: '密码',
-    labelWidth: '80px',
-    vModel: 'userPassword',
-    type: 'password',
-    placeholder: '密码',
-  },
-])
 /**
  * 函数
  */
 const handleLogin = async (): Promise<void> => {
   const { userName } = form
   await loginStore.login(form)
+  loading.value = true
+  debugger
   const user = await userStore.getUserInfo(userName)
+  loading.value = false
   if (user) {
     const { id } = user
     userStore.getPermission(id.toString())
@@ -54,20 +34,81 @@ const handleLogin = async (): Promise<void> => {
   }
 }
 </script>
-
 <template>
-  <div class="login">
-    <quick-form
-      :model="form"
-      :form-items="formItems"
-      :show-action="true"
-      :action-slot="true"
-    >
-      <template #action>
-        <el-button type="primary" @click="handleLogin">登录</el-button>
-      </template>
-    </quick-form>
+  <div class="login-box">
+    <div class="form">
+      <el-card shadow="always">
+        <div class="item">
+          <div class="tilte"><span>quick后台管理系统</span></div>
+        </div>
+        <div class="item">
+          <el-input
+            v-model="form.userName"
+            placeholder="用户名"
+            :prefix-icon="UserFilled"
+            size="large"
+          />
+        </div>
+        <div class="item">
+          <el-input
+            v-model="form.userPassword"
+            type="password"
+            placeholder="密码"
+            show-password
+            :prefix-icon="Lock"
+            size="large"
+          />
+        </div>
+        <div class="item">
+          <el-button
+            type="primary"
+            size="large"
+            :loading="loading"
+            @click="handleLogin"
+            >登录</el-button
+          >
+        </div>
+        <div class="test">测试账号密码：admin/123456</div>
+      </el-card>
+    </div>
   </div>
 </template>
-
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.login-box {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  // background-color: green;
+  background: url('public/images/login-bg.jpeg') no-repeat center center;
+  background-size: 100% 100%;
+  border-radius: 5px;
+  .form {
+    width: 550px;
+    height: 400px;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    .el-card {
+      height: 100%;
+      border-radius: 20px;
+    }
+    .item {
+      margin: 20px 0;
+    }
+    .el-button {
+      width: 100%;
+    }
+    .tilte {
+      font-size: 30px;
+      margin-bottom: 60px;
+    }
+    .test {
+      color: gray;
+      text-align: left;
+    }
+  }
+}
+</style>
