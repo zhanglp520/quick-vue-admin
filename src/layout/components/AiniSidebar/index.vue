@@ -2,9 +2,9 @@
 import { computed } from 'vue'
 import { useAppStore } from '@/store/modules/app'
 import { useTabStore } from '@/store/modules/tab'
-import AiniMenu from '@/layout/components/AiniMenu/index.vue'
 import { Tab } from '@/types/tab'
 import { Menubar } from '@/types/menu'
+import AiniMenu from '@/layout/components/AiniMenu/index.vue'
 
 const tabStore = useTabStore()
 const appStore = useAppStore()
