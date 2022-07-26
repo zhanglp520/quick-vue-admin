@@ -1,15 +1,42 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { useAppStore } from '../../../store/modules/app'
+import { useAppStore } from '@/store/modules/app'
+import { useTabStore } from '@/store/modules/tab'
 import AiniMenu from '@/layout/components/AiniMenu/index.vue'
+import { Tab } from '@/types/tab'
+import { Menubar } from '@/types/menu'
 
+const tabStore = useTabStore()
 const appStore = useAppStore()
 const isCollapse = computed(() => appStore.getCollapse)
+const goHome = () => {
+  const menu: Menubar = {
+    id: 'home',
+    menuId: 'home',
+    menuName: '首页',
+    menuType: '0',
+    icon: '',
+    sort: 0,
+    pid: '0',
+    link: 0,
+    enabled: 0,
+    status: 0,
+    path: '/home',
+    children: [],
+  }
+  const { id, menuName, path } = menu
+  const tab: Tab = {
+    id,
+    name: menuName,
+    path,
+  }
+  tabStore.setActiveTab(tab)
+}
 </script>
 
 <template>
   <div class="aini-sidebar">
-    <div class="aini-title">
+    <div class="aini-title" @click="goHome">
       <img src="@/assets/logo.png" />
       <h5 v-if="!isCollapse">quick框架</h5>
     </div>
