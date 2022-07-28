@@ -117,6 +117,9 @@ export const menuFormat = (data: any) => {
 
 // json的key下划线转驼峰
 export const toTuofeng = (str: string) => {
+  if (!str) {
+    return str
+  }
   return str.replace(/"(\w)+":/g, (all) => {
     if (all.indexOf('_') === -1) {
       return all

@@ -47,7 +47,8 @@ export default ({ command, mode }) => {
       port: VITE_PORT,
       proxy: {
         [VITE_APP_BASE_URL]: {
-          target: 'http://localhost:3002/', // 代理的目标地址
+          // target: 'http://localhost:3002/', // 代理的目标地址
+          target: 'http://110.42.130.88:3102/', // 代理的目标地址
           changeOrigin: false, // 开发模式，默认的origin是真实的 origin:localhost:3000 代理服务会把origin修改为目标地址
           secure: false, // 是否https接口
           ws: false, // 是否代理websockets
