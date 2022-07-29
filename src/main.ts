@@ -17,9 +17,13 @@ const appStore = useAppStore(pinia)
 app.use(ElementPlus, {
   locale: appStore.getLanguage === 'zh' ? zhCn : en,
 })
-app.use(router)
 app.use(pinia)
+app.use(router)
 app.use(i18n)
 app.config.globalProperties.$echarts = echarts
 
-app.mount('#app')
+// app.mount('#app')
+
+router.isReady().then(() => {
+  app.mount('#app')
+})

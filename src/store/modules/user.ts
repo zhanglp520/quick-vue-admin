@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { menuFormat } from '@/utils/index'
+import { router } from '@/router'
 import { User } from '@/types/user'
 import { QuickResponseData } from '@/utils/request'
 import { Menu, Menubar } from '@/types/menu'
@@ -43,6 +44,8 @@ export const useUserStore = defineStore('userStore', {
         getPermission(userId).then((res) => {
           const { data: userPermissionMenuList } = res
           this.permissionMenuList = userPermissionMenuList
+          console.log('this.permissionMenuList', this.permissionMenuList)
+
           const userMenuList = menuFormat(userPermissionMenuList)
           this.menuList = userMenuList
           resolve(res)

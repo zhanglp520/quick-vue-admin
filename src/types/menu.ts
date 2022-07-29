@@ -3,7 +3,7 @@ export interface Menu {
   menuId: string
   menuName: string
   path: string
-  menuType: string
+  menuType: number
   icon: string
   sort: number
   pid: string

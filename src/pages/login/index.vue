@@ -21,17 +21,11 @@ const form = reactive<LoginParams>({
  * 函数
  */
 const handleLogin = async (): Promise<void> => {
-  const { userName } = form
-  await loginStore.login(form)
   loading.value = true
-  debugger
-  const user = await userStore.getUserInfo(userName)
-  loading.value = false
-  if (user) {
-    const { id } = user
-    userStore.getPermission(id.toString())
-    router.push('/')
-  }
+  loginStore.login(form).then(() => {
+    loading.value = false
+    // router.push('/')
+  })
 }
 </script>
 <template>
