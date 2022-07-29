@@ -73,17 +73,19 @@ const addRoutes = async () => {
     router.addRoute(element)
   })
 }
-
+let isRefresh = true
 router.beforeEach(async (to, from, next) => {
+  NProgress.start()
   const loginStore = useLoginStore(pinia)
   if (loginStore.getToken) {
     if (to.path === '/login') {
-      next('/')
-    } else if (to.name) {
+      next()
+    } else if (to.name && !isRefresh) {
       next()
     } else {
       await addRoutes()
       next({ ...to, replace: true })
+      isRefresh = false
     }
   } else if (to.path === '/login') {
     next()
