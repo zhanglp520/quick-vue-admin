@@ -2,6 +2,7 @@
 import { UserFilled, Lock } from '@element-plus/icons-vue'
 import { reactive, ref } from 'vue'
 import { router } from '@/router'
+import pinia from '@/store'
 import { LoginParams } from '@/types/login'
 import { useLoginStore } from '@/store/modules/login'
 import { useUserStore } from '@/store/modules/user'
@@ -9,8 +10,8 @@ import { useUserStore } from '@/store/modules/user'
 /**
  * 属性
  */
-const loginStore = useLoginStore()
-const userStore = useUserStore()
+const loginStore = useLoginStore(pinia)
+const userStore = useUserStore(pinia)
 const loading = ref(false)
 const form = reactive<LoginParams>({
   tenant: '',

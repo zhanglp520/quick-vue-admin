@@ -44,10 +44,10 @@ export const useUserStore = defineStore('userStore', {
         getPermission(userId).then((res) => {
           const { data: userPermissionMenuList } = res
           this.permissionMenuList = userPermissionMenuList
-          console.log('this.permissionMenuList', this.permissionMenuList)
-
-          const userMenuList = menuFormat(userPermissionMenuList)
-          this.menuList = userMenuList
+          const dt = JSON.parse(JSON.stringify(userPermissionMenuList))
+          const userMenuList = menuFormat(dt)
+          const m = JSON.parse(JSON.stringify(userMenuList))
+          this.menuList = m
           resolve(res)
         })
       })

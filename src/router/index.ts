@@ -1,22 +1,21 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import { pinia } from '@/store'
+import pinia from '@/store'
 import { useLoginStore } from '@/store/modules/login'
 import { useUserStore } from '@/store/modules/user'
 import { Menu } from '@/types/menu'
 import staticRouter from './staticRouter'
 import dynamicRouter from './dynamicRouter'
 
-const loginStore = useLoginStore(pinia)
-const userStore = useUserStore(pinia)
-
 export const router = createRouter({
   history: createWebHashHistory(),
   routes: [...staticRouter, ...dynamicRouter],
 })
-
+const modules = import.meta.glob('../views/*/*.vue')
 export const formatRouter = (data: Menu[]) => {
+  console.log('data', data)
+
   const arr: RouteRecordRaw[] = []
   const firstMenuArr: Menu[] = []
   const secondMenuArr: Menu[] = []
@@ -47,9 +46,7 @@ export const formatRouter = (data: Menu[]) => {
         const childRouterObj: RouteRecordRaw = {
           name: childElement.menuId,
           path: childElement.path,
-          component: import.meta.globEager(
-            `@/views/${childElement.path}/index.vue`
-          ),
+          component: modules[`../views/${childElement.path}/index.vue`],
           meta: {
             title: childElement.menuName,
             icon: childElement.icon,
@@ -64,32 +61,34 @@ export const formatRouter = (data: Menu[]) => {
   return arr
 }
 
-router.beforeEach((to, from, next) => {
-  NProgress.start()
-  debugger
-  if (to.path === '/login') {
-    next()
-  } else if (loginStore.getRefreshToken) {
-    if (loginStore.getToken) {
-      userStore.getUserInfo(loginStore.userName).then((res) => {
-        const user = res
-        if (user) {
-          const { id } = user
-          userStore.getPermission(id.toString()).then(() => {
-            const routerData = formatRouter(userStore.getPermissionMenuList)
-            routerData.forEach((element) => {
-              router.addRoute('home', element)
-            })
-            next()
-          })
-        }
-      })
-    } else {
-      loginStore.refreshNewToken()
+const addRoutes = async () => {
+  const loginStore = useLoginStore(pinia)
+  const userStore = useUserStore(pinia)
+  const user = await userStore.getUserInfo(loginStore.userName)
+  const { id } = user
+  await userStore.getPermission(id.toString())
+  const dt = JSON.parse(JSON.stringify(userStore.getPermissionMenuList))
+  const routerData = formatRouter(dt)
+  routerData.forEach((element) => {
+    router.addRoute(element)
+  })
+}
+
+router.beforeEach(async (to, from, next) => {
+  const loginStore = useLoginStore(pinia)
+  if (loginStore.getToken) {
+    if (to.path === '/login') {
+      next('/')
+    } else if (to.name) {
       next()
+    } else {
+      await addRoutes()
+      next({ ...to, replace: true })
     }
+  } else if (to.path === '/login') {
+    next()
   } else {
-    next({ path: '/login' })
+    next('/login')
   }
 })
 router.afterEach((to, from) => {

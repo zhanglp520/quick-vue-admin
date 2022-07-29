@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import Cookies from 'js-cookie'
 import { userLogin } from '@/api/login'
-import { LoginParams } from '@/types/login'
+import { LoginData, LoginParams } from '@/types/login'
 import { quickMd5 } from '@/utils'
 import { router } from '@/router'
 
@@ -32,7 +32,7 @@ export const useLoginStore = defineStore('loginStore', {
     refreshNewToken() {
       this.refreshToken = '1111'
     },
-    login(form: LoginParams): Promise<LoginState> {
+    login(form: LoginParams): Promise<LoginData> {
       const { tenant, userName, userPassword } = form
       return new Promise((resolve, reject) => {
         userLogin({
@@ -59,6 +59,7 @@ export const useLoginStore = defineStore('loginStore', {
   },
   persist: {
     enabled: true,
+    // encryptionKey: 'myTest',
     // strategies: [
     //   {
     //     key: 'login',

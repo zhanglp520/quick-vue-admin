@@ -7,7 +7,7 @@ import 'quick-vue3-ui/dist/style.css'
 import * as echarts from 'echarts'
 import App from './App.vue'
 import { router } from './router'
-import { pinia } from './store'
+import pinia from './store'
 import i18n from './i18n'
 import { useAppStore } from './store/modules/app'
 
@@ -22,8 +22,4 @@ app.use(router)
 app.use(i18n)
 app.config.globalProperties.$echarts = echarts
 
-// app.mount('#app')
-
-router.isReady().then(() => {
-  app.mount('#app')
-})
+app.mount('#app')

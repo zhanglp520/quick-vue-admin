@@ -10,6 +10,8 @@ import AiniTop from './components/AiniTop/index.vue'
 import AiniSidebar from './components/AiniSidebar/index.vue'
 
 const route = useRoute()
+console.log('route', route)
+
 const router = useRouter()
 const appStore = useAppStore()
 const menuStore = useMenuStore()
@@ -21,7 +23,7 @@ const { t } = useI18n()
 console.log('i18n', t('title'))
 
 const isCollapse = computed(() => appStore.getCollapse)
-router.push('/home')
+// router.push('/home')
 /**
  * 选项卡
  */

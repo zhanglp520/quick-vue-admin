@@ -542,7 +542,7 @@
     "@vue/compiler-dom" "3.2.37"
     "@vue/shared" "3.2.37"
 
-"@vue/devtools-api@^6.0.0-beta.7", "@vue/devtools-api@^6.1.4":
+"@vue/devtools-api@^6.0.0-beta.7", "@vue/devtools-api@^6.1.4", "@vue/devtools-api@^6.2.1":
   "integrity" "sha512-OEgAMeQXvCoJ+1x8WyQuVZzFo0wcyCmUR3baRVLmKBo1LmYZWMlRiXlux5jd0fqVJu6PfDbOrZItVqUEzLobeQ=="
   "resolved" "https://registry.npmjs.org/@vue/devtools-api/-/devtools-api-6.2.1.tgz"
   "version" "6.2.1"
@@ -886,6 +886,11 @@
     "path-key" "^3.1.0"
     "shebang-command" "^2.0.0"
     "which" "^2.0.1"
+
+"crypto-js@^4.1.1":
+  "integrity" "sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw=="
+  "resolved" "https://registry.npmjs.org/crypto-js/-/crypto-js-4.1.1.tgz"
+  "version" "4.1.1"
 
 "css-select@^4.2.1":
   "integrity" "sha512-wPpOYtnsVontu2mODhA19JrqWxNsfdatRKd64kmpRbQgh1KtItko5sTnEpPdpSaJszTOhEMlF/RPz28qj4HqhQ=="
@@ -2121,12 +2126,20 @@
   dependencies:
     "vue-demi" "^0.12.1"
 
-"pinia@^2.0.0", "pinia@^2.0.13":
-  "integrity" "sha512-9/LMVO+/epny1NBfC77vnps4g3JRezxhhoF1xLUk8mZkUIxVnwfEAIRiAX8mYBTD/KCwZqnDMqXc8w3eU0FQGg=="
-  "resolved" "https://registry.npmjs.org/pinia/-/pinia-2.0.16.tgz"
-  "version" "2.0.16"
+"pinia-use-persist@^0.0.21":
+  "integrity" "sha512-l48Tiq536tnImvqz898iGIG6YfP0Fp8hj2skdNkFv5fTdf4iFC9/g28bMi17JR/aUQZZkg8fm6maZAGNP2BICg=="
+  "resolved" "https://registry.npmjs.org/pinia-use-persist/-/pinia-use-persist-0.0.21.tgz"
+  "version" "0.0.21"
   dependencies:
-    "@vue/devtools-api" "^6.1.4"
+    "crypto-js" "^4.1.1"
+    "pinia" "^2.0.14"
+
+"pinia@^2.0.0", "pinia@^2.0.14", "pinia@^2.0.17":
+  "integrity" "sha512-AtwLwEWQgIjofjgeFT+nxbnK5lT2QwQjaHNEDqpsi2AiCwf/NY78uWTeHUyEhiiJy8+sBmw0ujgQMoQbWiZDfA=="
+  "resolved" "https://registry.npmjs.org/pinia/-/pinia-2.0.17.tgz"
+  "version" "2.0.17"
+  dependencies:
+    "@vue/devtools-api" "^6.2.1"
     "vue-demi" "*"
 
 "postcss-selector-parser@^6.0.9":

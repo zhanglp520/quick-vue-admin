@@ -775,6 +775,20 @@ export const useUserStore = defineStore('userStore', {
 2.路由跳转会刷新掉 store，尽量放在路由刷新后存储。
 :::
 
+### 持久化并加密
+
+pinia-use-persist
+
+用法官方：
+https://www.npmjs.com/package/pinia-use-persist
+
+```ts
+persist: {
+    enabled: true,
+    encryptionKey: 'myTest',
+    }
+```
+
 ## element-plus
 
 ### 介绍
@@ -861,7 +875,7 @@ pnpm install vue-i18n
 ```ts
 // index.ts
 import { createI18n } from 'vue-i18n'
-import { pinia } from '../store'
+import pinia from '../store'
 import { useAppStore } from '../store/modules/app'
 
 import zhLocale from './lang/zh.json'

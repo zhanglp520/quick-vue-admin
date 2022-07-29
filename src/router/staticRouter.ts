@@ -3,7 +3,7 @@ import layout from '../layout/index.vue'
 const staticRouter = [
   {
     path: '/:catchAll(.*)',
-    name: '404',
+    // name: '404',
     component: () => import('@/pages/404/index.vue'),
   },
   {

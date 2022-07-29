@@ -5,4 +5,7 @@ export interface LoginParams {
 }
 export interface LoginData {
   token: string
+  refreshToken: string
+  tenant: string
+  userName: string
 }
