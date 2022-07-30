@@ -214,6 +214,12 @@ const handleEdit = (row: any) => {
   Object.keys(formModel.value).forEach((key) => {
     formModel.value[key] = row[key]
   })
+  emits('onEdit', formModel.value, (data: any) => {
+    Object.keys(formModel.value).forEach((key) => {
+      formModel.value[key] = data[key]
+    })
+    dialogFormVisible.value = true
+  })
   dialogFormVisible.value = true
 }
 const handleDelete = (row: any) => {
@@ -247,10 +253,8 @@ const handleSubmit = (formRef: FormInstance | undefined) => {
   if (!formRef) return
   formRef.validate((valid) => {
     if (!valid) {
-      console.log('error submit!')
       return false
     }
-    console.log('submit!')
     emits('onFormSubmit', formModel.value, () => {
       dialogFormVisible.value = false
       load()
@@ -271,12 +275,13 @@ const handleAdd = () => {
   }
   Object.keys(formModel.value).forEach((key) => {
     const index = formItems.value.findIndex(
-      (x) => x.vModel === key && x.type === 'select'
+      (x) => x.vModel === key && (x.type === 'select' || x.type === 'tree')
     )
     if (index !== -1) {
       formModel.value[key] = selectTree.value.id
     }
   })
+
   dialogFormType.value = 'add'
   formTitle.add = dialogTitle.value ? dialogTitle.value.add : formTitle.add
   title.value = formTitle.add

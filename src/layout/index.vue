@@ -107,7 +107,7 @@ watch(tabList, (val) => {
   height: 100%;
   .content {
     .el-card {
-      height: 100%;
+      // height: 100%;
     }
   }
 }

@@ -93,7 +93,7 @@ const handleFormSubmit = (form: Dictionary, done: any) => {
     updateDictionary(form).then(() => {
       ElMessage({
         type: 'success',
-        message: '用户修改成功',
+        message: '字典修改成功',
       })
       done()
     })
@@ -101,7 +101,7 @@ const handleFormSubmit = (form: Dictionary, done: any) => {
     addDictionary(form).then(() => {
       ElMessage({
         type: 'success',
-        message: '用户创建成功',
+        message: '字典创建成功',
       })
       done()
     })
@@ -136,7 +136,7 @@ const tableColumns = reactive<Array<Column>>([
 ])
 const handleDelete = (item: Dictionary, done: any) => {
   ElMessageBox.confirm(
-    `你真的删除【${item.dictionaryName}】的用户吗？`,
+    `你真的删除【${item.dictionaryName}】的字典吗？`,
     '警告',
     {
       confirmButtonText: '确定',
@@ -147,7 +147,7 @@ const handleDelete = (item: Dictionary, done: any) => {
     deleteDictionary(item.id).then(() => {
       ElMessage({
         type: 'success',
-        message: '用户删除成功',
+        message: '字典删除成功',
       })
       done()
     })
