@@ -1,11 +1,11 @@
 import md5 from 'js-md5'
-import { Options, TreeOptions } from '../types/options'
-import { Tree } from '../types/tree'
+import { Options, SelectTreeOptions, TreeOptions } from '../types/options'
+import { SelectTree, Tree } from '../types/tree'
 
 export const quickMd5 = (str: string) => {
   return md5(str)
 }
-export const dicFormat = (data: any, options: Options) => {
+export const dicFormat = (data: any, options: Options = {}) => {
   const arr: Options[] = []
   const defaultOptions = {
     label: 'label',
@@ -18,6 +18,30 @@ export const dicFormat = (data: any, options: Options) => {
       label: element[label],
       value: element[value],
     })
+  })
+  return arr
+}
+export const selectTreeFormat = (data: any, options: SelectTreeOptions) => {
+  const arr: SelectTree[] = []
+  const defaultOptions = {
+    value: 'value',
+    label: 'label',
+    children: 'children',
+  }
+  const label = options && options.label ? options.label : defaultOptions.label
+  const value = options && options.value ? options.value : defaultOptions.value
+  const children =
+    options && options.children ? options.children : defaultOptions.children
+  data.forEach((element: SelectTree) => {
+    const obj: SelectTree = {
+      label: element[label],
+      value: element[value],
+      children: [],
+    }
+    if (element[children] && element[children].length > 0) {
+      obj.children = selectTreeFormat(element[children], options)
+    }
+    arr.push(obj)
   })
   return arr
 }
@@ -45,6 +69,20 @@ export const treeFormat = (data: any, options: TreeOptions) => {
   })
   return arr
 }
+export const listToTableTree = (data: any, pId = '0') => {
+  const arr = []
+  const parentData = data.filter((x: any) => x.pId === pId)
+  parentData.forEach((item) => {
+    // if(item.id){}
+    const obj = item
+    obj.children = listToTableTree(data, item.id)
+    // const childData = data.filter((x: any) => x.pId === item.id)
+    // listToTableTree(data, item.id)
+    arr.push(obj)
+  })
+  return arr
+}
+
 export const tableTreeFormat = (data: any) => {
   const forderArr = []
   const menuArr = []
