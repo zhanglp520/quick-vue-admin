@@ -40,5 +40,5 @@ export interface Toolbar {
   hiddenBatchDeleteButton?: boolean
   hiddenPrintButton?: boolean
   hiddenRefreshButton?: boolean
-  btns: Array<Btns>
+  btns?: Array<Btns>
 }

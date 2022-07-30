@@ -39,9 +39,9 @@ quickRequest.interceptors.response.use(
     const { data } = res
     const { status, data: payload, page, msg } = data as QuickResponseData<any>
     if (status === 0) {
-      if (!payload) {
-        return Promise.reject(msg)
-      }
+      // if (!payload) {
+      //   return Promise.reject(msg)
+      // }
       const jsonStr = toTuofeng(JSON.stringify(payload))
       const result = JSON.parse(jsonStr)
       return Promise.resolve({

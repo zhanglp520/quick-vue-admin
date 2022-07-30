@@ -3,6 +3,11 @@ export interface Tree {
   label: string
   children: Tree[]
 }
+export interface SelectTree {
+  value: string
+  label: string
+  children: SelectTree[]
+}
 export interface LeftTree {
   treeSpan?: number
   treeData: Tree[]
