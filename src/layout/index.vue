@@ -23,7 +23,6 @@ const { t } = useI18n()
 console.log('i18n', t('title'))
 
 const isCollapse = computed(() => appStore.getCollapse)
-// router.push('/home')
 /**
  * 选项卡
  */
@@ -42,7 +41,11 @@ const handleClick = (activeName: string) => {
   if (index !== -1) {
     tabStore.setActiveTab(tabList.value[index])
     menuStore.setActiveMenuId(activeName)
+    editableTabsValue.value = activeName
   }
+}
+if (activeTab.value.id) {
+  handleClick(activeTab.value.id)
 }
 watch(activeTab, (val) => {
   if (val) {

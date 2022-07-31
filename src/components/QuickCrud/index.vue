@@ -201,6 +201,7 @@ const refresh = () => {
   if (leftTree.value && leftTreeRefresh.value) {
     treeLoad()
   } else {
+    load()
   }
 }
 /**
