@@ -14,7 +14,7 @@
     "skipLibCheck": true,
     "types": ["element-plus/global"],
     "suppressImplicitAnyIndexErrors": true,
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"]
     },

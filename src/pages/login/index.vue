@@ -77,7 +77,7 @@ const handleLogin = async (): Promise<void> => {
   align-items: center;
   justify-content: center;
   // background-color: green;
-  background: url('public/images/login-bg.jpeg') no-repeat center center;
+  background: url('/images/login-bg.jpeg') no-repeat center center;
   background-size: 100% 100%;
   border-radius: 5px;
   .form {

@@ -22,11 +22,14 @@ const quickRequest: AxiosInstance = axios.create({
 // 请求拦截器
 quickRequest.interceptors.request.use(
   (config) => {
+    const cfg = config
     const loginStore = useLoginStore()
-    console.log('request', config)
     const token = loginStore.getToken
-    config.headers.authorization = `Bearer ${token}`
-    return config
+    if (cfg.headers) {
+      cfg.headers.authorization = `Bearer ${token}`
+    }
+    console.log('request', cfg)
+    return cfg
   },
   (error) => {
     console.error(error)

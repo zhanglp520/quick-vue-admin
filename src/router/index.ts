@@ -12,10 +12,10 @@ export const router = createRouter({
   history: createWebHashHistory(),
   routes: [...staticRouter, ...dynamicRouter],
 })
-const modules = import.meta.glob('../views/*/*.vue')
-export const formatRouter = (data: Menu[]) => {
-  console.log('data', data)
+const modules = import.meta.glob('../views/**/*.vue')
+const layout = import.meta.glob('../layout/*.vue')
 
+export const formatRouter = (data: Menu[]) => {
   const arr: RouteRecordRaw[] = []
   const firstMenuArr: Menu[] = []
   const secondMenuArr: Menu[] = []
@@ -30,7 +30,7 @@ export const formatRouter = (data: Menu[]) => {
     const routerObj: RouteRecordRaw = {
       name: element.menuId,
       path: element.path,
-      component: import('@/layout/index.vue'),
+      component: layout['../layout/index.vue'],
       redirect: '',
       children: [],
       meta: {
@@ -79,13 +79,15 @@ router.beforeEach(async (to, from, next) => {
   const loginStore = useLoginStore(pinia)
   if (loginStore.getToken) {
     if (to.path === '/login') {
+      isRefresh = true
       next()
     } else if (to.name && !isRefresh) {
+      isRefresh = true
       next()
     } else {
+      isRefresh = false
       await addRoutes()
       next({ ...to, replace: true })
-      isRefresh = false
     }
   } else if (to.path === '/login') {
     next()

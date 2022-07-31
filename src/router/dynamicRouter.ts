@@ -1,16 +1,16 @@
-import layout from '../layout/index.vue'
+import layout from '@/layout/index.vue'
 
 const dynamicRouter = [
   {
     path: '/',
-    // name: '',
+    name: 'fist',
     component: layout,
     redirect: '/home',
     children: [
       {
         path: '/home',
         name: 'home',
-        component: () => import('../views/home/index.vue'),
+        component: () => import('@/views/home/index.vue'),
       },
     ],
   },
