@@ -235,6 +235,7 @@ const leftTree = reactive<LeftTree>({
 const treeLoad = (done: any) => {
   getDeptList().then((res: any) => {
     const { data: deptList } = res
+    deptDdataListTemp.length = 0
     deptDdataListTemp.push(...deptList)
     const data = deptTreeFormat(deptList)
     console.log(`pid`, data)
@@ -246,8 +247,9 @@ const treeLoad = (done: any) => {
     dicTypeList.length = 0
     dicTypeList.push(...data1)
     console.log('data1', data1)
-
-    currentTreeData.value.id = data[0].id
+    if (!currentTreeData.value.id) {
+      currentTreeData.value.id = data[0].id
+    }
     done(currentTreeData.value.id)
   })
 }
@@ -267,6 +269,7 @@ const handleTreeClick = (data: Tree, done: any) => {
     :table-toolbar="tableToolbar"
     dialog-titles="dialogTitles"
     :left-tree="leftTree"
+    :left-tree-refresh="true"
     @on-edit="handleEdit"
     @on-load="load"
     @on-tree-load="treeLoad"

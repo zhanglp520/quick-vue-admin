@@ -68,6 +68,10 @@ const props = defineProps({
     type: [Boolean, Object],
     default: false,
   },
+  leftTreeRefresh: {
+    type: Boolean,
+    default: false,
+  },
   tableData: {
     type: Array,
     default: () => {
@@ -100,6 +104,7 @@ const {
   searchFormModel,
   searchFormItems,
   leftTree,
+  leftTreeRefresh,
   tableData,
   tableColumns,
   tableActionbar,
@@ -115,6 +120,7 @@ const {
   formModel: Ref<any>
   formItems: Ref<FormItem[]>
   leftTree: Ref<any>
+  leftTreeRefresh: Ref<boolean>
   tableData: Ref<any>
   tableColumns: Ref<any>
   tableActionbar: Ref<boolean | Actionbar>
@@ -169,6 +175,7 @@ const treeRef = ref<InstanceType<typeof ElTree>>()
 /**
  * 加载数据
  */
+
 const load = () => {
   const { current, size } = page.value
   const params = { ...searchFormModel.value, current, size }
@@ -189,6 +196,12 @@ const treeLoad = () => {
     })
     load()
   })
+}
+const refresh = () => {
+  if (leftTree.value && leftTreeRefresh.value) {
+    treeLoad()
+  } else {
+  }
 }
 /**
  * 搜索
@@ -224,7 +237,7 @@ const handleEdit = (row: any) => {
 }
 const handleDelete = (row: any) => {
   emits('onDelete', row, () => {
-    load()
+    refresh()
   })
 }
 const handleDetail = (row: any) => {
@@ -257,7 +270,7 @@ const handleSubmit = (formRef: FormInstance | undefined) => {
     }
     emits('onFormSubmit', formModel.value, () => {
       dialogFormVisible.value = false
-      load()
+      refresh()
     })
     return true
   })
@@ -308,7 +321,7 @@ const handleBatchDelete = () => {
     })
     .join(',')
   emits('onBatchDelete', { checkDataList, ids }, () => {
-    load()
+    refresh()
   })
 }
 const handleImport = () => {
@@ -321,7 +334,7 @@ const handleImport = () => {
   }
   console.log('handleImport')
   emits('onImport', () => {
-    load()
+    refresh()
   })
 }
 const handleExport = () => {
@@ -349,6 +362,7 @@ const handlePrint = () => {
 const handleRefresh = () => {
   console.log('handleRefresh')
   load()
+
   // emits('onRefresh', () => {
   //   load()
   // })
@@ -407,9 +421,8 @@ const handleTbaleRef = (tableRef: any): void => {
 onMounted(() => {
   if (leftTree.value) {
     treeLoad()
-  } else {
-    load()
   }
+  load()
   // if (autoReFefresh.value) {
   //   timeCount.value = setInterval(() => {
   //     load()
@@ -432,6 +445,7 @@ onActivated(() => {
             :props="defaultTreeProps"
             node-key="id"
             :highlight-current="true"
+            :expand-on-click-node="false"
             @node-click="handleTreeNodeClick"
           >
           </el-tree>
