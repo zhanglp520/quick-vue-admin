@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { toTuofeng } from './index'
-import { Page } from '../types/page'
+import { Page } from '@/types/page'
+import { useLoginStore } from '@/store/modules/login'
 
 export interface QuickResponseData<T = any> {
   status: number
@@ -21,9 +22,10 @@ const quickRequest: AxiosInstance = axios.create({
 // 请求拦截器
 quickRequest.interceptors.request.use(
   (config) => {
+    const loginStore = useLoginStore()
     console.log('request', config)
-    //   const token = ''
-    //   config.headers.token = `Bearer ${token}`
+    const token = loginStore.getToken
+    config.headers.authorization = `Bearer ${token}`
     return config
   },
   (error) => {
