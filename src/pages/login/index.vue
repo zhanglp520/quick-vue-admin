@@ -10,6 +10,7 @@ import { useUserStore } from '@/store/modules/user'
 /**
  * 属性
  */
+const title = ref('quick后台管理系统')
 const loginStore = useLoginStore(pinia)
 const userStore = useUserStore(pinia)
 const loading = ref(false)
@@ -34,7 +35,9 @@ const handleLogin = async (): Promise<void> => {
     <div class="form">
       <el-card shadow="always">
         <div class="item">
-          <div class="tilte"><span>quick后台管理系统</span></div>
+          <div class="tilte">
+            <span>{{ title }}</span>
+          </div>
         </div>
         <div class="item">
           <el-input
