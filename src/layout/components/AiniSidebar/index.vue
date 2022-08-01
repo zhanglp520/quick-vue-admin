@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useAppStore } from '@/store/modules/app'
 import { useTabStore } from '@/store/modules/tab'
 import { Tab } from '@/types/tab'
 import { Menubar } from '@/types/menu'
 import AiniMenu from '@/layout/components/AiniMenu/index.vue'
 
+const title = ref('quick后台管理系统')
 const tabStore = useTabStore()
 const appStore = useAppStore()
 const isCollapse = computed(() => appStore.getCollapse)
@@ -38,7 +39,7 @@ const goHome = () => {
   <div class="aini-sidebar">
     <div class="aini-title" @click="goHome">
       <img src="@/assets/logo.png" />
-      <h5 v-if="!isCollapse">quick框架</h5>
+      <h5 v-if="!isCollapse">{{ title }}</h5>
     </div>
     <aini-menu></aini-menu>
   </div>
