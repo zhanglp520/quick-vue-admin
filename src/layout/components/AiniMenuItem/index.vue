@@ -30,18 +30,22 @@ const { menu, parent } = toRefs(props) as {
   parent: Ref<Menubar>
 }
 const menuClick = () => {
-  const { id, menuName, path } = menu.value
-  const routerPath = `${parent.value.path}/${path}`
-  const tab: Tab = {
-    id,
-    name: menuName,
-    path: routerPath,
+  const { id, menuName, path, link, linkUrl } = menu.value
+  if (link) {
+    window.open(linkUrl)
+  } else {
+    const routerPath = `${parent.value.path}/${path}`
+    const tab: Tab = {
+      id: id.toString(),
+      name: menuName,
+      path: routerPath,
+    }
+    tabStore.addTab(tab)
   }
-  tabStore.addTab(tab)
 }
 </script>
 <template>
-  <el-menu-item :index="menu.id" @click="menuClick">
+  <el-menu-item :index="menu.id.toString()" @click="menuClick">
     {{ menu.menuName }}
   </el-menu-item>
 </template>

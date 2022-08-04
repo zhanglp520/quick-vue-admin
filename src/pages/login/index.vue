@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { UserFilled, Lock } from '@element-plus/icons-vue'
-import { reactive, ref } from 'vue'
+import { onMounted, onUnmounted, reactive, ref } from 'vue'
 import { router } from '@/router'
 import pinia from '@/store'
 import { LoginParams } from '@/types/login'
@@ -29,6 +29,17 @@ const handleLogin = async (): Promise<void> => {
     // router.push('/')
   })
 }
+const keyDown = (e: KeyboardEvent) => {
+  if (e.key === 'Enter') {
+    handleLogin()
+  }
+}
+onMounted(() => {
+  window.addEventListener('keydown', keyDown)
+})
+onUnmounted(() => {
+  window.removeEventListener('keydown', keyDown, false)
+})
 </script>
 <template>
   <div class="login-box">

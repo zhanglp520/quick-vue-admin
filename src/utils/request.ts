@@ -1,3 +1,4 @@
+import { ElMessage } from 'element-plus'
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { toTuofeng } from './index'
 import { Page } from '@/types/page'
@@ -43,10 +44,9 @@ quickRequest.interceptors.response.use(
     console.log('response', res)
     const { data } = res
     const { status, data: payload, page, msg } = data as QuickResponseData<any>
-    if (status === 0) {
-      // if (!payload) {
-      //   return Promise.reject(msg)
-      // }
+    if (status === 1) {
+      ElMessage.error(msg)
+    } else {
       const jsonStr = toTuofeng(JSON.stringify(payload))
       const result = JSON.parse(jsonStr)
       return Promise.resolve({
@@ -57,7 +57,7 @@ quickRequest.interceptors.response.use(
     return Promise.reject(msg)
   },
   (error) => {
-    console.error(error)
+    ElMessage.error(error)
     return Promise.reject(error)
   }
 )

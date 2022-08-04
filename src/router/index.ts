@@ -13,7 +13,33 @@ export const router = createRouter({
   routes: [...staticRouter, ...dynamicRouter],
 })
 const modules = import.meta.glob('../views/**/*.vue')
+console.log('modules', modules)
+
 const layout = import.meta.glob('../layout/*.vue')
+
+const getComponent = (childElement: Menu) => {
+  let component = {}
+  if (childElement.viewPath) {
+    const viewPath = modules[`../views/${childElement.viewPath}.vue`]
+    if (!viewPath) {
+      console.error(
+        `Menu view path configuration error or view does not exist ../views/${childElement.viewPath}.vue`
+      )
+    } else {
+      component = viewPath
+    }
+  } else {
+    const path = modules[`../views/${childElement.path}/index.vue`]
+    if (!path) {
+      console.error(
+        `Menu routing address configuration error or view does not exist ../views/${childElement.path}/index.vue`
+      )
+    } else {
+      component = path
+    }
+  }
+  return component
+}
 
 export const formatRouter = (data: Menu[]) => {
   const arr: RouteRecordRaw[] = []
@@ -42,18 +68,21 @@ export const formatRouter = (data: Menu[]) => {
     const childMenu = secondMenuArr.filter((x) => x.pid === element.id)
     if (childMenu.length > 0) {
       routerObj.redirect = childMenu[0].path
-      childMenu.forEach((childElement) => {
+      childMenu.forEach((childElement: Menu) => {
+        const component = getComponent(childElement)
         const childRouterObj: RouteRecordRaw = {
           name: childElement.menuId,
           path: childElement.path,
-          component: modules[`../views/${childElement.path}/index.vue`],
+          component,
           meta: {
             title: childElement.menuName,
             icon: childElement.icon,
             link: childElement.link,
           },
         }
-        routerObj.children.push(childRouterObj)
+        if (routerObj.children) {
+          routerObj.children.push(childRouterObj)
+        }
       })
     }
     arr.push(routerObj)

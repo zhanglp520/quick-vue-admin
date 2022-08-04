@@ -47,6 +47,7 @@ const homeMenuClick = () => {
     enabled: 0,
     status: 0,
     path: '/home',
+    viewPath: '',
     children: [],
   }
   menuClick(menu)
@@ -73,7 +74,7 @@ watch(activeMenuId, (val: string) => {
     </el-menu-item>
     <template v-for="(menu, index) in menuList" :key="index">
       <template v-if="menu.children.length > 0">
-        <el-sub-menu :index="menu.id">
+        <el-sub-menu :index="menu.id.toString()">
           <template #title>
             <el-icon><Setting /></el-icon>
             <span>{{ menu.menuName }}</span>
@@ -87,7 +88,7 @@ watch(activeMenuId, (val: string) => {
         </el-sub-menu>
       </template>
       <template v-else>
-        <el-menu-item :index="menu.id" @click="menuClick(menu)">{{
+        <el-menu-item :index="menu.id.toString()" @click="menuClick(menu)">{{
           menu.menuName
         }}</el-menu-item>
       </template>

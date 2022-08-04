@@ -1,14 +1,16 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import QuickCrud from '@/components/QuickCrud/index.vue'
-import { tableTreeFormat } from '@/utils/index'
+import { selectTreeFormat, tableTreeFormat } from '@/utils/index'
 import { Column, Actionbar, Toolbar } from '@/types/table'
 import { Menu } from '@/types/menu'
 import { FormItem } from '@/types/form'
+import { Options } from '@/types/options.js'
 import { getMenuList, addMenu, updateMenu, deleteMenu } from '@/api/menu'
+import QuickCrud from '@/components/QuickCrud/index.vue'
 
 const dataList = reactive<Array<Menu>>([])
+const dicTypeList = reactive<Array<Options>>([])
 /**
  * 表单
  */
@@ -18,17 +20,19 @@ const dialogTitle = reactive({
   detail: '菜单详情',
 })
 const formModel = reactive<Menu>({
-  id: '',
+  id: 0,
   menuId: '',
   menuName: '',
   path: '',
-  menuType: '',
+  viewPath: '',
+  menuType: 0,
   icon: '',
   sort: 0,
-  pid: '',
+  pid: 0,
   link: 0,
-  enabled: 0,
-  status: 0,
+  linkUrl: '',
+  enabled: 1,
+  status: 1,
 })
 const formItems = reactive<Array<FormItem>>([
   {
@@ -67,6 +71,12 @@ const formItems = reactive<Array<FormItem>>([
     placeholder: '路由',
   },
   {
+    label: '视图',
+    labelWidth: '80px',
+    vModel: 'viewPath',
+    placeholder: '视图',
+  },
+  {
     label: '菜单类型',
     labelWidth: '80px',
     vModel: 'menuType',
@@ -76,15 +86,15 @@ const formItems = reactive<Array<FormItem>>([
     options: [
       {
         label: '目录',
-        value: '0',
+        value: 0,
       },
       {
         label: '菜单',
-        value: '1',
+        value: 1,
       },
       {
         label: '按钮',
-        value: '2',
+        value: 2,
       },
     ],
     rules: [
@@ -107,7 +117,6 @@ const formItems = reactive<Array<FormItem>>([
     labelWidth: '80px',
     vModel: 'sort',
     placeholder: '排序',
-    editReadonly: true,
     prop: 'sort',
   },
   // {
@@ -124,6 +133,8 @@ const formItems = reactive<Array<FormItem>>([
     labelWidth: '80px',
     vModel: 'pid',
     placeholder: '父级菜单',
+    type: 'tree',
+    options: dicTypeList,
   },
   {
     label: '外链',
@@ -133,6 +144,13 @@ const formItems = reactive<Array<FormItem>>([
     prop: 'link',
     type: 'switch',
   },
+  {
+    label: '链接地址',
+    labelWidth: '80px',
+    vModel: 'linkUrl',
+    placeholder: '链接地址',
+  },
+
   {
     label: '是否启用',
     labelWidth: '80px',
@@ -151,7 +169,6 @@ const formItems = reactive<Array<FormItem>>([
   },
 ])
 const handleFormSubmit = (form: Menu, done: any) => {
-  console.log('handleFormSubmit', form)
   if (form.id) {
     updateMenu(form).then(() => {
       ElMessage({
@@ -203,6 +220,11 @@ const tableColumns = reactive<Array<Column>>([
     width: '200',
   },
   {
+    label: '视图',
+    prop: 'viewPath',
+    width: '200',
+  },
+  {
     label: '菜单类型',
     prop: 'menuType',
     width: '200',
@@ -238,11 +260,11 @@ const tableColumns = reactive<Array<Column>>([
     },
   },
   {
-    label: '启用',
+    label: '是否启用',
     prop: 'enabled',
     width: '200',
     format: (row: Menu) => {
-      return row.enabled === 1 ? '禁用' : '启用'
+      return row.enabled === 1 ? '启用' : '禁用'
     },
   },
   {
@@ -250,13 +272,9 @@ const tableColumns = reactive<Array<Column>>([
     prop: 'status',
     width: '200',
     format: (row: Menu) => {
-      return row.status === 1 ? '不显示' : '显示'
+      return row.status === 1 ? '显示' : '不显示'
     },
   },
-  // {
-  //   label: '菜单名称',
-  //   prop: 'menuName',
-  // },
 ])
 const handleDelete = (item: Menu, done: any) => {
   ElMessageBox.confirm(`你真的删除【${item.menuName}】的菜单吗？`, '警告', {
@@ -279,12 +297,16 @@ const tableActionbar = reactive<Actionbar>({
 /**
  * 加载数据
  */
-const load = (parmas: object) => {
+const load = () => {
   getMenuList().then((res) => {
     const { data: menuList } = res
     const menuTree = tableTreeFormat(menuList)
-    console.log('menuTree', menuTree)
-
+    const selectTreeData = selectTreeFormat(menuTree, {
+      value: 'id',
+      label: 'menuName',
+    })
+    dicTypeList.length = 0
+    dicTypeList.push(...selectTreeData)
     dataList.length = 0
     dataList.push(...menuTree)
   })

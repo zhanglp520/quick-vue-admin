@@ -1,6 +1,6 @@
 export interface Options {
   label?: string
-  value?: string
+  value?: string | number
 }
 export interface TreeOptions {
   id?: string

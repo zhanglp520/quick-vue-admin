@@ -23,6 +23,7 @@ const goHome = () => {
     enabled: 0,
     status: 0,
     path: '/home',
+    viewPath: '',
     children: [],
   }
   const { id, menuName, path } = menu

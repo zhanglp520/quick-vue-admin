@@ -172,7 +172,11 @@ defineExpose({ handleSubmit })
           />
         </template>
         <template v-else-if="item.type === 'switch'">
-          <el-switch v-model="model[item.vModel]" />
+          <el-switch
+            v-model="model[item.vModel]"
+            :active-value="1"
+            :inactive-value="0"
+          />
         </template>
         <template v-else-if="item.type === 'tree'">
           <el-tree-select
