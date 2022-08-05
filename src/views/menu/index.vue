@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { selectTreeFormat, tableTreeFormat } from '@/utils/index'
+import { selectTreeFormat, listToTree } from '@/utils/index'
 import { Column, Actionbar, Toolbar } from '@/types/table'
 import { Menu } from '@/types/menu'
 import { FormItem } from '@/types/form'
@@ -300,15 +300,22 @@ const tableActionbar = reactive<Actionbar>({
 const load = () => {
   getMenuList().then((res) => {
     const { data: menuList } = res
-    const menuTree = tableTreeFormat(menuList)
-    const selectTreeData = selectTreeFormat(menuTree, {
+    const menuTree = listToTree(menuList, 0, {
+      pId: 'pid',
+    })
+    dataList.length = 0
+    dataList.push(...menuTree)
+
+    const parentMenuList = menuList.filter((x) => x.menuType !== 2)
+    const dicTypeMenuTree = listToTree(parentMenuList, 0, {
+      pId: 'pid',
+    })
+    const selectTreeData = selectTreeFormat(dicTypeMenuTree, {
       value: 'id',
       label: 'menuName',
     })
     dicTypeList.length = 0
     dicTypeList.push(...selectTreeData)
-    dataList.length = 0
-    dataList.push(...menuTree)
   })
 }
 </script>
