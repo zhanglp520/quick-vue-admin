@@ -288,6 +288,7 @@ const handleAdd = () => {
     return
   }
   Object.keys(formModel.value).forEach((key) => {
+    formModel.value[key] = ''
     const index = formItems.value.findIndex(
       (x) => x.vModel === key && (x.type === 'select' || x.type === 'tree')
     )
@@ -518,6 +519,7 @@ onActivated(() => {
           v-model="dialogFormVisible"
           :title="title"
           width="35%"
+          :destroy-on-close="true"
           @close="handleCancel()"
         >
           <quick-form
