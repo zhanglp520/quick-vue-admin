@@ -1,4 +1,4 @@
-<div align="center"> <a href="https://gitee.com/zhanglp520/quick-vue3-admin.git"> <img alt="quick-vue3-admin Logo" width="200" height="200" src="public/images/logo.png"> </a> <br> <br>
+<div align="center"> <a href="https://gitee.com/zhanglp520/quick-vue3-admin.git"> <img alt="quick-vue3-admin Logo" width="200" height="200" src="images/logo.png"> </a> <br> <br>
 </div>
 
 **中文** | [English](./README.en.md)
