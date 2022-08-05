@@ -6,7 +6,7 @@ import { Tab } from '@/types/tab'
 import { Menubar } from '@/types/menu'
 import AiniMenu from '@/layout/components/AiniMenu/index.vue'
 
-const title = ref('quick后台管理系统')
+const title = ref('quick-vue3-admin')
 const tabStore = useTabStore()
 const appStore = useAppStore()
 const isCollapse = computed(() => appStore.getCollapse)
@@ -65,9 +65,12 @@ const goHome = () => {
       text-align: center;
       color: #fff;
       font-weight: 700;
-      font-size: 16px;
+      font-size: 14px;
       margin: 0;
-      padding: 0;
+      padding: 0 10px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      // white-space: nowrap;
     }
   }
 }
