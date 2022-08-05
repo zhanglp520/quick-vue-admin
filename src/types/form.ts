@@ -29,9 +29,11 @@ export interface FormItem {
   imgUrl?: string
   prop?: string
   rules?: any
+  width?: string
   maxLength?: string
   format?: () => any
   change?: (value: string) => void
+  select?: (value: string) => void
   success?: () => void
   beforeUpload?: () => void
 }

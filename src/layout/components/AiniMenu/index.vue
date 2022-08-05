@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { HomeFilled } from '@element-plus/icons-vue'
 import { computed, watch, ref } from 'vue'
 import { useAppStore } from '@/store/modules/app'
 import { useUserStore } from '@/store/modules/user'
@@ -69,7 +68,9 @@ watch(activeMenuId, (val: string) => {
     @close="handleClose"
   >
     <el-menu-item index="/home" :router="true" @click="homeMenuClick">
-      <el-icon><HomeFilled /></el-icon>
+      <el-icon>
+        <component :is="'home-filled'" />
+      </el-icon>
       <span>首页</span>
     </el-menu-item>
     <aini-menu-item :menu-list="menuList"></aini-menu-item>
