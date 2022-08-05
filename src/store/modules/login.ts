@@ -41,7 +41,6 @@ export const useLoginStore = defineStore('loginStore', {
           userPassword: quickMd5(userPassword),
         })
           .then((res) => {
-            router.push('/')
             const { data: loginData } = res
             const { token } = loginData
             if (token) {

@@ -1,29 +1,20 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { log } from 'console'
-import { listToTableTree, selectTreeFormat, tableTreeFormat } from '@/utils'
-import QuickCrud from '@/components/QuickCrud/index.vue'
+import { listToTableTree, selectTreeFormat } from '@/utils'
 import { Column, Actionbar, Toolbar } from '@/types/table'
 import { Dept } from '@/types/dept'
 import { FormItem } from '@/types/form'
 import { Options } from '@/types/options'
-import { Tree } from '@/types/tree'
-import {
-  getDeptList,
-  getDeptListByPId,
-  addDept,
-  updateDept,
-  deleteDept,
-} from '@/api/dept'
-import { LeftTree } from '../../types/tree'
+import { Tree, LeftTree } from '@/types/tree'
+import { getDeptList, addDept, updateDept, deleteDept } from '@/api/dept'
+import QuickCrud from '@/components/QuickCrud/index.vue'
 
 /**
  * 常规属性
  */
-const deptDdataListTemp = []
+const deptDdataListTemp = reactive<Array<Dept>>([])
 const dicTypeList = reactive<Array<Options>>([])
-const treeDataList = reactive<Array<Tree>>([])
 const dataList = reactive<Array<Dept>>([])
 const currentTreeData = ref<Tree>({
   id: '',
@@ -84,13 +75,9 @@ const formItems = reactive<Array<FormItem>>([
     editDisabled: true,
     detailDisabled: true,
     options: dicTypeList,
-    change: (val: string) => {
-      console.log('change', val)
-    },
   },
 ])
 const handleFormSubmit = (form: Dept, done: any) => {
-  console.log('handleFormSubmit', form)
   if (form.id) {
     updateDept(form).then(() => {
       ElMessage({
@@ -141,14 +128,6 @@ const tableColumns = reactive<Array<Column>>([
     label: '部门名称',
     prop: 'name',
   },
-  // {
-  //   label: '父级',
-  //   prop: 'pId',
-  //   format: (row: any) => {
-  //     const obj = deptDdataListTemp.find((x) => x.id === row.pId)
-  //     return obj && obj.name
-  //   },
-  // },
 ])
 const handleDelete = (item: Dept, done: any) => {
   ElMessageBox.confirm(`你真的删除【${item.name}】的部门吗？`, '警告', {
@@ -208,20 +187,12 @@ const deptTreeFormat = (data: Array<Dept>, pId = '0') => {
 /**
  * 加载数据
  */
-const load = (parmas: object) => {
+const load = () => {
   const { id } = currentTreeData.value
   const pId = Number(id)
   const deptTree = listToTableTree(deptDdataListTemp, pId)
-  console.log(`deptTree`, deptTree)
   dataList.length = 0
   dataList.push(...deptTree)
-  // getDeptListByPId(pId).then((res: any) => {
-  //   const { data: deptList } = res
-  //   const deptTree = listToTableTree(deptList, pId)
-  //   console.log(`deptTree`, deptTree)
-  //   dataList.length = 0
-  //   dataList.push(...deptTree)
-  // })
 }
 
 /**
@@ -238,15 +209,13 @@ const treeLoad = (done: any) => {
     deptDdataListTemp.length = 0
     deptDdataListTemp.push(...deptList)
     const data = deptTreeFormat(deptList)
-    console.log(`pid`, data)
     leftTree.treeData.length = 0
     leftTree.treeData.push(...data)
-    const data1 = selectTreeFormat(data, {
+    const selectTreeData = selectTreeFormat(data, {
       value: 'id',
     })
     dicTypeList.length = 0
-    dicTypeList.push(...data1)
-    console.log('data1', data1)
+    dicTypeList.push(...selectTreeData)
     if (!currentTreeData.value.id) {
       currentTreeData.value.id = data[0].id
     }

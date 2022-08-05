@@ -1,47 +1,69 @@
 <script lang="ts" setup>
-import { Ref, defineProps, toRefs } from 'vue'
+ import { Ref, defineProps, toRefs } from 'vue'
 import { useTabStore } from '@/store/modules/tab'
 import { Menubar } from '@/types/menu'
 import { Tab } from '@/types/tab'
+
+// eslint-disable-next-line no-undef
+defineOptions({
+    name: 'AiniMenuItem',
+  });
 
 const tabStore = useTabStore()
 /**
  * props
  */
 const props = defineProps({
-  menu: {
-    type: Object,
+  menuList: {
+    type: Array<Menubar>,
     default: () => {
-      return {}
-    },
-  },
-  parent: {
-    type: Object,
-    default: () => {
-      return {}
+      return []
     },
   },
 })
 /**
  * props toRefs
  */
-const { menu, parent } = toRefs(props) as {
-  menu: Ref<Menubar>
-  parent: Ref<Menubar>
+const { menuList } = toRefs(props) as {
+  menuList: Ref<Array<Menubar>>
 }
-const menuClick = () => {
-  const { id, menuName, path } = menu.value
-  const routerPath = `${parent.value.path}/${path}`
-  const tab: Tab = {
-    id,
-    name: menuName,
-    path: routerPath,
+const menuClick = (item:Menubar) => {
+  const { id, menuName, path, link, linkUrl } =item
+  if (link) {
+    window.open(linkUrl)
+  } else {
+    const routerPath = path
+    const tab: Tab = {
+      id: id.toString(),
+      name: menuName,
+      path: routerPath,
+    }
+    tabStore.addTab(tab)
   }
-  tabStore.addTab(tab)
 }
 </script>
 <template>
-  <el-menu-item :index="menu.id" @click="menuClick">
-    {{ menu.menuName }}
-  </el-menu-item>
+  <template v-for="(item, index) in menuList" :key="index">
+    <template v-if="item.children && item.children.length > 0">
+      <el-sub-menu :index="item.id.toString()">
+        <template #title>
+          <el-icon>
+            <component :is="item.icon" />
+          </el-icon>
+          <span>{{ item.menuName }}</span>
+        </template>
+        <aini-menu-item :menu-list="item.children"></aini-menu-item>
+      </el-sub-menu>
+    </template>
+    <template v-else>
+      <el-menu-item :index="item.id.toString()" @click="menuClick(item)">
+        <template #title>
+          <el-icon>
+            <component :is="item.icon" />
+          </el-icon>
+          <span>{{ item.menuName }}</span>
+        </template>
+      </el-menu-item>
+    </template>
+  </template>
 </template>

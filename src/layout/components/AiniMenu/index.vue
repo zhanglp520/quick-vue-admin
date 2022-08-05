@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { HomeFilled, Setting } from '@element-plus/icons-vue'
 import { computed, watch, ref } from 'vue'
 import { useAppStore } from '@/store/modules/app'
 import { useUserStore } from '@/store/modules/user'
@@ -47,6 +46,7 @@ const homeMenuClick = () => {
     enabled: 0,
     status: 0,
     path: '/home',
+    viewPath: '',
     children: [],
   }
   menuClick(menu)
@@ -67,30 +67,12 @@ watch(activeMenuId, (val: string) => {
     @open="handleOpen"
     @close="handleClose"
   >
-    <el-menu-item index="home" @click="homeMenuClick">
-      <el-icon><HomeFilled /></el-icon>
+    <el-menu-item index="/home" :router="true" @click="homeMenuClick">
+      <el-icon>
+        <component :is="'home-filled'" />
+      </el-icon>
       <span>首页</span>
     </el-menu-item>
-    <template v-for="(menu, index) in menuList" :key="index">
-      <template v-if="menu.children.length > 0">
-        <el-sub-menu :index="menu.id">
-          <template #title>
-            <el-icon><Setting /></el-icon>
-            <span>{{ menu.menuName }}</span>
-          </template>
-          <template
-            v-for="(childMenu, childIndex) in menu.children"
-            :key="childIndex"
-          >
-            <aini-menu-item :menu="childMenu" :parent="menu"></aini-menu-item>
-          </template>
-        </el-sub-menu>
-      </template>
-      <template v-else>
-        <el-menu-item :index="menu.id" @click="menuClick(menu)">{{
-          menu.menuName
-        }}</el-menu-item>
-      </template>
-    </template>
+    <aini-menu-item :menu-list="menuList"></aini-menu-item>
   </el-menu>
 </template>

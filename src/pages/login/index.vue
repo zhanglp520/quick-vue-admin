@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { UserFilled, Lock } from '@element-plus/icons-vue'
-import { reactive, ref } from 'vue'
+import { onMounted, onUnmounted, reactive, ref } from 'vue'
 import { router } from '@/router'
 import pinia from '@/store'
 import { LoginParams } from '@/types/login'
@@ -10,7 +10,7 @@ import { useUserStore } from '@/store/modules/user'
 /**
  * 属性
  */
-const title = ref('quick后台管理系统')
+const title = ref('quick-vue3-admin')
 const loginStore = useLoginStore(pinia)
 const userStore = useUserStore(pinia)
 const loading = ref(false)
@@ -24,11 +24,24 @@ const form = reactive<LoginParams>({
  */
 const handleLogin = async (): Promise<void> => {
   loading.value = true
-  loginStore.login(form).then(() => {
-    loading.value = false
-    // router.push('/')
-  })
+  await loginStore.login(form)
+  const user = await userStore.getUserInfo(loginStore.userName)
+  const { id } = user
+  await userStore.getPermission(id.toString())
+  router.push('/')
+  loading.value = false
 }
+const keyDown = (e: KeyboardEvent) => {
+  if (e.key === 'Enter') {
+    handleLogin()
+  }
+}
+onMounted(() => {
+  window.addEventListener('keydown', keyDown)
+})
+onUnmounted(() => {
+  window.removeEventListener('keydown', keyDown, false)
+})
 </script>
 <template>
   <div class="login-box">

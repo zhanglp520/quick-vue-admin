@@ -1,13 +1,15 @@
 export interface Menu {
-  id: string
+  id: number
   menuId: string
   menuName: string
   path: string
+  viewPath: string
   menuType: number
   icon: string
   sort: number
-  pid: string
+  pid: number
   link: number
+  linkUrl: string
   enabled: number
   status: number
 }

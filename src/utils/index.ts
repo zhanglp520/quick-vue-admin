@@ -69,15 +69,12 @@ export const treeFormat = (data: any, options: TreeOptions) => {
   })
   return arr
 }
-export const listToTableTree = (data: any, pId = '0') => {
+export const listToTableTree = (data: any, pId = 0) => {
   const arr = []
   const parentData = data.filter((x: any) => x.pId === pId)
-  parentData.forEach((item) => {
-    // if(item.id){}
+  parentData.forEach((item: any) => {
     const obj = item
     obj.children = listToTableTree(data, item.id)
-    // const childData = data.filter((x: any) => x.pId === item.id)
-    // listToTableTree(data, item.id)
     arr.push(obj)
   })
   return arr
@@ -172,4 +169,25 @@ export const toTuofeng = (str: string) => {
     })
     return str1
   })
+}
+export const listToTree = (data, pId, options) => {
+  const defaultOptions = {
+    id: 'id',
+    pId: 'pId',
+    sort: 'sort',
+  }
+  const value = options && options.id ? options.id : defaultOptions.id
+  const parentId = options && options.pId ? options.pId : defaultOptions.pId
+  const sort = options && options.sort ? options.sort : defaultOptions.sort
+  const arr = []
+  let children = []
+  const nodeData = data.filter((x) => x[parentId] === pId)
+  const nodeSort = nodeData.sort((a, b) => {
+    return a[sort] - b[sort]
+  })
+  nodeSort.forEach((element) => {
+    children = listToTree(data, element[value], options)
+    arr.push({ ...element, children })
+  })
+  return arr
 }

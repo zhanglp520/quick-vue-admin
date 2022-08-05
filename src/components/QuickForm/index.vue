@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { defineExpose, defineProps, toRefs, Ref, defineEmits, ref } from 'vue'
-import { Plus } from '@element-plus/icons-vue'
-import { FormInstance } from 'element-plus'
+import { Plus, Setting } from '@element-plus/icons-vue'
+import { FormInstance, TabsPaneContext } from 'element-plus'
 import { FormItem } from '@/types/form'
+import elementPlusIcons from '@/config/elementPlusIcon.json'
 
 /**
  * form
@@ -24,7 +25,7 @@ const props = defineProps({
       return []
     },
   },
-  inline: {
+  formInline: {
     type: Boolean,
     default: false,
   },
@@ -44,25 +45,35 @@ const props = defineProps({
 /**
  * props toRefs
  */
-const {
-  model,
-  inline = false,
-  formItems,
-  formType,
-  actionSlot = false,
-  hiddenAction = false,
-} = toRefs(props) as {
-  model: Ref<any>
-  inline: Ref<boolean>
-  formItems: Ref<FormItem[]>
-  formType: Ref<string>
-  actionSlot: Ref<boolean>
-  hiddenAction: Ref<boolean>
-}
+const { model, formInline, formItems, formType, actionSlot, hiddenAction } =
+  toRefs(props) as {
+    model: Ref<any>
+    formInline: Ref<boolean>
+    formItems: Ref<FormItem[]>
+    formType: Ref<string>
+    actionSlot: Ref<boolean>
+    hiddenAction: Ref<boolean>
+  }
+
 /**
  * emits
  */
 const emits = defineEmits(['submit', 'clear'])
+const iconVisible = ref(false)
+/**
+ * tabs
+ */
+const activeName = ref('element')
+const handleClick = (tab: TabsPaneContext, event: Event) => {
+  console.log(tab, event)
+}
+const selectIcon = (item, option) => {
+  item.select(option.value)
+  iconVisible.value = false
+}
+const iconClick = () => {
+  iconVisible.value = true
+}
 /**
  * 函数
  */
@@ -75,7 +86,7 @@ const handleClear = () => {
 defineExpose({ handleSubmit })
 </script>
 <template>
-  <el-form ref="formRef" :model="model" :inline="inline" size="default">
+  <el-form ref="formRef" :model="model" :inline="formInline" size="default">
     <template v-for="(item, index) in formItems" :key="index">
       <el-form-item
         v-if="
@@ -94,6 +105,7 @@ defineExpose({ handleSubmit })
           <el-select
             v-model="model[item.vModel]"
             :placeholder="item.placeholder"
+            :style="{ width: formInline ? '400px' : '100%' }"
             :disabled="
               (formType === 'add' && item.addDisabled) ||
               (formType === 'edit' && item.editDisabled) ||
@@ -115,6 +127,7 @@ defineExpose({ handleSubmit })
             :props="{
               expandTrigger: 'hover',
             }"
+            :style="{ width: formInline ? '400px' : '100%' }"
             @change="item.change"
           />
         </template>
@@ -125,6 +138,7 @@ defineExpose({ handleSubmit })
             type="textarea"
             :autocomplete="item.autocomplete"
             :placeholder="item.placeholder"
+            :style="{ width: formInline ? '400px' : '100%' }"
             :readonly="
               (formType === 'add' && item.addReadonly) ||
               (formType === 'edit' && item.editReadonly) ||
@@ -139,6 +153,7 @@ defineExpose({ handleSubmit })
             :placeholder="item.placeholder"
             type="password"
             show-password
+            :style="{ width: formInline ? '400px' : '100%' }"
             :readonly="
               (formType === 'add' && item.addReadonly) ||
               (formType === 'edit' && item.editReadonly) ||
@@ -153,6 +168,7 @@ defineExpose({ handleSubmit })
             :show-file-list="false"
             :on-success="item.success"
             :before-upload="item.beforeUpload"
+            :style="{ width: formInline ? '400px' : '100%' }"
           >
             <img v-if="item.imgUrl" :src="item.imgUrl" class="avatar" />
             <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
@@ -164,6 +180,7 @@ defineExpose({ handleSubmit })
             type="number"
             :autocomplete="item.autocomplete"
             :placeholder="item.placeholder"
+            :style="{ width: formInline ? '400px' : '100%' }"
             :readonly="
               (formType === 'add' && item.addReadonly) ||
               (formType === 'edit' && item.editReadonly) ||
@@ -172,7 +189,11 @@ defineExpose({ handleSubmit })
           />
         </template>
         <template v-else-if="item.type === 'switch'">
-          <el-switch v-model="model[item.vModel]" />
+          <el-switch
+            v-model="model[item.vModel]"
+            :active-value="1"
+            :inactive-value="0"
+          />
         </template>
         <template v-else-if="item.type === 'tree'">
           <el-tree-select
@@ -180,6 +201,7 @@ defineExpose({ handleSubmit })
             :data="item.options"
             :check-strictly="true"
             :render-after-expand="false"
+            :style="{ width: formInline ? '400px' : '100%' }"
             :disabled="
               (formType === 'add' && item.addDisabled) ||
               (formType === 'edit' && item.editDisabled) ||
@@ -187,11 +209,80 @@ defineExpose({ handleSubmit })
             "
           />
         </template>
+        <template v-else-if="item.type == 'icon'">
+          <!-- v-model:visible="iconVisible" -->
+          <el-popover placement="bottom" width="1000px" trigger="click">
+            <template #reference>
+              <el-input
+                v-model="model[item.vModel]"
+                :autocomplete="item.autocomplete"
+                :placeholder="item.placeholder"
+                :style="{ width: formInline ? '400px' : '100%' }"
+                :readonly="
+                  (formType === 'add' && item.addReadonly) ||
+                  (formType === 'edit' && item.editReadonly) ||
+                  formType === 'detail'
+                "
+                @click="iconClick()"
+              >
+                <template #append>
+                  <el-icon>
+                    <component :is="model[item.vModel]" />
+                  </el-icon>
+                </template>
+              </el-input>
+            </template>
+            <el-tabs
+              v-model="activeName"
+              class="demo-tabs"
+              @tab-click="handleClick"
+            >
+              <el-tab-pane label="element官方" name="element">
+                <ul class="icon-list">
+                  <li
+                    v-for="(option, index) in elementPlusIcons"
+                    :key="index"
+                    class="icon-item"
+                    @click="selectIcon(item, option)"
+                  >
+                    <span class="svg-icon">
+                      <el-icon style="font-size: 20px">
+                        <component :is="option.value" />
+                      </el-icon>
+                      <span style="margin-top: 8px">
+                        {{ option.label }}
+                      </span>
+                    </span>
+                  </li>
+                </ul>
+              </el-tab-pane>
+              <el-tab-pane label="自定义" name="custorm">
+                <ul class="icon-list">
+                  <li
+                    v-for="(option, index) in item.options"
+                    :key="index"
+                    class="icon-item"
+                  >
+                    <span class="svg-icon">
+                      <el-icon style="font-size: 20px">
+                        <component :is="option.value" />
+                      </el-icon>
+                      <span style="margin-top: 8px">
+                        {{ option.label }}
+                      </span>
+                    </span>
+                  </li>
+                </ul>
+              </el-tab-pane>
+            </el-tabs>
+          </el-popover>
+        </template>
         <template v-else>
           <el-input
             v-model="model[item.vModel]"
             :autocomplete="item.autocomplete"
             :placeholder="item.placeholder"
+            :style="{ width: formInline ? '400px' : '100%' }"
             :readonly="
               (formType === 'add' && item.addReadonly) ||
               (formType === 'edit' && item.editReadonly) ||
@@ -234,5 +325,33 @@ defineExpose({ handleSubmit })
   width: 178px;
   height: 178px;
   text-align: center;
+}
+.icon-list {
+  overflow-y: scroll;
+  list-style: none;
+  padding: 0 !important;
+  border-top: 1px solid var(--el-border-color);
+  border-left: 1px solid var(--el-border-color);
+  border-radius: 4px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  height: 300px;
+  .icon-item {
+    text-align: center;
+    color: var(--el-text-color-regular);
+    height: 90px;
+    font-size: 13px;
+    border-right: 1px solid var(--el-border-color);
+    border-bottom: 1px solid var(--el-border-color);
+    transition: background-color var(--el-transition-duration);
+  }
+  .svg-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    cursor: pointer;
+  }
 }
 </style>

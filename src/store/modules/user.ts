@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { menuFormat } from '@/utils/index'
+import { listToTree, menuFormat } from '@/utils/index'
 import { router } from '@/router'
 import { User } from '@/types/user'
 import { QuickResponseData } from '@/utils/request'
@@ -45,7 +45,12 @@ export const useUserStore = defineStore('userStore', {
           const { data: userPermissionMenuList } = res
           this.permissionMenuList = userPermissionMenuList
           const dt = JSON.parse(JSON.stringify(userPermissionMenuList))
-          const userMenuList = menuFormat(dt)
+          // const userMenuList = menuFormat(dt)
+          const dtNew = dt.filter((x) => x.menuType !== 2)
+          const userMenuList = listToTree(dtNew, 0, {
+            pId: 'pid',
+          })
+
           const m = JSON.parse(JSON.stringify(userMenuList))
           this.menuList = m
           resolve(res)
