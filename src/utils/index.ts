@@ -170,3 +170,24 @@ export const toTuofeng = (str: string) => {
     return str1
   })
 }
+export const listToTree = (data, pId, options = null) => {
+  const defaultOptions = {
+    id: 'id',
+    pId: 'pId',
+    sort: 'sort',
+  }
+  const value = options && options.id ? options.id : defaultOptions.id
+  const parentId = options && options.pId ? options.pId : defaultOptions.pId
+  const sort = options && options.sort ? options.sort : defaultOptions.sort
+  const arr = []
+  let children = []
+  const nodeData = data.filter((x) => x[parentId] === pId)
+  const nodeSort = nodeData.sort((a, b) => {
+    return a[sort] - b[sort]
+  })
+  nodeSort.forEach((element) => {
+    children = listToTree(data, element[value], options)
+    arr.push({ ...element, children })
+  })
+  return arr
+}
