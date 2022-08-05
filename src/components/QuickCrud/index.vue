@@ -64,6 +64,11 @@ const props = defineProps({
       return []
     },
   },
+  formInline: {
+    type: Boolean,
+    default: false,
+  },
+
   leftTree: {
     type: [Boolean, Object],
     default: false,
@@ -113,12 +118,14 @@ const {
   dialogTitle,
   formModel,
   formItems,
+  formInline,
 } = toRefs(props) as {
   searchFormModel: Ref<boolean | any>
   searchFormItems: Ref<FormItem[]>
   dialogTitle: Ref<boolean | any>
   formModel: Ref<any>
   formItems: Ref<FormItem[]>
+  formInline: Ref<boolean>
   leftTree: Ref<any>
   leftTreeRefresh: Ref<boolean>
   tableData: Ref<any>
@@ -518,7 +525,8 @@ onActivated(() => {
         <el-dialog
           v-model="dialogFormVisible"
           :title="title"
-          width="35%"
+          :width="formInline ? '60%' : '35%'"
+          :append-to-body="true"
           :destroy-on-close="true"
           @close="handleCancel()"
         >
@@ -526,6 +534,7 @@ onActivated(() => {
             ref="quickFormRef"
             :model="formModel"
             :form-items="formItems"
+            :form-inline="formInline"
             :form-type="dialogFormType"
             :hidden-action="true"
             @submit="handleSubmit"

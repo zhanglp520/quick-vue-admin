@@ -1,6 +1,5 @@
 <script lang="ts" setup>
  import { Ref, defineProps, toRefs } from 'vue'
-import { Setting } from '@element-plus/icons-vue'
 import { useTabStore } from '@/store/modules/tab'
 import { Menubar } from '@/types/menu'
 import { Tab } from '@/types/tab'
@@ -48,7 +47,9 @@ const menuClick = (item:Menubar) => {
     <template v-if="item.children && item.children.length > 0">
       <el-sub-menu :index="item.id.toString()">
         <template #title>
-          <el-icon><Setting /></el-icon>
+          <el-icon>
+            <component :is="item.icon" />
+          </el-icon>
           <span>{{ item.menuName }}</span>
         </template>
         <aini-menu-item :menu-list="item.children"></aini-menu-item>
@@ -57,7 +58,9 @@ const menuClick = (item:Menubar) => {
     <template v-else>
       <el-menu-item :index="item.id.toString()" @click="menuClick(item)">
         <template #title>
-          <el-icon><Setting /></el-icon>
+          <el-icon>
+            <component :is="item.icon" />
+          </el-icon>
           <span>{{ item.menuName }}</span>
         </template>
       </el-menu-item>

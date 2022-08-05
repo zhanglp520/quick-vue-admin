@@ -110,8 +110,17 @@ const formItems = reactive<Array<FormItem>>([
     labelWidth: '80px',
     vModel: 'icon',
     placeholder: '菜单图标',
-    prop: 'icon',
+    type: 'test',
+    options: parentTreeList,
   },
+  // {
+  //   label: '菜单图标',
+  //   labelWidth: '80px',
+  //   vModel: 'icon',
+  //   placeholder: '菜单图标',
+  //   prop: 'icon',
+  //   type: 'icon',
+  // },
   {
     label: '排序',
     labelWidth: '80px',

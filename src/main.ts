@@ -3,6 +3,7 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import en from 'element-plus/es/locale/lang/en'
+import * as Elicons from '@element-plus/icons-vue'
 import 'quick-vue3-ui/dist/style.css'
 import * as echarts from 'echarts'
 import App from './App.vue'
@@ -14,12 +15,15 @@ import { useAppStore } from './store/modules/app'
 const app = createApp(App)
 const appStore = useAppStore(pinia)
 
-app.use(ElementPlus, {
-  locale: appStore.getLanguage === 'zh' ? zhCn : en,
-})
-app.use(pinia)
-app.use(router)
-app.use(i18n)
 app.config.globalProperties.$echarts = echarts
-
-app.mount('#app')
+Object.keys(Elicons).forEach((key) => {
+  app.component(key, Elicons[key])
+})
+app
+  .use(ElementPlus, {
+    locale: appStore.getLanguage === 'zh' ? zhCn : en,
+  })
+  .use(pinia)
+  .use(router)
+  .use(i18n)
+  .mount('#app')

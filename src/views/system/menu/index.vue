@@ -8,6 +8,7 @@ import { FormItem } from '@/types/form'
 import { Options } from '@/types/options.js'
 import { getMenuList, addMenu, updateMenu, deleteMenu } from '@/api/menu'
 import QuickCrud from '@/components/QuickCrud/index.vue'
+import elementPlusIcons from '@/config/custormIcons.json'
 
 const dataList = reactive<Array<Menu>>([])
 const parentTreeList = reactive<Array<Options>>([])
@@ -42,6 +43,7 @@ const formItems = reactive<Array<FormItem>>([
     placeholder: '菜单编号',
     editReadonly: true,
     prop: 'menuId',
+    width: '400px',
     rules: [
       {
         required: true,
@@ -56,6 +58,7 @@ const formItems = reactive<Array<FormItem>>([
     vModel: 'menuName',
     placeholder: '菜单名称',
     prop: 'menuName',
+    width: '400px',
     rules: [
       {
         required: true,
@@ -65,24 +68,13 @@ const formItems = reactive<Array<FormItem>>([
     ],
   },
   {
-    label: '路由',
-    labelWidth: '80px',
-    vModel: 'path',
-    placeholder: '路由',
-  },
-  {
-    label: '视图',
-    labelWidth: '80px',
-    vModel: 'viewPath',
-    placeholder: '视图',
-  },
-  {
     label: '菜单类型',
     labelWidth: '80px',
     vModel: 'menuType',
     placeholder: '菜单类型',
     prop: 'menuType',
     type: 'select',
+    width: '400px',
     options: [
       {
         label: '目录',
@@ -111,6 +103,26 @@ const formItems = reactive<Array<FormItem>>([
     vModel: 'icon',
     placeholder: '菜单图标',
     prop: 'icon',
+    type: 'icon',
+    options: elementPlusIcons,
+    width: '400px',
+    select: (val) => {
+      formModel.icon = val
+    },
+  },
+  {
+    label: '路由',
+    labelWidth: '80px',
+    vModel: 'path',
+    placeholder: '路由',
+    width: '400px',
+  },
+  {
+    label: '视图',
+    labelWidth: '80px',
+    vModel: 'viewPath',
+    placeholder: '视图',
+    width: '400px',
   },
   {
     label: '排序',
@@ -118,16 +130,8 @@ const formItems = reactive<Array<FormItem>>([
     vModel: 'sort',
     placeholder: '排序',
     prop: 'sort',
+    width: '400px',
   },
-  // {
-  //   label: '父级菜单',
-  //   labelWidth: '80px',
-  //   vModel: 'pid',
-  //   placeholder: '父级菜单',
-  //   prop: 'pid',
-  //   type: 'select',
-  //   options: [],
-  // },
   {
     label: '父级菜单',
     labelWidth: '80px',
@@ -135,22 +139,8 @@ const formItems = reactive<Array<FormItem>>([
     placeholder: '父级菜单',
     type: 'tree',
     options: parentTreeList,
+    width: '400px',
   },
-  {
-    label: '外链',
-    labelWidth: '80px',
-    vModel: 'link',
-    placeholder: '外链',
-    prop: 'link',
-    type: 'switch',
-  },
-  {
-    label: '链接地址',
-    labelWidth: '80px',
-    vModel: 'linkUrl',
-    placeholder: '链接地址',
-  },
-
   {
     label: '是否启用',
     labelWidth: '80px',
@@ -158,6 +148,7 @@ const formItems = reactive<Array<FormItem>>([
     placeholder: '是否启用',
     prop: 'enabled',
     type: 'switch',
+    width: '400px',
   },
   {
     label: '是否显示',
@@ -166,6 +157,23 @@ const formItems = reactive<Array<FormItem>>([
     placeholder: '是否显示',
     prop: 'status',
     type: 'switch',
+    width: '400px',
+  },
+  {
+    label: '外链',
+    labelWidth: '80px',
+    vModel: 'link',
+    placeholder: '外链',
+    prop: 'link',
+    type: 'switch',
+    width: '400px',
+  },
+  {
+    label: '链接地址',
+    labelWidth: '80px',
+    vModel: 'linkUrl',
+    placeholder: '链接地址',
+    width: '400px',
   },
 ])
 const handleFormSubmit = (form: Menu, done: any) => {
@@ -321,6 +329,7 @@ const load = () => {
 </script>
 <template>
   <quick-crud
+    :form-inline="true"
     :dialog-title="dialogTitle"
     :form-model="formModel"
     :form-items="formItems"
