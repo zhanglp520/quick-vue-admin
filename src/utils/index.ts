@@ -170,7 +170,7 @@ export const toTuofeng = (str: string) => {
     return str1
   })
 }
-export const listToTree = (data, pId, options = null) => {
+export const listToTree = (data, pId, options) => {
   const defaultOptions = {
     id: 'id',
     pId: 'pId',

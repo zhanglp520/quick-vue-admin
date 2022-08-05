@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ElTree, ElMessage, ElMessageBox } from 'element-plus'
 import { nextTick, onMounted, reactive, ref } from 'vue'
-import { menuTreeFormat, treeFormat } from '@/utils'
+import { listToTree, treeFormat } from '@/utils'
 import { MenuTree } from '@/types/menu'
 import { Toolbar } from '@/types/table'
 import { Tree } from '@/types/tree'
@@ -23,7 +23,9 @@ const menuTreeList = reactive<Array<MenuTree>>([])
 const menuLoad = () => {
   getMenuList().then((res) => {
     const { data: menuList } = res
-    const menuTree = menuTreeFormat(menuList)
+    const menuTree = listToTree(menuList, 0, {
+      pId: 'pid',
+    })
     menuTreeList.length = 0
     menuTreeList.push(...menuTree)
   })

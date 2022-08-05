@@ -10,19 +10,19 @@ const layout = import.meta.glob('../layout/*.vue')
 const getComponent = (childElement: Menu) => {
   let component = {}
   if (childElement.viewPath) {
-    const viewPath = modules[`../views/${childElement.viewPath}.vue`]
+    const viewPath = modules[`../views${childElement.viewPath}.vue`]
     if (!viewPath) {
       console.error(
-        `Menu view path configuration error or view does not exist ../views/${childElement.viewPath}.vue`
+        `Menu view path configuration error or view does not exist ../views${childElement.viewPath}.vue`
       )
     } else {
       component = viewPath
     }
   } else {
-    const path = modules[`../views/${childElement.path}/index.vue`]
+    const path = modules[`../views${childElement.path}/index.vue`]
     if (!path) {
       console.error(
-        `Menu routing address configuration error or view does not exist ../views/${childElement.path}/index.vue`
+        `Menu routing path configuration error or view does not exist ../views${childElement.path}/index.vue`
       )
     } else {
       component = path
