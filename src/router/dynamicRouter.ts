@@ -58,6 +58,7 @@ const formatRouter = (data: Menu[]) => {
     if (childMenu.length > 0) {
       routerObj.redirect = childMenu[0].path
       childMenu.forEach((childElement: Menu) => {
+        if (childElement.link) return
         const component = getComponent(childElement)
         const childRouterObj: RouteRecordRaw = {
           name: childElement.menuId,
