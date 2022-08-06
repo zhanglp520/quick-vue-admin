@@ -5,7 +5,7 @@ import { selectTreeFormat, listToTree } from '@/utils/index'
 import { Column, Actionbar, Toolbar } from '@/types/table'
 import { Menu } from '@/types/menu'
 import { FormItem } from '@/types/form'
-import { Options } from '@/types/options.js'
+import { Options } from '@/types/options'
 import { getMenuList, addMenu, updateMenu, deleteMenu } from '@/api/menu'
 import QuickCrud from '@/components/QuickCrud/index.vue'
 

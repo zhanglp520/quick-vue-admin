@@ -195,6 +195,17 @@ defineExpose({ handleSubmit })
             :inactive-value="0"
           />
         </template>
+        <template v-else-if="item.type === 'datetimerange'">
+          <el-date-picker
+            v-model="model[item.vModel]"
+            type="datetimerange"
+            range-separator="To"
+            value-format="X"
+            format="YYYY-MM-DD HH:mm:ss"
+            :start-placeholder="item.placeholders[0]"
+            :end-placeholder="item.placeholders[1]"
+          />
+        </template>
         <template v-else-if="item.type === 'tree'">
           <el-tree-select
             v-model="model[item.vModel]"
@@ -210,7 +221,6 @@ defineExpose({ handleSubmit })
           />
         </template>
         <template v-else-if="item.type == 'icon'">
-          <!-- v-model:visible="iconVisible" -->
           <el-popover placement="bottom" width="1000px" trigger="click">
             <template #reference>
               <el-input
