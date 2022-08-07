@@ -257,6 +257,12 @@ const handleDetail = (row: any) => {
   Object.keys(formModel.value).forEach((key) => {
     formModel.value[key] = row[key]
   })
+  emits('onDetail', formModel.value, (data: any) => {
+    Object.keys(formModel.value).forEach((key) => {
+      formModel.value[key] = data[key]
+    })
+    dialogFormVisible.value = true
+  })
   dialogFormVisible.value = true
 }
 /**
