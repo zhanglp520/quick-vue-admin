@@ -3,84 +3,98 @@ import { reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import QuickCrud from '@/components/QuickCrud/index.vue'
 import { Column, Actionbar, Toolbar } from '@/types/table'
-import { Role } from '@/types/role'
+import { Log, SearchLog } from '@/types/log'
 import { FormItem } from '@/types/form'
-import { getRoleList, addRole, updateRole, deleteRole } from '@/api/role'
+import { Page } from '@/types/page'
+import { getLogPageList, removeLog, batchRemove } from '@/api/log'
 
-const dataList = reactive<Array<Role>>([])
+const dataList = reactive<Array<Log>>([])
 /**
  * 表单
  */
 const dialogTitle = reactive({
-  add: '新增角色',
-  edit: '编辑角色',
-  detail: '角色详情',
+  detail: '日志详情',
 })
-const formModel = reactive<Role>({
-  id: '',
-  roleId: '',
-  roleName: '',
+const formModel = reactive<Log>({
+  id: 0,
+  logTime: '',
+  operateApi: '',
+  requestParams: '',
+  errorMessage: '',
+  exceptionMessage: '',
+  ip: '',
+  logType: 0,
 })
 const formItems = reactive<Array<FormItem>>([
   {
-    label: '角色编号',
+    label: '编号',
     labelWidth: '80px',
-    vModel: 'roleId',
-    placeholder: '角色编号',
-    editReadonly: true,
-    prop: 'roleId',
-    rules: [
-      {
-        required: true,
-        message: '角色编号不能为空',
-        trigger: 'blur',
-      },
-    ],
+    vModel: 'id',
   },
   {
-    label: '角色名称',
+    label: '日志时间',
     labelWidth: '80px',
-    vModel: 'roleName',
-    placeholder: '角色名称',
-    prop: 'roleName',
-    rules: [
-      {
-        required: true,
-        message: '角色名称不能为空',
-        trigger: 'blur',
-      },
-    ],
+    vModel: 'logTime',
+  },
+  {
+    label: 'IP',
+    labelWidth: '80px',
+    vModel: 'ip',
+  },
+  {
+    label: '操作接口',
+    labelWidth: '80px',
+    vModel: 'operateApi',
+  },
+  {
+    label: '请求参数',
+    labelWidth: '80px',
+    vModel: 'requestParams',
+    type: 'textarea',
   },
 ])
-const handleFormSubmit = (form: Role, done: any) => {
-  console.log('handleFormSubmit', form)
-  if (form.id) {
-    updateRole(form).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '角色修改成功',
-      })
-      done()
-    })
-  } else {
-    addRole(form).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '角色创建成功',
-      })
-      done()
-    })
-  }
-}
+
+/**
+ * 搜索
+ */
+const searchForm = reactive<SearchLog>({
+  startTime: '',
+  endTime: '',
+  logTime: '',
+})
+const searchFormItems = reactive<Array<FormItem>>([
+  {
+    label: '日志时间',
+    vModel: 'logTime',
+    placeholders: ['开始时间', '结束时间'],
+    type: 'datetimerange',
+  },
+])
 /**
  * 工具栏
  */
 const tableToolbar = reactive<Toolbar>({
-  hiddenBatchDeleteButton: true,
   hiddenImportButton: true,
   hiddenExportButton: true,
+  hiddenAddButton: true,
   hiddenPrintButton: true,
 })
+const handleBatchDelete = (data: any, done: any) => {
+  const { ids } = data
+  ElMessageBox.confirm(`你真的删除选择的日志吗？`, '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    batchRemove(ids).then(() => {
+      ElMessage({
+        type: 'success',
+        message: '日志删除成功',
+      })
+      done()
+    })
+  })
+}
 /**
  * 表格
  */
@@ -88,43 +102,91 @@ const tableColumns = reactive<Array<Column>>([
   {
     width: '50',
     type: 'selection',
+    align: 'center',
   },
   {
-    label: '角色编号',
-    prop: 'roleId',
+    label: '日志时间',
+    prop: 'logTime',
     width: '200',
   },
   {
-    label: '角色名称',
-    prop: 'roleName',
+    label: 'IP',
+    prop: 'ip',
+    width: '120',
+  },
+  {
+    label: '操作接口',
+    prop: 'operateApi',
+    width: '300',
+  },
+  {
+    label: '请求参数',
+    prop: 'requestParams',
   },
 ])
-const handleDelete = (item: Role, done: any) => {
-  ElMessageBox.confirm(`你真的删除【${item.roleName}】的角色吗？`, '警告', {
+const handleDelete = (item: Log, done: any) => {
+  ElMessageBox.confirm(`你真的删除【${item.id}】的日志吗？`, '警告', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
-    deleteRole(item.id).then(() => {
+    removeLog(item.id.toString()).then(() => {
       ElMessage({
         type: 'success',
-        message: '角色删除成功',
+        message: '日志删除成功',
       })
       done()
     })
   })
 }
+const handleDetail = (item: Log, done: any) => {
+  const form: Log = { ...item }
+  if (form.requestParams) {
+    const params = JSON.parse(form.requestParams)
+    form.requestParams = JSON.stringify(params, null, 4)
+    done(form)
+  }
+}
+
 const tableActionbar = reactive<Actionbar>({
   width: 150,
+  hiddenEditButton: true,
+})
+/**
+ * 分页
+ */
+const page = reactive<Page>({
+  current: 1,
+  size: 10,
+  sizes: [10, 20, 30, 40, 50],
+  total: 100,
 })
 /**
  * 加载数据
  */
-const load = () => {
-  getRoleList().then((res) => {
-    const { data: roleList } = res
-    dataList.length = 0
-    dataList.push(...roleList)
+const load = (params: any) => {
+  let obj = {}
+  const { logTime } = params
+  if (logTime) {
+    obj = {
+      ...params,
+      logType: 0,
+      startTime: logTime[0],
+      endTime: logTime[1],
+      logTime: null,
+    }
+  } else {
+    obj = { ...params, logType: 0, logTime: null }
+  }
+  getLogPageList(obj).then((res: any) => {
+    const { data: logList, page: pagination } = res
+    if (logList) {
+      dataList.length = 0
+      dataList.push(...logList)
+    }
+    if (pagination) {
+      page.total = pagination.total
+    }
   })
 }
 </script>
@@ -137,9 +199,16 @@ const load = () => {
     :table-columns="tableColumns"
     :table-actionbar="tableActionbar"
     :table-toolbar="tableToolbar"
+    :search-form-items="searchFormItems"
+    :search-form-model="searchForm"
     dialog-titles="dialogTitles"
+    :page="page"
     @on-load="load"
-    @on-form-submit="handleFormSubmit"
+    @on-detail="handleDetail"
     @on-delete="handleDelete"
+    @on-batch-delete="handleBatchDelete"
+    @on-import="handleImport"
+    @on-export="handleExport"
+    @on-print="handlePrint"
   ></quick-crud>
 </template>

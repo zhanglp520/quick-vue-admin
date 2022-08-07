@@ -31,7 +31,8 @@ export interface FormItem {
   rules?: any
   width?: string
   maxLength?: string
-  format?: () => any
+  placeholders?: Array<string>
+  format?: (value: string) => any
   change?: (value: string) => void
   select?: (value: string) => void
   success?: () => void
