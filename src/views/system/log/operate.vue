@@ -13,12 +13,10 @@ const dataList = reactive<Array<Log>>([])
  * 表单
  */
 const dialogTitle = reactive({
-  // add: '添加日志',
-  // edit: '编辑日志',
   detail: '日志详情',
 })
 const formModel = reactive<Log>({
-  id: '',
+  id: 0,
   logTime: '',
   operateApi: '',
   requestParams: '',
@@ -39,34 +37,19 @@ const formItems = reactive<Array<FormItem>>([
     vModel: 'logTime',
   },
   {
-    label: '操作接口',
-    labelWidth: '80px',
-    vModel: 'operateApi',
-  },
-  {
     label: 'IP',
     labelWidth: '80px',
     vModel: 'ip',
   },
   {
+    label: '操作接口',
+    labelWidth: '80px',
+    vModel: 'operateApi',
+  },
+  {
     label: '请求参数',
     labelWidth: '80px',
     vModel: 'requestParams',
-  },
-  {
-    label: '操作人',
-    labelWidth: '80px',
-    vModel: 'operateUserId',
-  },
-  {
-    label: '错误信息',
-    labelWidth: '80px',
-    vModel: 'errorMessage',
-  },
-  {
-    label: '异常信息',
-    labelWidth: '80px',
-    vModel: 'exceptionMessage',
     type: 'textarea',
   },
 ])
@@ -77,7 +60,6 @@ const formItems = reactive<Array<FormItem>>([
 const searchForm = reactive<SearchLog>({
   startTime: '',
   endTime: '',
-  operateUserId: '',
   logTime: '',
 })
 const searchFormItems = reactive<Array<FormItem>>([
@@ -86,11 +68,6 @@ const searchFormItems = reactive<Array<FormItem>>([
     vModel: 'logTime',
     placeholders: ['开始时间', '结束时间'],
     type: 'datetimerange',
-  },
-  {
-    label: '操作人',
-    vModel: 'operateUserId',
-    placeholder: '操作人',
   },
 ])
 /**
@@ -103,7 +80,7 @@ const tableToolbar = reactive<Toolbar>({
   hiddenPrintButton: true,
 })
 const handleBatchDelete = (data: any, done: any) => {
-  const { checkDataList, ids } = data
+  const { ids } = data
   ElMessageBox.confirm(`你真的删除选择的日志吗？`, '警告', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
@@ -118,21 +95,12 @@ const handleBatchDelete = (data: any, done: any) => {
     })
   })
 }
-const handleImport = (done: any) => {
-  done()
-}
-const handleExport = () => {
-  // window.open(`${window.location.origin}/日志报表.xlsx`)//TODO:导出bug
-}
-const handlePrint = () => {
-  window.print()
-}
 /**
  * 表格
  */
 const tableColumns = reactive<Array<Column>>([
   {
-    width: '100',
+    width: '50',
     type: 'selection',
     align: 'center',
   },
@@ -142,32 +110,18 @@ const tableColumns = reactive<Array<Column>>([
     width: '200',
   },
   {
-    label: '操作接口',
-    prop: 'operateApi',
-    width: '300',
-  },
-  {
     label: 'IP',
     prop: 'ip',
     width: '120',
   },
   {
+    label: '操作接口',
+    prop: 'operateApi',
+    width: '300',
+  },
+  {
     label: '请求参数',
     prop: 'requestParams',
-    width: '180',
-  },
-  {
-    label: '操作人',
-    prop: 'operateUserId',
-    width: '100',
-    //   format: (row: Log) => {
-    //   return row.enabled === 1 ? '禁用' : '启用'
-    // },
-  },
-  {
-    label: '错误信息',
-    prop: 'errorMessage',
-    width: '200',
   },
 ])
 const handleDelete = (item: Log, done: any) => {
@@ -185,6 +139,15 @@ const handleDelete = (item: Log, done: any) => {
     })
   })
 }
+const handleDetail = (item: Log, done: any) => {
+  const form: Log = { ...item }
+  if (form.requestParams) {
+    const params = JSON.parse(form.requestParams)
+    form.requestParams = JSON.stringify(params, null, 4)
+    done(form)
+  }
+}
+
 const tableActionbar = reactive<Actionbar>({
   width: 150,
   hiddenEditButton: true,
@@ -205,11 +168,16 @@ const load = (params: any) => {
   let obj = {}
   const { logTime } = params
   if (logTime) {
-    obj = { ...params, startTime: logTime[0], endTime: logTime[1] }
+    obj = {
+      ...params,
+      logType: 0,
+      startTime: logTime[0],
+      endTime: logTime[1],
+      logTime: null,
+    }
   } else {
-    obj = { ...params }
+    obj = { ...params, logType: 0, logTime: null }
   }
-
   getLogPageList(obj).then((res: any) => {
     const { data: logList, page: pagination } = res
     if (logList) {
@@ -235,9 +203,8 @@ const load = (params: any) => {
     :search-form-model="searchForm"
     dialog-titles="dialogTitles"
     :page="page"
-    :form-inline="true"
     @on-load="load"
-    @on-form-submit="handleFormSubmit"
+    @on-detail="handleDetail"
     @on-delete="handleDelete"
     @on-batch-delete="handleBatchDelete"
     @on-import="handleImport"

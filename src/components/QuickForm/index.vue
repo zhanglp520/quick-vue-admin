@@ -199,7 +199,7 @@ defineExpose({ handleSubmit })
           <el-date-picker
             v-model="model[item.vModel]"
             type="datetimerange"
-            range-separator="To"
+            range-separator="-"
             value-format="X"
             format="YYYY-MM-DD HH:mm:ss"
             :start-placeholder="item.placeholders[0]"

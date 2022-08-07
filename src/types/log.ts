@@ -1,5 +1,5 @@
 export interface Log {
-  id: string | number
+  id: number
   logTime: string
   operateApi: string
   requestParams?: string
@@ -11,6 +11,5 @@ export interface Log {
 export interface SearchLog {
   startTime?: string
   endTime?: string
-  operateUserId?: string
   logTime: string
 }
