@@ -1,100 +1,194 @@
 <div align="center"> <a href="https://gitee.com/zhanglp520/quick-vue3-admin.git"> <img alt="quick-vue3-admin Logo" width="200" height="200" src="./public/images/logo.png"> </a> <br> <br>
 </div>
 
-**中文** | [English](./README.en.md)
+**Chinese** | [English](./README.en.md)
 
-## 简介
+##Introduction
 
-quick-vue3-admin 是一款免费开源快速搭建中后台系统框架。本框架基于 vite2、vue3、element-plus、pinia 等最新主流技术并封装了通用的组件方便开发者提高工作效率。后期也会通过版本升级的方式来维护并更新，使开发者拥有一款长期并且稳定的脚手架。本团队还提供了基于 quick 框架开发的各类业务项目，如有相关需求联系管理员。
 
-## 软件特色
 
-1. 使用 vite2、vue3、element-plus、pinia 和 typescript 等前言技术
-2. 封装了通用的组件
-3. 提供了系统管理常用功能模块
-4. 提供权限管理模块
-5. 动态菜单技术
-6. 动态路由技术
-7. 使用 JWT 鉴权
-8. 使用中间件异常处理
-9. 前后端分离
-10. 提供免费帮助通道
-11. 免费提供框架演示环境
-12. 官方提供稳定并长期维护的 node 轻后端接口项目
+Quick-vue3-admin is a free and open-source framework for quickly building middle and background systems. This framework is based on the latest mainstream technologies such as vite2, vue3, element plus and Pinia, and encapsulates common components to facilitate developers to improve work efficiency. In the later stage, it will also be maintained and updated through version upgrade, so that developers can have a long-term and stable scaffold. The team also provides various business projects developed based on the quick framework. If you have relevant needs, please contact the administrator.
 
-## 预览
 
-- [quick-vue3-admin](http://quick.ainiteam.com/) - 框架演示
 
-演示账号密码：admin/123456
+##Software features
 
-## 文档
 
-文档地址完善中
 
-## 安装使用
+1. Use foreword technologies such as vite2, vue3, element plus, Pinia and typescript
 
-- 克隆项目
+2. General components are encapsulated
+
+3. Common function modules of system management are provided
+
+4. Provide permission management module
+
+5. Dynamic menu technology
+
+6. Dynamic routing technology
+
+7. Use JWT authentication
+
+8. Use middleware exception handling
+
+9. Separation of front and rear ends
+
+10. Provide free help channel
+
+11. Provide framework demonstration environment for free
+
+12. The official provides stable and long-term maintenance of the node light back-end interface project
+
+
+
+##Preview
+
+
+
+- [quick-vue3-admin]( http://quick.ainiteam.com/ ）- frame demonstration
+
+
+
+Demo account password: admin / 123456
+
+
+
+##Documentation
+
+
+
+Document address is under improvement
+
+
+
+##Installation and use
+
+
+
+-Clone project
+
+
 
 ```bash
+
 git clone https://gitee.com/zhanglp520/quick-vue3-admin.git
+
 ```
 
-- 安装 pnpm
+
+
+-Install pnpm
+
+
 
 ```bash
+
 npm install -g pnpm
+
 ```
 
-- 安装项目依赖包
+
+
+-Install project dependency package
+
+
 
 ```bash
+
 pnpm install
+
 ```
 
-- 运行
+
+
+-Run
+
+
 
 ```bash
+
 pnpm run dev
+
 ```
 
-运行命令执行服务启动后，浏览器输入：http://localhost:3001/
 
-- eslint 检测
+
+After the command execution service is started, the browser enters: http://localhost:3001/
+
+
+
+-Eslint detection
+
+
 
 ```bash
-pnpm run lint 仅检测
 
-pnpm run lint-fix 检测并尝试修复
+Pnpm run lint (detect only)
+
+
+
+Pnpm run lint fix detect and try to repair
+
 ```
 
-- 打包上线
+
+
+-Pack and go online
+
+
 
 ```bash
+
 pnpm run build
+
 ```
 
-## 后端接口
 
-官方提供后端接口项目：https://gitee.com/zhanglp520/quick-node-express.git
 
-## 寻求帮助
+##Back end interface
 
-1. 查看官方帮助文档
-2. 发起 Issue
-3. 加 quick 框架 QQ 群：558795174
+
+
+Official back-end interface project: https://gitee.com/zhanglp520/quick-node-express.git
+
+
+
+##Ask for help
+
+
+
+1. View the official help document
+
+2. Initiate issue
+
+3. Add quick framework QQ group: 558795174
+
+
 
 ## License
 
+
+
 [MIT © quick-vue3-admin](./LICENSE)
 
-## 参与贡献
 
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-5.  点个 star 把
-6.  如果你觉得这个项目对你有帮助，你可以帮作者买一杯咖啡表示支持!
-    ![donate](./public/payImages/alipay.jpg)
-7.  如需加入开源，请联系管理员
+
+##Participation and contribution
+
+
+
+1. Fork this warehouse
+
+2. New feat_ XXX branch
+
+3. Submission code
+
+4. Create a new pull request
+
+5. Order a star
+
+6. If you think this project is helpful to you, you can buy a cup of coffee for the author to express your support!
+
+! [donate](./public/payImages/alipay.jpg)
+
+7. If you need to join open source, please contact the administrator
