@@ -1,7 +1,7 @@
 <div align="center"> <a href="https://gitee.com/zhanglp520/quick-vue3-admin.git"> <img alt="quick-vue3-admin Logo" width="200" height="200" src="./public/images/logo.png"> </a> <br> <br>
 </div>
 
-**Chinese** | [English](./README.en.md)
+ [Chinese](./README.md)|**Chinese**
 
 ##Introduction
 
@@ -189,6 +189,6 @@ Official back-end interface project: https://gitee.com/zhanglp520/quick-node-exp
 
 6. If you think this project is helpful to you, you can buy a cup of coffee for the author to express your support!
 
-! [donate](./public/payImages/alipay.jpg)
+ ![donate](./public/payImages/alipay.jpg)
 
 7. If you need to join open source, please contact the administrator
