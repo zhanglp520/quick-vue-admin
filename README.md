@@ -24,20 +24,30 @@ quick-vue3-admin 是一款免费开源快速搭建中后台系统框架。本框
 
 ## 预览
 
-- [quick-vue3-admin](http://quick.ainiteam.com/) - 框架演示
+- [quick-vue3-admin](https://quick.ainiteam.com/) - 框架演示
 
 演示账号密码：admin/123456
 
 ## 文档
+- [quick-vue3-template](https://template.ainiteam.com/) - quick帮助文档
 
-文档地址完善中
+账号密码：admin/123456
+
+## 接口文档
+
+- [quick接口文档](https://console-docs.apipost.cn/preview/0e11a2eb3c3883a7/4fff7a394c074ac7) - quick接口文档
+
 
 ## 安装使用
 
 - 克隆项目
 
 ```bash
-git clone https://gitee.com/zhanglp520/quick-vue3-admin.git
+码云：git clone https://gitee.com/zhanglp520/quick-vue3-admin.git
+
+github： git clone https://github.com/zhanglp520/quick-vue3-admin..git
+
+gitlab git clone http://110.42.130.88:8099/zhanglp520/quick-vue3-admin.git
 ```
 
 - 安装 pnpm
@@ -74,6 +84,12 @@ pnpm run lint-fix 检测并尝试修复
 pnpm run build
 ```
 
+- 打包后预览
+
+```bash
+pnpm run preview
+```
+
 ## 后端接口
 
 官方提供后端接口项目：https://gitee.com/zhanglp520/quick-node-express.git
@@ -95,6 +111,6 @@ pnpm run build
 3.  提交代码
 4.  新建 Pull Request
 5.  点个 star 把
-6.  如果你觉得这个项目对你有帮助，你可以帮作者买一杯咖啡表示支持!
+6.  如需加入开源，请联系管理员
+7.  如果你觉得这个项目对你有帮助，你可以帮作者买一杯咖啡表示支持!
     ![donate](./public/payImages/alipay.jpg)
-7.  如需加入开源，请联系管理员
