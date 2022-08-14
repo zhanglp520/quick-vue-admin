@@ -5,6 +5,7 @@ export interface Column {
   type?: string
   align?: string
   slot?: boolean
+  fixed?: boolean
   format?(row: any, column?: any, cellValue?: any, index?: number): void
 }
 export interface Btns {
