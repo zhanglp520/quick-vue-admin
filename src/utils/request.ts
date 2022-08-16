@@ -29,7 +29,7 @@ quickRequest.interceptors.request.use(
     if (cfg.headers) {
       cfg.headers.authorization = `Bearer ${token}`
     }
-    console.log('request', cfg)
+    console.info('request', cfg)
     return cfg
   },
   (error) => {
@@ -41,7 +41,7 @@ quickRequest.interceptors.request.use(
 // 响应拦截器
 quickRequest.interceptors.response.use(
   (res) => {
-    console.log('response', res)
+    console.info('response', res)
     const { data } = res
     const { status, data: payload, page, msg } = data as QuickResponseData<any>
     if (status === 1) {

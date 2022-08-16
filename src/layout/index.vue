@@ -10,8 +10,6 @@ import AiniTop from './components/AiniTop/index.vue'
 import AiniSidebar from './components/AiniSidebar/index.vue'
 
 const route = useRoute()
-console.log('route', route)
-
 const router = useRouter()
 const appStore = useAppStore()
 const menuStore = useMenuStore()

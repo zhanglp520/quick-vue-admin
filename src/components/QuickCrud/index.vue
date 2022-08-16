@@ -87,6 +87,10 @@ const props = defineProps({
     type: [Boolean, Object],
     default: false,
   },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
 })
 /**
  * props to ref
@@ -105,6 +109,7 @@ const {
   formModel,
   formItems,
   formInline,
+  loading,
 } = toRefs(props) as {
   searchFormModel: Ref<boolean | any>
   searchFormItems: Ref<FormItem[]>
@@ -119,6 +124,7 @@ const {
   tableActionbar: Ref<boolean | Actionbar>
   tableToolbar: Ref<boolean | Toolbar>
   page: Ref<Page>
+  loading: Ref<boolean>
 }
 /**
  * 类型转换
@@ -489,6 +495,7 @@ onActivated(() => {
         <quick-table
           :data="tableData"
           :columns="tableColumns"
+          :loading="loading"
           :table-actionbar="tableActionbar"
           :edit-button-name="actionbar?.editButtonName"
           :delete-button-name="actionbar?.deleteButtonName"

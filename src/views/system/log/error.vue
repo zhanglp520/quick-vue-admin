@@ -1,16 +1,17 @@
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import QuickCrud from '@/components/QuickCrud/index.vue'
 import { Column, Actionbar, Toolbar } from '@/types/table'
 import { FormItem } from '@/types/form'
 import { Page } from '@/types/page'
 import { Log, SearchLog } from '@/types/log'
+import QuickCrud from '@/components/QuickCrud/index.vue'
 import { getLogPageList, removeLog, batchRemove } from '@/api/log'
 
 /**
  * 属性
  */
+const loading = ref(false)
 const dataList = reactive<Array<Log>>([])
 /**
  * 分页
@@ -35,61 +36,6 @@ const searchFormItems = reactive<Array<FormItem>>([
     vModel: 'logTime',
     placeholders: ['开始时间', '结束时间'],
     type: 'datetimerange',
-  },
-])
-/**
- * 表单
- */
-const dialogTitle = reactive({
-  detail: '日志详情',
-})
-const formModel = reactive<Log>({
-  id: 0,
-  logTime: '',
-  operateApi: '',
-  requestParams: '',
-  errorMessage: '',
-  exceptionMessage: '',
-  ip: '',
-  logType: 0,
-})
-const formItems = reactive<Array<FormItem>>([
-  {
-    label: '编号',
-    labelWidth: '80px',
-    vModel: 'id',
-  },
-  {
-    label: '日志时间',
-    labelWidth: '80px',
-    vModel: 'logTime',
-  },
-  {
-    label: '操作接口',
-    labelWidth: '80px',
-    vModel: 'operateApi',
-  },
-  {
-    label: 'IP',
-    labelWidth: '80px',
-    vModel: 'ip',
-  },
-  {
-    label: '错误信息',
-    labelWidth: '80px',
-    vModel: 'errorMessage',
-  },
-  {
-    label: '请求参数',
-    labelWidth: '80px',
-    vModel: 'requestParams',
-    type: 'textarea',
-  },
-  {
-    label: '异常信息',
-    labelWidth: '80px',
-    vModel: 'exceptionMessage',
-    type: 'textarea',
   },
 ])
 /**
@@ -192,8 +138,9 @@ const load = (params: any) => {
   } else {
     obj = { ...params, logType: 1 }
   }
-
+  loading.value = true
   getLogPageList(obj).then((res: any) => {
+    loading.value = false
     const { data: logList, page: pagination } = res
     if (logList) {
       dataList.length = 0
@@ -204,6 +151,61 @@ const load = (params: any) => {
     }
   })
 }
+/**
+ * 表单
+ */
+const dialogTitle = reactive({
+  detail: '日志详情',
+})
+const formModel = reactive<Log>({
+  id: 0,
+  logTime: '',
+  operateApi: '',
+  requestParams: '',
+  errorMessage: '',
+  exceptionMessage: '',
+  ip: '',
+  logType: 0,
+})
+const formItems = reactive<Array<FormItem>>([
+  {
+    label: '编号',
+    labelWidth: '80px',
+    vModel: 'id',
+  },
+  {
+    label: '日志时间',
+    labelWidth: '80px',
+    vModel: 'logTime',
+  },
+  {
+    label: '操作接口',
+    labelWidth: '80px',
+    vModel: 'operateApi',
+  },
+  {
+    label: 'IP',
+    labelWidth: '80px',
+    vModel: 'ip',
+  },
+  {
+    label: '错误信息',
+    labelWidth: '80px',
+    vModel: 'errorMessage',
+  },
+  {
+    label: '请求参数',
+    labelWidth: '80px',
+    vModel: 'requestParams',
+    type: 'textarea',
+  },
+  {
+    label: '异常信息',
+    labelWidth: '80px',
+    vModel: 'exceptionMessage',
+    type: 'textarea',
+  },
+])
 </script>
 <template>
   <quick-crud
@@ -219,6 +221,7 @@ const load = (params: any) => {
     dialog-titles="dialogTitles"
     :page="page"
     :form-inline="true"
+    :loading="loading"
     @on-load="load"
     @on-detail="handleDetail"
     @on-delete="handleDelete"

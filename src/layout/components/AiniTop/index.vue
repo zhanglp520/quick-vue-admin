@@ -15,11 +15,15 @@ import {
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 // import AiniLanguage from '@/components/AiniLanguage/index.vue'
-import { useAppStore } from '../../../store/modules/app'
+import { useAppStore } from '@/store/modules/app'
+import { useUserStore } from '@/store/modules/user'
 
 const router = useRouter()
 const appStore = useAppStore()
+const userStore = useUserStore()
+
 const isCollapse = computed(() => appStore.getCollapse)
+const userInfo = computed(() => userStore.userInfo)
 const collapse = () => {
   appStore.setCollapse(!isCollapse.value)
 }
@@ -87,7 +91,9 @@ const handleCommand = (cmd: string) => {
       <span class="test">
         <el-dropdown @command="handleCommand">
           <span class="el-dropdown-link">
-            <el-avatar :size="30"> user </el-avatar>
+            <el-avatar :size="30">
+              {{ userInfo.userName.charAt(0).toUpperCase() }}
+            </el-avatar>
           </span>
           <template #dropdown>
             <el-dropdown-menu>

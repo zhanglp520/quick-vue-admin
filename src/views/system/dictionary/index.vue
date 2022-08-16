@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { dicFormat, treeFormat } from '@/utils'
-import QuickCrud from '@/components/QuickCrud/index.vue'
 import { Column, Actionbar, Toolbar } from '@/types/table'
 import { Dictionary } from '@/types/dictionary'
 import { FormItem } from '@/types/form'
 import { Options } from '@/types/options'
 import { Tree, LeftTree } from '@/types/tree'
+import QuickCrud from '@/components/QuickCrud/index.vue'
 import { getDictionaryTypeList } from '@/api/dictionaryType'
 import {
   getDictionaryList,
@@ -19,6 +19,7 @@ import {
 /**
  * 属性
  */
+const loading = ref(false)
 const dicTypeList = reactive<Array<Options>>([])
 const treeDataList = reactive<Array<Tree>>([])
 const dataList = reactive<Array<Dictionary>>([])
@@ -27,86 +28,6 @@ const currentTreeData = ref<Tree>({
   label: '',
   children: [],
 })
-/**
- * 表单
- */
-const dialogTitle = reactive({
-  add: '创建字典',
-  edit: '修改字典',
-  detail: '字典详情',
-})
-const formModel = reactive<Dictionary>({
-  id: '',
-  dicTypeId: '',
-  dicId: '',
-  name: '',
-})
-const formItems = reactive<Array<FormItem>>([
-  {
-    label: '字典编号',
-    labelWidth: '80px',
-    vModel: 'dicId',
-    placeholder: '字典编号',
-    editReadonly: true,
-    prop: 'dicId',
-    rules: [
-      {
-        required: true,
-        message: '字典编号不能为空',
-        trigger: 'blur',
-      },
-    ],
-  },
-  {
-    label: '字典名称',
-    labelWidth: '80px',
-    vModel: 'name',
-    placeholder: '字典名称',
-    prop: 'name',
-    rules: [
-      {
-        required: true,
-        message: '字典名称不能为空',
-        trigger: 'blur',
-      },
-    ],
-  },
-  {
-    label: '字典类型',
-    labelWidth: '80px',
-    vModel: 'dicTypeId',
-    placeholder: '字典类型',
-    type: 'select',
-    addDisabled: true,
-    editDisabled: true,
-    detailDisabled: true,
-    options: dicTypeList,
-    prop: 'dicTypeId',
-    change: (val: string) => {
-      console.log('change', val)
-    },
-  },
-])
-const handleFormSubmit = (form: Dictionary, done: any) => {
-  console.log('handleFormSubmit', form)
-  if (form.id) {
-    updateDictionary(form).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '字典修改成功',
-      })
-      done()
-    })
-  } else {
-    addDictionary(form).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '字典创建成功',
-      })
-      done()
-    })
-  }
-}
 /**
  * 工具栏
  */
@@ -194,11 +115,89 @@ const handleTreeClick = (data: Tree, done: any) => {
  */
 const load = () => {
   const { id } = currentTreeData.value
+  loading.value = true
   getDictionaryList(id).then((res) => {
+    loading.value = false
     const { data: dictionaryList } = res
     dataList.length = 0
     dataList.push(...dictionaryList)
   })
+}
+/**
+ * 表单
+ */
+const dialogTitle = reactive({
+  add: '创建字典',
+  edit: '修改字典',
+  detail: '字典详情',
+})
+const formModel = reactive<Dictionary>({
+  id: '',
+  dicTypeId: '',
+  dicId: '',
+  name: '',
+})
+const formItems = reactive<Array<FormItem>>([
+  {
+    label: '字典编号',
+    labelWidth: '80px',
+    vModel: 'dicId',
+    placeholder: '字典编号',
+    editReadonly: true,
+    prop: 'dicId',
+    rules: [
+      {
+        required: true,
+        message: '字典编号不能为空',
+        trigger: 'blur',
+      },
+    ],
+  },
+  {
+    label: '字典名称',
+    labelWidth: '80px',
+    vModel: 'name',
+    placeholder: '字典名称',
+    prop: 'name',
+    rules: [
+      {
+        required: true,
+        message: '字典名称不能为空',
+        trigger: 'blur',
+      },
+    ],
+  },
+  {
+    label: '字典类型',
+    labelWidth: '80px',
+    vModel: 'dicTypeId',
+    placeholder: '字典类型',
+    type: 'select',
+    addDisabled: true,
+    editDisabled: true,
+    detailDisabled: true,
+    options: dicTypeList,
+    prop: 'dicTypeId',
+  },
+])
+const handleFormSubmit = (form: Dictionary, done: any) => {
+  if (form.id) {
+    updateDictionary(form).then(() => {
+      ElMessage({
+        type: 'success',
+        message: '字典修改成功',
+      })
+      done()
+    })
+  } else {
+    addDictionary(form).then(() => {
+      ElMessage({
+        type: 'success',
+        message: '字典创建成功',
+      })
+      done()
+    })
+  }
 }
 </script>
 <template>
@@ -212,6 +211,7 @@ const load = () => {
     :table-toolbar="tableToolbar"
     dialog-titles="dialogTitles"
     :left-tree="leftTree"
+    :loading="loading"
     @on-load="load"
     @on-tree-load="treeLoad"
     @on-tree-click="handleTreeClick"

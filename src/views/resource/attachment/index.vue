@@ -2,16 +2,129 @@
 import { reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { UploadInstance } from 'element-plus'
-import QuickCrud from '@/components/QuickCrud/index.vue'
 import { Column, Actionbar, Toolbar } from '@/types/table'
 import { Role } from '@/types/role'
 import { FormItem } from '@/types/form'
-import { getRoleList, addRole, updateRole, deleteRole } from '@/api/role'
 import { SearchUser } from '@/types/user'
+import QuickCrud from '@/components/QuickCrud/index.vue'
+import { getRoleList, addRole, updateRole, deleteRole } from '@/api/role'
 
+/**
+ * 属性
+ */
+const loading = ref(false)
 const uploadRef = ref<UploadInstance>()
-
 const dataList = reactive<Array<Role>>([])
+/**
+ * 搜索
+ */
+const searchForm = reactive<SearchUser>({
+  userName: '',
+})
+const searchFormItems = reactive<Array<FormItem>>([
+  {
+    label: '名称',
+    vModel: 'userName',
+    placeholder: '名称',
+  },
+  {
+    label: '类型',
+    vModel: 'userName',
+    placeholder: '类型',
+  },
+])
+/**
+ * 工具栏
+ */
+const tableToolbar = reactive<Toolbar>({
+  hiddenAddButton: true,
+  hiddenExportButton: true,
+  hiddenPrintButton: true,
+  hiddenImportButton: true,
+  importButtonName: '上传',
+})
+/**
+ * 操作栏
+ */
+const handleDelete = (item: Role, done: any) => {
+  ElMessageBox.confirm(`你真的删除【${item.roleName}】的角色吗？`, '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    deleteRole(item.id).then(() => {
+      ElMessage({
+        type: 'success',
+        message: '角色删除成功',
+      })
+      done()
+    })
+  })
+}
+const tableActionbar = reactive<Actionbar>({
+  width: 150,
+})
+/**
+ * 表格
+ */
+const tableColumns = reactive<Array<Column>>([
+  {
+    width: '50',
+    type: 'selection',
+  },
+  {
+    label: '上传时间',
+    prop: 'roleName',
+  },
+  {
+    label: '名称',
+    prop: 'roleId',
+    width: '200',
+  },
+  {
+    label: '原文件名称',
+    prop: 'roleName',
+  },
+  {
+    label: '类型',
+    prop: 'roleName',
+  },
+  {
+    label: '大小',
+    prop: 'roleName',
+  },
+])
+/**
+ * 加载数据
+ */
+const load = () => {
+  loading.value = true
+  getRoleList().then((res) => {
+    loading.value = false
+    const { data: roleList } = res
+    dataList.length = 0
+    dataList.push(...roleList)
+  })
+}
+
+// 上传
+const upload = ref(null)
+
+const handleImport = (done: any) => {
+  // done()
+  //  this.$refs['upload'].$refs['upload-inner'].handleClick()
+
+  //  this.$refs['centerIcon'][0].$children[0].$refs.input.click()
+  // el-upload__input
+  if (upload.value) {
+    debugger
+    upload.value.handleStart()
+  }
+}
+
+const submitUpload = () => {
+  uploadRef.value!.submit()
+}
 /**
  * 表单
  */
@@ -57,7 +170,6 @@ const formItems = reactive<Array<FormItem>>([
   },
 ])
 const handleFormSubmit = (form: Role, done: any) => {
-  console.log('handleFormSubmit', form)
   if (form.id) {
     updateRole(form).then(() => {
       ElMessage({
@@ -75,113 +187,6 @@ const handleFormSubmit = (form: Role, done: any) => {
       done()
     })
   }
-}
-/**
- * 搜索
- */
-const searchForm = reactive<SearchUser>({
-  userName: '',
-})
-const searchFormItems = reactive<Array<FormItem>>([
-  {
-    label: '名称',
-    vModel: 'userName',
-    placeholder: '名称',
-  },
-  {
-    label: '类型',
-    vModel: 'userName',
-    placeholder: '类型',
-  },
-])
-
-/**
- * 工具栏
- */
-const tableToolbar = reactive<Toolbar>({
-  hiddenAddButton: true,
-  hiddenExportButton: true,
-  hiddenPrintButton: true,
-  hiddenImportButton: true,
-  importButtonName: '上传',
-})
-
-/**
- * 表格
- */
-const tableColumns = reactive<Array<Column>>([
-  {
-    width: '50',
-    type: 'selection',
-  },
-  {
-    label: '上传时间',
-    prop: 'roleName',
-  },
-  {
-    label: '名称',
-    prop: 'roleId',
-    width: '200',
-  },
-  {
-    label: '原文件名称',
-    prop: 'roleName',
-  },
-  {
-    label: '类型',
-    prop: 'roleName',
-  },
-  {
-    label: '大小',
-    prop: 'roleName',
-  },
-])
-const handleDelete = (item: Role, done: any) => {
-  ElMessageBox.confirm(`你真的删除【${item.roleName}】的角色吗？`, '警告', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(() => {
-    deleteRole(item.id).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '角色删除成功',
-      })
-      done()
-    })
-  })
-}
-const tableActionbar = reactive<Actionbar>({
-  width: 150,
-})
-/**
- * 加载数据
- */
-const load = () => {
-  getRoleList().then((res) => {
-    const { data: roleList } = res
-    dataList.length = 0
-    dataList.push(...roleList)
-  })
-}
-
-// 上传
-const upload = ref(null)
-
-const handleImport = (done: any) => {
-  // done()
-  //  this.$refs['upload'].$refs['upload-inner'].handleClick()
-
-  //  this.$refs['centerIcon'][0].$children[0].$refs.input.click()
-  // el-upload__input
-  if (upload.value) {
-    debugger
-    upload.value.handleStart()
-  }
-}
-
-const submitUpload = () => {
-  uploadRef.value!.submit()
 }
 </script>
 <template>
@@ -206,6 +211,7 @@ const submitUpload = () => {
     :search-form-items="searchFormItems"
     :search-form-model="searchForm"
     dialog-titles="dialogTitles"
+    :loading="loading"
     @on-load="load"
     @on-form-submit="handleFormSubmit"
     @on-delete="handleDelete"

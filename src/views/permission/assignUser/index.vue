@@ -1,17 +1,18 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox, ElTable } from 'element-plus'
-import QuickCrud from '@/components/QuickCrud/index.vue'
 import { treeFormat } from '@/utils'
 import { Column, Toolbar } from '@/types/table'
 import { User } from '@/types/user'
 import { Tree, LeftTree } from '@/types/tree'
+import QuickCrud from '@/components/QuickCrud/index.vue'
 import { getRoleList, getUserPermission, assignUser } from '@/api/role'
 import { getUserList } from '@/api/user'
 
 /**
  * 属性
  */
+const loading = ref(false)
 const dataList = reactive<Array<User>>([])
 const userList = reactive<Array<User>>([])
 const checkDataList = ref<Array<User>>([])
@@ -113,7 +114,9 @@ const tableColumns = reactive<Array<Column>>([
  * 加载数据
  */
 const load = () => {
+  loading.value = true
   getUserList().then((res) => {
+    loading.value = false
     const { data: userDataList } = res
     userList.length = 0
     userList.push(...userDataList)
@@ -193,6 +196,7 @@ const handleTreeClick = (data: Tree, done: any) => {
     :table-toolbar="tableToolbar"
     dialog-titles="dialogTitles"
     :left-tree="leftTree"
+    :loading="loading"
     @on-selection-change="handleSelectionChange"
     @on-load="load"
     @on-tree-load="treeLoad"

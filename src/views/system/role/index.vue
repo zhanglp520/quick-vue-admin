@@ -1,80 +1,17 @@
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import QuickCrud from '@/components/QuickCrud/index.vue'
 import { Column, Actionbar, Toolbar } from '@/types/table'
 import { Role } from '@/types/role'
 import { FormItem } from '@/types/form'
+import QuickCrud from '@/components/QuickCrud/index.vue'
 import { getRoleList, addRole, updateRole, deleteRole } from '@/api/role'
 
 /**
  * 属性
  */
+const loading = ref(false)
 const dataList = reactive<Array<Role>>([])
-/**
- * 表单
- */
-const dialogTitle = reactive({
-  add: '新增角色',
-  edit: '编辑角色',
-  detail: '角色详情',
-})
-const formModel = reactive<Role>({
-  id: '',
-  roleId: '',
-  roleName: '',
-})
-const formItems = reactive<Array<FormItem>>([
-  {
-    label: '角色编号',
-    labelWidth: '80px',
-    vModel: 'roleId',
-    placeholder: '角色编号',
-    editReadonly: true,
-    prop: 'roleId',
-    rules: [
-      {
-        required: true,
-        message: '角色编号不能为空',
-        trigger: 'blur',
-      },
-    ],
-  },
-  {
-    label: '角色名称',
-    labelWidth: '80px',
-    vModel: 'roleName',
-    placeholder: '角色名称',
-    prop: 'roleName',
-    rules: [
-      {
-        required: true,
-        message: '角色名称不能为空',
-        trigger: 'blur',
-      },
-    ],
-  },
-])
-const handleFormSubmit = (form: Role, done: any) => {
-  console.log('handleFormSubmit', form)
-  if (form.id) {
-    updateRole(form).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '角色修改成功',
-      })
-      done()
-    })
-  } else {
-    addRole(form).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '角色创建成功',
-      })
-      done()
-    })
-  }
-}
 /**
  * 工具栏
  */
@@ -127,11 +64,76 @@ const handleDelete = (item: Role, done: any) => {
  * 加载数据
  */
 const load = () => {
+  loading.value = true
   getRoleList().then((res) => {
+    loading.value = false
     const { data: roleList } = res
     dataList.length = 0
     dataList.push(...roleList)
   })
+}
+/**
+ * 表单
+ */
+const dialogTitle = reactive({
+  add: '新增角色',
+  edit: '编辑角色',
+  detail: '角色详情',
+})
+const formModel = reactive<Role>({
+  id: '',
+  roleId: '',
+  roleName: '',
+})
+const formItems = reactive<Array<FormItem>>([
+  {
+    label: '角色编号',
+    labelWidth: '80px',
+    vModel: 'roleId',
+    placeholder: '角色编号',
+    editReadonly: true,
+    prop: 'roleId',
+    rules: [
+      {
+        required: true,
+        message: '角色编号不能为空',
+        trigger: 'blur',
+      },
+    ],
+  },
+  {
+    label: '角色名称',
+    labelWidth: '80px',
+    vModel: 'roleName',
+    placeholder: '角色名称',
+    prop: 'roleName',
+    rules: [
+      {
+        required: true,
+        message: '角色名称不能为空',
+        trigger: 'blur',
+      },
+    ],
+  },
+])
+const handleFormSubmit = (form: Role, done: any) => {
+  if (form.id) {
+    updateRole(form).then(() => {
+      ElMessage({
+        type: 'success',
+        message: '角色修改成功',
+      })
+      done()
+    })
+  } else {
+    addRole(form).then(() => {
+      ElMessage({
+        type: 'success',
+        message: '角色创建成功',
+      })
+      done()
+    })
+  }
 }
 </script>
 <template>
@@ -144,6 +146,7 @@ const load = () => {
     :table-actionbar="tableActionbar"
     :table-toolbar="tableToolbar"
     dialog-titles="dialogTitles"
+    :loading="loading"
     @on-load="load"
     @on-form-submit="handleFormSubmit"
     @on-delete="handleDelete"

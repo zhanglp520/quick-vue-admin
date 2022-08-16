@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import QuickCrud from '@/components/QuickCrud/index.vue'
 import { Column, Actionbar, Toolbar } from '@/types/table'
 import { DictionaryType } from '@/types/dictionaryType'
 import { FormItem } from '@/types/form'
+import QuickCrud from '@/components/QuickCrud/index.vue'
 import {
   getDictionaryTypeList,
   addDictionaryType,
@@ -15,71 +15,8 @@ import {
 /**
  * 属性
  */
+const loading = ref(false)
 const dataList = reactive<Array<DictionaryType>>([])
-/**
- * 表单
- */
-const dialogTitle = reactive({
-  add: '创建字典分类',
-  edit: '修改字典分类',
-  detail: '字典分类详情',
-})
-const formModel = reactive<DictionaryType>({
-  id: '',
-  dicTypeId: '',
-  name: '',
-})
-const formItems = reactive<Array<FormItem>>([
-  {
-    label: '分类编号',
-    labelWidth: '80px',
-    vModel: 'dicTypeId',
-    placeholder: '分类编号',
-    editReadonly: true,
-    prop: 'dicTypeId',
-    rules: [
-      {
-        required: true,
-        message: '分类编号不能为空',
-        trigger: 'blur',
-      },
-    ],
-  },
-  {
-    label: '分类名称',
-    labelWidth: '80px',
-    vModel: 'name',
-    placeholder: '分类名称',
-    prop: 'name',
-    rules: [
-      {
-        required: true,
-        message: '分类名称不能为空',
-        trigger: 'blur',
-      },
-    ],
-  },
-])
-const handleFormSubmit = (form: DictionaryType, done: any) => {
-  console.log('handleFormSubmit', form)
-  if (form.id) {
-    updateDictionaryType(form).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '用户修改成功',
-      })
-      done()
-    })
-  } else {
-    addDictionaryType(form).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '用户创建成功',
-      })
-      done()
-    })
-  }
-}
 /**
  * 工具栏
  */
@@ -133,11 +70,76 @@ const tableColumns = reactive<Array<Column>>([
  * 加载数据
  */
 const load = () => {
+  loading.value = true
   getDictionaryTypeList().then((res) => {
+    loading.value = false
     const { data: dictionaryTypeList } = res
     dataList.length = 0
     dataList.push(...dictionaryTypeList)
   })
+}
+/**
+ * 表单
+ */
+const dialogTitle = reactive({
+  add: '创建字典分类',
+  edit: '修改字典分类',
+  detail: '字典分类详情',
+})
+const formModel = reactive<DictionaryType>({
+  id: '',
+  dicTypeId: '',
+  name: '',
+})
+const formItems = reactive<Array<FormItem>>([
+  {
+    label: '分类编号',
+    labelWidth: '80px',
+    vModel: 'dicTypeId',
+    placeholder: '分类编号',
+    editReadonly: true,
+    prop: 'dicTypeId',
+    rules: [
+      {
+        required: true,
+        message: '分类编号不能为空',
+        trigger: 'blur',
+      },
+    ],
+  },
+  {
+    label: '分类名称',
+    labelWidth: '80px',
+    vModel: 'name',
+    placeholder: '分类名称',
+    prop: 'name',
+    rules: [
+      {
+        required: true,
+        message: '分类名称不能为空',
+        trigger: 'blur',
+      },
+    ],
+  },
+])
+const handleFormSubmit = (form: DictionaryType, done: any) => {
+  if (form.id) {
+    updateDictionaryType(form).then(() => {
+      ElMessage({
+        type: 'success',
+        message: '用户修改成功',
+      })
+      done()
+    })
+  } else {
+    addDictionaryType(form).then(() => {
+      ElMessage({
+        type: 'success',
+        message: '用户创建成功',
+      })
+      done()
+    })
+  }
 }
 </script>
 <template>
@@ -150,6 +152,7 @@ const load = () => {
     :table-actionbar="tableActionbar"
     :table-toolbar="tableToolbar"
     dialog-titles="dialogTitles"
+    :loading="loading"
     @on-load="load"
     @on-form-submit="handleFormSubmit"
     @on-delete="handleDelete"
