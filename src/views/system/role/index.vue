@@ -7,6 +7,9 @@ import { Role } from '@/types/role'
 import { FormItem } from '@/types/form'
 import { getRoleList, addRole, updateRole, deleteRole } from '@/api/role'
 
+/**
+ * 属性
+ */
 const dataList = reactive<Array<Role>>([])
 /**
  * 表单
@@ -82,6 +85,12 @@ const tableToolbar = reactive<Toolbar>({
   hiddenPrintButton: true,
 })
 /**
+ * 操作栏
+ */
+const tableActionbar = reactive<Actionbar>({
+  width: 150,
+})
+/**
  * 表格
  */
 const tableColumns = reactive<Array<Column>>([
@@ -114,9 +123,6 @@ const handleDelete = (item: Role, done: any) => {
     })
   })
 }
-const tableActionbar = reactive<Actionbar>({
-  width: 150,
-})
 /**
  * 加载数据
  */

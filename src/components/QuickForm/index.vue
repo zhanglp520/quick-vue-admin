@@ -58,7 +58,7 @@ const { model, formInline, formItems, formType, actionSlot, hiddenAction } =
 /**
  * emits
  */
-const emits = defineEmits(['submit', 'clear'])
+const emits = defineEmits(['onSubmit'])
 const iconVisible = ref(false)
 /**
  * tabs
@@ -77,13 +77,28 @@ const iconClick = () => {
 /**
  * 函数
  */
+const submitForm = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  await formEl.validate((valid, fields) => {
+    if (valid) {
+      console.log('submit!')
+      emits('onSubmit', formRef.value)
+    } else {
+      console.log('error submit!', fields)
+    }
+  })
+}
+const resetForm = (formEl: FormInstance | undefined) => {
+  if (!formEl) return
+  formEl.resetFields()
+}
 const handleSubmit = () => {
-  emits('submit', formRef.value)
+  submitForm(formRef.value)
 }
 const handleClear = () => {
-  emits('clear')
+  resetForm(formRef.value)
 }
-defineExpose({ handleSubmit })
+defineExpose({ handleSubmit, handleClear })
 </script>
 <template>
   <el-form ref="formRef" :model="model" :inline="formInline" size="default">

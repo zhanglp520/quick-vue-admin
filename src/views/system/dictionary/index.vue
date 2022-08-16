@@ -7,7 +7,7 @@ import { Column, Actionbar, Toolbar } from '@/types/table'
 import { Dictionary } from '@/types/dictionary'
 import { FormItem } from '@/types/form'
 import { Options } from '@/types/options'
-import { Tree } from '@/types/tree'
+import { Tree, LeftTree } from '@/types/tree'
 import { getDictionaryTypeList } from '@/api/dictionaryType'
 import {
   getDictionaryList,
@@ -15,10 +15,9 @@ import {
   updateDictionary,
   deleteDictionary,
 } from '@/api/dictionary'
-import { LeftTree } from '../../types/tree'
 
 /**
- * 常规属性
+ * 属性
  */
 const dicTypeList = reactive<Array<Options>>([])
 const treeDataList = reactive<Array<Tree>>([])
@@ -82,6 +81,7 @@ const formItems = reactive<Array<FormItem>>([
     editDisabled: true,
     detailDisabled: true,
     options: dicTypeList,
+    prop: 'dicTypeId',
     change: (val: string) => {
       console.log('change', val)
     },
@@ -117,6 +117,28 @@ const tableToolbar = reactive<Toolbar>({
   hiddenPrintButton: true,
 })
 /**
+ * 操作栏
+ */
+const handleDelete = (item: Dictionary, done: any) => {
+  ElMessageBox.confirm(`你真的删除【${item.name}】的字典吗？`, '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    deleteDictionary(item.id).then(() => {
+      ElMessage({
+        type: 'success',
+        message: '字典删除成功',
+      })
+      done()
+    })
+  })
+}
+const tableActionbar = reactive<Actionbar>({
+  width: 300,
+  hiddenDetailButton: true,
+})
+/**
  * 表格
  */
 const tableColumns = reactive<Array<Column>>([
@@ -134,40 +156,6 @@ const tableColumns = reactive<Array<Column>>([
     prop: 'name',
   },
 ])
-const handleDelete = (item: Dictionary, done: any) => {
-  ElMessageBox.confirm(
-    `你真的删除【${item.dictionaryName}】的字典吗？`,
-    '警告',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    }
-  ).then(() => {
-    deleteDictionary(item.id).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '字典删除成功',
-      })
-      done()
-    })
-  })
-}
-const tableActionbar = reactive<Actionbar>({
-  width: 300,
-  hiddenDetailButton: true,
-})
-/**
- * 加载数据
- */
-const load = (parmas: object) => {
-  const { id } = currentTreeData.value
-  getDictionaryList(id).then((res: any) => {
-    const { data: dictionaryList } = res
-    dataList.length = 0
-    dataList.push(...dictionaryList)
-  })
-}
 /**
  * 左树
  */
@@ -175,7 +163,7 @@ const leftTree = reactive<LeftTree>({
   treeData: [],
 })
 const treeLoad = (done: any) => {
-  getDictionaryTypeList().then((res: any) => {
+  getDictionaryTypeList().then((res) => {
     const { data: dictionaryTypeList } = res
     const data = treeFormat(dictionaryTypeList, {
       id: 'dicTypeId',
@@ -200,6 +188,17 @@ const treeLoad = (done: any) => {
 const handleTreeClick = (data: Tree, done: any) => {
   currentTreeData.value = data
   done()
+}
+/**
+ * 加载数据
+ */
+const load = () => {
+  const { id } = currentTreeData.value
+  getDictionaryList(id).then((res) => {
+    const { data: dictionaryList } = res
+    dataList.length = 0
+    dataList.push(...dictionaryList)
+  })
 }
 </script>
 <template>

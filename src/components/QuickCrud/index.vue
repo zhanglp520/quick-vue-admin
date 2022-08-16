@@ -21,20 +21,6 @@ import { Page } from '@/types/page'
 import { LeftTree, Tree } from '@/types/tree'
 
 /**
- * 属性
- */
-const formTitle = reactive({
-  add: '添加',
-  edit: '编辑',
-  delete: '删除',
-  detail: '详情',
-})
-const title = ref('')
-const quickFormRef = ref<InstanceType<typeof QuickForm>>()
-const dialogFormVisible = ref(false)
-const dialogFormType = ref('')
-const checkDataList = reactive<Array<any>>([])
-/**
  * props
  */
 const props = defineProps({
@@ -174,11 +160,23 @@ const emits = defineEmits([
   'onSelectionChange',
   'onTableRef',
 ])
+
 /**
- * 常规属性
+ * 属性
  */
+const quickFormRef = ref<InstanceType<typeof QuickForm>>()
+const dialogFormVisible = ref(false)
+const dialogFormType = ref('')
+const checkDataList = reactive<Array<any>>([])
 const selectTree = ref<Tree>({})
 const treeRef = ref<InstanceType<typeof ElTree>>()
+const title = ref('')
+const formTitle = reactive({
+  add: '添加',
+  edit: '编辑',
+  delete: '删除',
+  detail: '详情',
+})
 /**
  * 加载数据
  */
@@ -229,9 +227,6 @@ const handleSearchClear = () => {
  * 操作栏
  */
 const handleEdit = (row: any) => {
-  dialogFormType.value = 'edit'
-  formTitle.edit = dialogTitle.value ? dialogTitle.value.edit : formTitle.edit
-  title.value = formTitle.edit
   Object.keys(formModel.value).forEach((key) => {
     formModel.value[key] = row[key]
   })
@@ -241,6 +236,9 @@ const handleEdit = (row: any) => {
     })
     dialogFormVisible.value = true
   })
+  dialogFormType.value = 'edit'
+  formTitle.edit = dialogTitle.value ? dialogTitle.value.edit : formTitle.edit
+  title.value = formTitle.edit
   dialogFormVisible.value = true
 }
 const handleDelete = (row: any) => {
@@ -249,11 +247,6 @@ const handleDelete = (row: any) => {
   })
 }
 const handleDetail = (row: any) => {
-  dialogFormType.value = 'detail'
-  formTitle.detail = dialogTitle.value
-    ? dialogTitle.value.detail
-    : formTitle.detail
-  title.value = formTitle.detail
   Object.keys(formModel.value).forEach((key) => {
     formModel.value[key] = row[key]
   })
@@ -263,30 +256,30 @@ const handleDetail = (row: any) => {
     })
     dialogFormVisible.value = true
   })
+  dialogFormType.value = 'detail'
+  formTitle.detail = dialogTitle.value
+    ? dialogTitle.value.detail
+    : formTitle.detail
+  title.value = formTitle.detail
   dialogFormVisible.value = true
 }
 /**
  * 表单
  */
 const handleOk = () => {
-  if (quickFormRef.value) {
-    quickFormRef.value.handleSubmit()
-  }
+  quickFormRef.value?.handleSubmit()
 }
 const handleCancel = () => {
+  Object.keys(formModel.value).forEach((key) => {
+    formModel.value[key] = ''
+  })
+  quickFormRef.value?.handleClear()
   dialogFormVisible.value = false
 }
-const handleSubmit = (formRef: FormInstance | undefined) => {
-  if (!formRef) return
-  formRef.validate((valid) => {
-    if (!valid) {
-      return false
-    }
-    emits('onFormSubmit', formModel.value, () => {
-      dialogFormVisible.value = false
-      refresh()
-    })
-    return true
+const handleFormSubmit = () => {
+  emits('onFormSubmit', formModel.value, () => {
+    dialogFormVisible.value = false
+    refresh()
   })
 }
 /**
@@ -300,16 +293,12 @@ const handleAdd = () => {
     })
     return
   }
-  Object.keys(formModel.value).forEach((key) => {
-    formModel.value[key] = ''
-    const index = formItems.value.findIndex(
-      (x) => x.vModel === key && (x.type === 'select' || x.type === 'tree')
-    )
-    if (index !== -1) {
-      formModel.value[key] = selectTree.value.id
-    }
+  emits('onAdd', formModel.value, (data: any) => {
+    Object.keys(formModel.value).forEach((key) => {
+      formModel.value[key] = data[key]
+    })
+    dialogFormVisible.value = true
   })
-
   dialogFormType.value = 'add'
   formTitle.add = dialogTitle.value ? dialogTitle.value.add : formTitle.add
   title.value = formTitle.add
@@ -528,12 +517,12 @@ onActivated(() => {
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
         />
+        <!-- 
+          :destroy-on-close="true" -->
         <el-dialog
           v-model="dialogFormVisible"
           :title="title"
           :width="formInline ? '60%' : '35%'"
-          :append-to-body="true"
-          :destroy-on-close="true"
           @close="handleCancel()"
         >
           <quick-form
@@ -543,7 +532,8 @@ onActivated(() => {
             :form-inline="formInline"
             :form-type="dialogFormType"
             :hidden-action="true"
-            @submit="handleSubmit"
+            :append-to-body="true"
+            @on-submit="handleFormSubmit"
           >
           </quick-form>
           <template #footer>

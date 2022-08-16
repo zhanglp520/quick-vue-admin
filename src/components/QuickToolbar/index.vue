@@ -171,7 +171,7 @@ const handleCustomClick = (item: any) => {
       @click="emits('onRefresh')"
       >{{ refreshButtonName }}</el-button
     >
-    <slot name="rightActions"></slot>
+    <slot name="rightToolbar"></slot>
   </div>
 </template>
 <style lang="scss" scoped>

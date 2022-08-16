@@ -1,15 +1,18 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import QuickCrud from '@/components/QuickCrud/index.vue'
 import { selectTreeFormat, listToTree } from '@/utils/index'
+import elementPlusIcons from '@/config/custormIcons.json'
 import { Column, Actionbar, Toolbar } from '@/types/table'
 import { Menu } from '@/types/menu'
 import { FormItem } from '@/types/form'
 import { Options } from '@/types/options'
 import { getMenuList, addMenu, updateMenu, deleteMenu } from '@/api/menu'
-import QuickCrud from '@/components/QuickCrud/index.vue'
-import elementPlusIcons from '@/config/custormIcons.json'
 
+/**
+ * 属性
+ */
 const dataList = reactive<Array<Menu>>([])
 const parentTreeList = reactive<Array<Options>>([])
 /**
@@ -21,7 +24,7 @@ const dialogTitle = reactive({
   detail: '菜单详情',
 })
 const formModel = reactive<Menu>({
-  id: 0,
+  id: '',
   menuId: '',
   menuName: '',
   path: '',
@@ -29,7 +32,7 @@ const formModel = reactive<Menu>({
   menuType: 0,
   icon: '',
   sort: 0,
-  pid: 0,
+  pid: '',
   link: 0,
   linkUrl: '',
   enabled: 1,
@@ -116,6 +119,7 @@ const formItems = reactive<Array<FormItem>>([
     vModel: 'path',
     placeholder: '路由',
     width: '400px',
+    prop: 'path',
   },
   {
     label: '视图',
@@ -123,6 +127,7 @@ const formItems = reactive<Array<FormItem>>([
     vModel: 'viewPath',
     placeholder: '视图',
     width: '400px',
+    prop: 'viewPath',
   },
   {
     label: '排序',
@@ -140,6 +145,7 @@ const formItems = reactive<Array<FormItem>>([
     type: 'tree',
     options: parentTreeList,
     width: '400px',
+    prop: 'pid',
   },
   {
     label: '是否启用',
@@ -174,6 +180,7 @@ const formItems = reactive<Array<FormItem>>([
     vModel: 'linkUrl',
     placeholder: '链接地址',
     width: '400px',
+    prop: 'linkUrl',
   },
 ])
 const handleFormSubmit = (form: Menu, done: any) => {
@@ -203,6 +210,27 @@ const tableToolbar = reactive<Toolbar>({
   hiddenImportButton: true,
   hiddenExportButton: true,
   hiddenPrintButton: true,
+})
+/**
+ * 操作栏
+ */
+const handleDelete = (item: Menu, done: any) => {
+  ElMessageBox.confirm(`你真的删除【${item.menuName}】的菜单吗？`, '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    deleteMenu(item.id).then(() => {
+      ElMessage({
+        type: 'success',
+        message: '菜单删除成功',
+      })
+      done()
+    })
+  })
+}
+const tableActionbar = reactive<Actionbar>({
+  width: 150,
 })
 /**
  * 表格
@@ -284,24 +312,6 @@ const tableColumns = reactive<Array<Column>>([
     },
   },
 ])
-const handleDelete = (item: Menu, done: any) => {
-  ElMessageBox.confirm(`你真的删除【${item.menuName}】的菜单吗？`, '警告', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(() => {
-    deleteMenu(item.id).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '菜单删除成功',
-      })
-      done()
-    })
-  })
-}
-const tableActionbar = reactive<Actionbar>({
-  width: 150,
-})
 /**
  * 加载数据
  */
