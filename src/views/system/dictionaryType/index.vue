@@ -12,6 +12,9 @@ import {
   deleteDictionaryType,
 } from '@/api/dictionaryType'
 
+/**
+ * 属性
+ */
 const dataList = reactive<Array<DictionaryType>>([])
 /**
  * 表单
@@ -87,23 +90,8 @@ const tableToolbar = reactive<Toolbar>({
   hiddenPrintButton: true,
 })
 /**
- * 表格
+ * 操作栏
  */
-const tableColumns = reactive<Array<Column>>([
-  {
-    width: '50',
-    type: 'selection',
-  },
-  {
-    label: '分类编号',
-    prop: 'dicTypeId',
-    width: '200',
-  },
-  {
-    label: '字典分类',
-    prop: 'name',
-  },
-])
 const handleDelete = (item: DictionaryType, done: any) => {
   ElMessageBox.confirm(`你真的删除【${item.name}】的字典分类吗？`, '警告', {
     confirmButtonText: '确定',
@@ -124,9 +112,27 @@ const tableActionbar = reactive<Actionbar>({
   hiddenDetailButton: true,
 })
 /**
+ * 表格
+ */
+const tableColumns = reactive<Array<Column>>([
+  {
+    width: '50',
+    type: 'selection',
+  },
+  {
+    label: '分类编号',
+    prop: 'dicTypeId',
+    width: '200',
+  },
+  {
+    label: '字典分类',
+    prop: 'name',
+  },
+])
+/**
  * 加载数据
  */
-const load = (parmas: object) => {
+const load = () => {
   getDictionaryTypeList().then((res) => {
     const { data: dictionaryTypeList } = res
     dataList.length = 0

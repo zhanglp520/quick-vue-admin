@@ -1,17 +1,17 @@
 export interface User {
-  id: string | number
+  id: string
   userId: string
   userName: string
   password?: string
   deleted?: number
   enabled?: number
-  createTime?: string | null
-  avatar?: string | null
-  fullName?: string | null
-  phone?: string | null
-  email?: string | null
-  address?: string | null
-  remark?: string | null
+  createTime?: string
+  avatar?: string
+  fullName?: string
+  phone?: string
+  email?: string
+  address?: string
+  remark?: string
 }
 export interface SearchUser {
   userName: string

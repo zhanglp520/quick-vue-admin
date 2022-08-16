@@ -69,7 +69,7 @@ export const treeFormat = (data: any, options: TreeOptions) => {
   })
   return arr
 }
-export const listToTableTree = (data: any, pId = 0) => {
+export const listToTableTree = (data: any, pId = '0') => {
   const arr = []
   const parentData = data.filter((x: any) => x.pId === pId)
   parentData.forEach((item: any) => {

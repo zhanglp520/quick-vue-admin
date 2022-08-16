@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { ElMessage, ElMessageBox, ElTable } from 'element-plus'
 import { reactive, ref } from 'vue'
-import { treeFormat } from '@/utils'
+import { ElMessage, ElMessageBox, ElTable } from 'element-plus'
 import QuickCrud from '@/components/QuickCrud/index.vue'
+import { treeFormat } from '@/utils'
 import { Column, Toolbar } from '@/types/table'
 import { User } from '@/types/user'
 import { Tree, LeftTree } from '@/types/tree'
@@ -10,8 +10,10 @@ import { getRoleList, getUserPermission, assignUser } from '@/api/role'
 import { getUserList } from '@/api/user'
 
 /**
- * 常规属性
+ * 属性
  */
+const dataList = reactive<Array<User>>([])
+const userList = reactive<Array<User>>([])
 const checkDataList = ref<Array<User>>([])
 const currentTreeData = ref<Tree>({
   id: '',
@@ -70,8 +72,8 @@ const tableToolbar = reactive<Toolbar>({
       name: '分配用户',
       position: 'left',
       type: 'primary',
-      click(data: any, done: any) {
-        handleAssign(data, done)
+      click() {
+        handleAssign()
       },
     },
   ],
@@ -79,44 +81,6 @@ const tableToolbar = reactive<Toolbar>({
 /**
  * 表格
  */
-const dataList = reactive<Array<User>>([])
-const userList = reactive<Array<User>>([])
-const handleSelectionChange = (selectDataList: Array<User>) => {
-  checkDataList.value = selectDataList
-}
-const load = () => {
-  getUserList().then((res) => {
-    const { data: userDataList } = res
-    userList.length = 0
-    userList.push(...userDataList)
-  })
-}
-const tabRef = ref<InstanceType<typeof ElTable>>()
-const hanleTableRef = (instance: any) => {
-  tabRef.value = instance.value
-}
-const toggleRowSelection = (rows: Array<User>) => {
-  rows.forEach((row) => {
-    if (tabRef.value) {
-      tabRef.value.toggleRowSelection(row, true)
-    }
-  })
-}
-const clearSelection = () => {
-  if (tabRef.value) {
-    tabRef.value.clearSelection()
-  }
-}
-const getRows = (data: string[]) => {
-  const arr: User[] = []
-  data.forEach((element: string) => {
-    const user = userList.find((x) => x.id === element)
-    if (user) {
-      arr.push(user)
-    }
-  })
-  return arr
-}
 const tableColumns = reactive<Array<Column>>([
   {
     width: '50',
@@ -145,6 +109,45 @@ const tableColumns = reactive<Array<Column>>([
     width: '200',
   },
 ])
+/**
+ * 加载数据
+ */
+const load = () => {
+  getUserList().then((res) => {
+    const { data: userDataList } = res
+    userList.length = 0
+    userList.push(...userDataList)
+  })
+}
+const handleSelectionChange = (selectDataList: Array<User>) => {
+  checkDataList.value = selectDataList
+}
+const tabRef = ref<InstanceType<typeof ElTable>>()
+const hanleTableRef = (instance: any) => {
+  tabRef.value = instance.value
+}
+const toggleRowSelection = (rows: Array<User>) => {
+  rows.forEach((row) => {
+    if (tabRef.value) {
+      tabRef.value.toggleRowSelection(row, true)
+    }
+  })
+}
+const clearSelection = () => {
+  if (tabRef.value) {
+    tabRef.value.clearSelection()
+  }
+}
+const getRows = (data: string[]) => {
+  const arr: User[] = []
+  data.forEach((element: string) => {
+    const user = userList.find((x) => x.id === element)
+    if (user) {
+      arr.push(user)
+    }
+  })
+  return arr
+}
 /**
  * 左树
  */

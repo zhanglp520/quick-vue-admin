@@ -1,16 +1,16 @@
 <script lang="ts" setup>
-import { ElTree, ElMessage, ElMessageBox } from 'element-plus'
 import { nextTick, onMounted, reactive, ref } from 'vue'
+import { ElTree, ElMessage, ElMessageBox } from 'element-plus'
+import QuickToolbar from '@/components/QuickToolbar/index.vue'
 import { listToTree, treeFormat } from '@/utils'
 import { MenuTree } from '@/types/menu'
 import { Toolbar } from '@/types/table'
 import { Tree } from '@/types/tree'
 import { getRoleList, getMenuPermission, assignPermission } from '@/api/role'
 import { getMenuList } from '@/api/menu'
-import QuickToolbar from '@/components/QuickToolbar/index.vue'
 
 /**
- * 菜单tree
+ * 属性
  */
 const menuTreeRef = ref<InstanceType<typeof ElTree>>()
 const menuProps = reactive({
@@ -20,19 +20,6 @@ const menuProps = reactive({
 })
 const menuTreeData = reactive<Array<MenuTree>>([])
 const menuTreeList = reactive<Array<MenuTree>>([])
-const menuLoad = () => {
-  getMenuList().then((res) => {
-    const { data: menuList } = res
-    const menuTree = listToTree(menuList, 0, {
-      pId: 'pid',
-    })
-    menuTreeList.length = 0
-    menuTreeList.push(...menuTree)
-  })
-}
-/**
- * 角色tree
- */
 const roleTreeRef = ref<InstanceType<typeof ElTree>>()
 const roleProps = reactive({
   id: 'id',
@@ -45,39 +32,6 @@ const currentTreeData = ref<Tree>({
   label: '',
   children: [],
 })
-const handleNodeClick = (data: any) => {
-  currentTreeData.value = data
-  const { id } = currentTreeData.value
-  getMenuPermission(id).then((res) => {
-    const { data: menuList } = res
-    const value = menuList.map((x) => x.id)
-    menuTreeData.length = 0
-    menuTreeData.push(...menuTreeList)
-    nextTick(() => {
-      if (menuTreeRef.value) {
-        menuTreeRef.value.setCheckedKeys(value, false)
-      }
-    })
-  })
-}
-const roleTreeLoad = () => {
-  getRoleList().then((res) => {
-    const { data: roleList } = res
-    const roleTree = treeFormat(roleList, {
-      id: 'id',
-      label: 'roleName',
-      children: 'children',
-    })
-    roleTreeData.length = 0
-    roleTreeData.push(...roleTree)
-    nextTick(() => {
-      const key = roleTree[0].id
-      roleTreeRef.value?.setCurrentKey(key)
-      const node = roleTreeRef.value?.getCurrentNode() as Tree
-      handleNodeClick(node)
-    })
-  })
-}
 /**
  * 工具栏
  */
@@ -118,6 +72,9 @@ const handleGrant = () => {
       })
     })
 }
+/**
+ * 操作栏
+ */
 const tableToolbar = reactive<Toolbar>({
   btns: [
     {
@@ -131,12 +88,57 @@ const tableToolbar = reactive<Toolbar>({
     },
   ],
 })
+/**
+ * 加载数据
+ */
+const menuLoad = () => {
+  getMenuList().then((res) => {
+    const { data: menuList } = res
+    const menuTree = listToTree(menuList, 0, {
+      pId: 'pid',
+    })
+    menuTreeList.length = 0
+    menuTreeList.push(...menuTree)
+  })
+}
+const handleNodeClick = (data: any) => {
+  currentTreeData.value = data
+  const { id } = currentTreeData.value
+  getMenuPermission(id).then((res) => {
+    const { data: menuList } = res
+    const value = menuList.map((x) => x.id)
+    menuTreeData.length = 0
+    menuTreeData.push(...menuTreeList)
+    nextTick(() => {
+      if (menuTreeRef.value) {
+        menuTreeRef.value.setCheckedKeys(value, false)
+      }
+    })
+  })
+}
+const roleTreeLoad = () => {
+  getRoleList().then((res) => {
+    const { data: roleList } = res
+    const roleTree = treeFormat(roleList, {
+      id: 'id',
+      label: 'roleName',
+      children: 'children',
+    })
+    roleTreeData.length = 0
+    roleTreeData.push(...roleTree)
+    nextTick(() => {
+      const key = roleTree[0].id
+      roleTreeRef.value?.setCurrentKey(key)
+      const node = roleTreeRef.value?.getCurrentNode() as Tree
+      handleNodeClick(node)
+    })
+  })
+}
 onMounted(() => {
   roleTreeLoad()
   menuLoad()
 })
 </script>
-
 <template>
   <div clas="content">
     <el-row :gutter="20">
@@ -163,7 +165,6 @@ onMounted(() => {
             :hidden-print-button="true"
             :hidden-refresh-button="true"
           ></quick-toolbar>
-          <!-- :default-checked-keys="" -->
           <el-tree
             ref="menuTreeRef"
             :data="menuTreeData"

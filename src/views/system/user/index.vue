@@ -6,7 +6,6 @@ import { Column, Actionbar, Toolbar } from '@/types/table'
 import { User, SearchUser } from '@/types/user'
 import { FormItem } from '@/types/form'
 import { Page } from '@/types/page'
-import { useUserStore } from '@/store/modules/user'
 import {
   getUserPageList,
   addUser,
@@ -18,7 +17,32 @@ import {
   disableUser,
 } from '@/api/user'
 
+/**
+ * 属性
+ */
 const dataList = reactive<Array<User>>([])
+/**
+ * 分页
+ */
+const page = reactive<Page>({
+  current: 1,
+  size: 10,
+  sizes: [10, 20, 30, 40, 50],
+  total: 100,
+})
+/**
+ * 搜索
+ */
+const searchForm = reactive<SearchUser>({
+  userName: '',
+})
+const searchFormItems = reactive<Array<FormItem>>([
+  {
+    label: '用户名',
+    vModel: 'userName',
+    placeholder: '用户名',
+  },
+])
 /**
  * 表单
  */
@@ -78,8 +102,10 @@ const formModel = reactive<User>({
   id: '',
   userId: '',
   userName: '',
-  password: '',
-  createTime: '',
+  fullName: '',
+  phone: '',
+  email: '',
+  address: '',
   remark: '',
 })
 const formItems = reactive<Array<FormItem>>([
@@ -164,6 +190,7 @@ const formItems = reactive<Array<FormItem>>([
     labelWidth: '80px',
     vModel: 'address',
     placeholder: '地址',
+    prop: 'address',
   },
   {
     label: '备注',
@@ -171,9 +198,9 @@ const formItems = reactive<Array<FormItem>>([
     vModel: 'remark',
     placeholder: '备注',
     type: 'textarea',
+    prop: 'remark',
   },
 ])
-
 const handleFormSubmit = (form: User, done: any) => {
   console.log('handleFormSubmit', form)
   if (form.id) {
@@ -195,26 +222,10 @@ const handleFormSubmit = (form: User, done: any) => {
   }
 }
 /**
- * 搜索
- */
-const searchForm = reactive<SearchUser>({
-  userName: '',
-})
-const searchFormItems = reactive<Array<FormItem>>([
-  {
-    label: '用户名',
-    vModel: 'userName',
-    placeholder: '用户名',
-  },
-])
-/**
  * 工具栏
  */
-const tableToolbar = reactive<Toolbar>({
-  hiddenBatchDeleteButton: false,
-})
 const handleBatchDelete = (data: any, done: any) => {
-  const { checkDataList, ids } = data
+  const { ids } = data
   ElMessageBox.confirm(`你真的删除选择的用户吗？`, '警告', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
@@ -238,63 +249,12 @@ const handleExport = () => {
 const handlePrint = () => {
   window.print()
 }
+const tableToolbar = reactive<Toolbar>({
+  hiddenBatchDeleteButton: false,
+})
 /**
- * 表格
+ * 操作栏
  */
-const tableColumns = reactive<Array<Column>>([
-  {
-    width: '100',
-    type: 'selection',
-    align: 'center',
-  },
-  {
-    label: '用户编号',
-    prop: 'userId',
-    width: '100',
-  },
-  {
-    label: '用户名',
-    prop: 'userName',
-    width: '100',
-  },
-  {
-    label: '姓名',
-    prop: 'fullName',
-    width: '100',
-  },
-  {
-    label: '手机号',
-    prop: 'phone',
-    width: '180',
-  },
-  {
-    label: '邮箱',
-    prop: 'email',
-    width: '200',
-  },
-  {
-    label: '是否启用',
-    prop: 'enabled',
-    width: '200',
-    format: (row: User) => {
-      return row.enabled === 1 ? '禁用' : '启用'
-    },
-  },
-  {
-    label: '创建时间',
-    prop: 'createTime',
-    width: '200',
-  },
-  {
-    label: '地址',
-    prop: 'address',
-    width: '200',
-  },
-  {
-    label: '备注',
-    prop: 'remark',
-  },
-])
 const handleDelete = (item: User, done: any) => {
   ElMessageBox.confirm(`你真的删除【${item.userName}】的用户吗？`, '警告', {
     confirmButtonText: '确定',
@@ -385,19 +345,67 @@ const tableActionbar = reactive<Actionbar>({
   ],
 })
 /**
- * 分页
+ * 表格
  */
-const page = reactive<Page>({
-  current: 1,
-  size: 10,
-  sizes: [10, 20, 30, 40, 50],
-  total: 100,
-})
+const tableColumns = reactive<Array<Column>>([
+  {
+    width: '100',
+    type: 'selection',
+    align: 'center',
+  },
+  {
+    label: '用户编号',
+    prop: 'userId',
+    width: '100',
+  },
+  {
+    label: '用户名',
+    prop: 'userName',
+    width: '100',
+  },
+  {
+    label: '姓名',
+    prop: 'fullName',
+    width: '100',
+  },
+  {
+    label: '手机号',
+    prop: 'phone',
+    width: '180',
+  },
+  {
+    label: '邮箱',
+    prop: 'email',
+    width: '200',
+  },
+  {
+    label: '是否启用',
+    prop: 'enabled',
+    width: '200',
+    format: (row: User) => {
+      return row.enabled === 1 ? '禁用' : '启用'
+    },
+  },
+  {
+    label: '创建时间',
+    prop: 'createTime',
+    width: '200',
+  },
+  {
+    label: '地址',
+    prop: 'address',
+    width: '200',
+  },
+  {
+    label: '备注',
+    prop: 'remark',
+  },
+])
 /**
  * 加载数据
  */
 const load = (parmas: object) => {
-  getUserPageList(parmas).then((res: any) => {
+  getUserPageList(parmas).then((res) => {
     const { data: userList, page: pagination } = res
     if (userList) {
       dataList.length = 0
