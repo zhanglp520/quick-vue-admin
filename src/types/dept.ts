@@ -4,3 +4,6 @@ export interface Dept {
   name: string
   pId: string
 }
+export interface DeptTree extends Dept {
+  children: DeptTree[]
+}

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { nextTick, onMounted, reactive, ref } from 'vue'
 import { ElTree, ElMessage, ElMessageBox } from 'element-plus'
-import QuickToolbar from '@/components/QuickToolbar/index.vue'
 import { listToTree, treeFormat } from '@/utils'
 import { MenuTree } from '@/types/menu'
 import { Toolbar } from '@/types/table'
 import { Tree } from '@/types/tree'
+import QuickToolbar from '@/components/QuickToolbar/index.vue'
 import { getRoleList, getMenuPermission, assignPermission } from '@/api/role'
 import { getMenuList } from '@/api/menu'
 

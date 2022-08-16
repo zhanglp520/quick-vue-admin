@@ -108,12 +108,6 @@ const emits = defineEmits([
   'onCustomToolbarClick',
 ])
 const handleCustomClick = (item: any) => {
-  // item.click(() => {
-  //   emits('onCustomToolbarClick', (data: any) => {
-  //     const { checkDataList, ids } = data
-  //     console.log('ids', ids)
-  //   })
-  // })
   emits('onCustomToolbarClick', item.click)
 }
 </script>

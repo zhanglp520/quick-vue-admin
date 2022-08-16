@@ -34,6 +34,10 @@ const props = defineProps({
     type: String,
     default: 'id',
   },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
   tableActionbar: {
     type: [Boolean, Object],
     default: false,
@@ -71,6 +75,7 @@ const {
   columns,
   height,
   rowKey,
+  loading,
   tableActionbar,
   editButtonName,
   deleteButtonName,
@@ -83,6 +88,7 @@ const {
   columns: Ref<Column[]>
   height: Ref<number>
   rowKey: Ref<string>
+  loading: Ref<boolean>
   tableActionbar: Ref<boolean | Actionbar>
   editButtonName: Ref<string>
   deleteButtonName: Ref<string>
@@ -128,6 +134,7 @@ onMounted(() => {
 <template>
   <el-table
     ref="tableRef"
+    v-loading="loading"
     :data="data"
     style="width: 100%"
     :height="height"
