@@ -146,6 +146,7 @@ onMounted(() => {
       :align="item.align"
       :formatter="item.format"
       show-overflow-tooltip
+      :fixed="item.fixed"
     ></el-table-column>
     <el-table-column
       v-if="tableActionbar"

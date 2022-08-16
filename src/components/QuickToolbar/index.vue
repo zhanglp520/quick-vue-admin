@@ -178,4 +178,8 @@ const handleCustomClick = (item: any) => {
 .toobar {
   margin-bottom: 10px;
 }
+
+.el-upload {
+  display: inline-flex;
+}
 </style>
