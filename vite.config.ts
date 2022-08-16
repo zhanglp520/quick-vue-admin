@@ -45,7 +45,7 @@ export default ({ command, mode }) => {
       https: false, // 运行服务是否以https方式
       host: true,
       port: VITE_PORT,
-      open: true,
+      open: false,
       proxy: {
         [VITE_APP_BASE_URL]: {
           target: 'http://localhost:3102/', // 代理的目标地址-本地

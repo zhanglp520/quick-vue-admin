@@ -29,6 +29,8 @@ const loginOut = () => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
+    localStorage.clear()
+    sessionStorage.clear()
     router.push('/login')
   })
 }
