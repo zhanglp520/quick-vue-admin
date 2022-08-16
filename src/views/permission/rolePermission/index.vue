@@ -53,7 +53,7 @@ const handleGrant = () => {
       if (!menuTreeRef.value) {
         return
       }
-      const menuIdArr = menuTreeRef.value.getCheckedKeys(false)
+      const menuIdArr = menuTreeRef.value.getCheckedKeys(true)
       const menuIds = menuIdArr.join(',')
       assignPermission({
         roleId: id,

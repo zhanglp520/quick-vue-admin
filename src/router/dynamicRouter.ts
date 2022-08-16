@@ -83,19 +83,6 @@ export const addRoutes = (router: Router) => {
   const userStore = useUserStore(pinia)
   const menuList = userStore.getPermissionMenuList
   const routerData = formatRouter(menuList)
-  router.addRoute({
-    path: '/',
-    name: 'fist',
-    component: layout['../layout/index.vue'],
-    redirect: '/home',
-    children: [
-      {
-        path: '/home',
-        name: 'home',
-        component: () => import('@/views/home/index.vue'),
-      },
-    ],
-  })
   routerData.forEach((element) => {
     router.addRoute(element)
   })

@@ -249,6 +249,7 @@ const tableColumns = reactive<Array<Column>>([
     label: '菜单名称',
     prop: 'menuName',
     width: '200',
+    fixed: true,
   },
   {
     label: '路由',
