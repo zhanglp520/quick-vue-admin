@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { computed, watch, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { Close } from '@element-plus/icons-vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useAppStore } from '../store/modules/app'
-import { useMenuStore } from '../store/modules/menu'
-import { useTabStore } from '../store/modules/tab'
+import { useAppStore } from '@/store/modules/app'
+import { useMenuStore } from '@/store/modules/menu'
+import { useTabStore } from '@/store/modules/tab'
 import { Tab } from '@/types/tab'
+import config from '@/config/index'
 import AiniTop from './components/AiniTop/index.vue'
 import AiniSidebar from './components/AiniSidebar/index.vue'
 
@@ -24,6 +26,7 @@ const isCollapse = computed(() => appStore.getCollapse)
 /**
  * 选项卡
  */
+const cache = ref(config.tabCache)
 const tabStore = useTabStore()
 const editableTabsValue = ref('home')
 const editableTabs = ref<Array<Tab>>([])
@@ -44,6 +47,11 @@ const handleClick = (activeName: string) => {
 }
 if (activeTab.value.id) {
   handleClick(activeTab.value.id)
+}
+const closeAll = () => {
+  tabStore.clear()
+  menuStore.clear()
+  editableTabsValue.value = 'home'
 }
 watch(activeTab, (val) => {
   if (val) {
@@ -74,7 +82,24 @@ watch(tabList, (val) => {
           </el-card>
         </el-header>
         <el-main class="content">
-          <el-card shadow="always" :body-style="{ padding: 10 }">
+          <el-card
+            shadow="always"
+            :body-style="{ padding: 10, position: 'relative' }"
+          >
+            <el-tooltip
+              class="box-item"
+              effect="light"
+              content="关闭全部"
+              placement="left"
+            >
+              <el-button
+                style="position: absolute; top: 30px; right: 22px; z-index: 1"
+                :icon="Close"
+                size="small"
+                @click="closeAll"
+              ></el-button>
+            </el-tooltip>
+
             <el-tabs
               v-model="editableTabsValue"
               type="card"
@@ -89,7 +114,12 @@ watch(tabList, (val) => {
                 :label="item.name"
                 :name="item.id"
               >
-                <router-view :key="route.fullPath" />
+                <router-view v-if="cache" v-slot="{ Component }">
+                  <keep-alive>
+                    <component :is="Component" />
+                  </keep-alive>
+                </router-view>
+                <router-view v-else></router-view>
               </el-tab-pane>
             </el-tabs>
           </el-card>
@@ -134,5 +164,6 @@ watch(tabList, (val) => {
 .el-aside {
   background-color: #545c64;
   width: 200px;
+  overflow: hidden;
 }
 </style>

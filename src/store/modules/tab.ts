@@ -49,6 +49,9 @@ export const useTabStore = defineStore('tabStore', {
         this.tabList = this.tabList.filter((x) => x.id !== id)
       }
     },
+    clear() {
+      this.tabList = this.tabList.filter((x) => x.id === 'home')
+    },
   },
   persist: {
     enabled: true,

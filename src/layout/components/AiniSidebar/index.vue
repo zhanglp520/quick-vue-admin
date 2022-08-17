@@ -42,12 +42,15 @@ const goHome = () => {
       <img src="@/assets/logo.png" />
       <h5 v-if="!isCollapse">{{ title }}</h5>
     </div>
-    <aini-menu></aini-menu>
+    <el-scrollbar style="100%">
+      <aini-menu></aini-menu>
+    </el-scrollbar>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .aini-sidebar {
+  height: calc(100% - 52px);
   .aini-title {
     display: flex;
     align-items: center;

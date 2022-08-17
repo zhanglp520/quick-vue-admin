@@ -340,8 +340,12 @@ const formItems = reactive<Array<FormItem>>([
   },
 ])
 const handleFormSubmit = (form: Menu, done: any) => {
-  if (form.id) {
-    updateMenu(form).then(() => {
+  const model = { ...form }
+  if (!model.pid) {
+    model.pid = '0'
+  }
+  if (model.id) {
+    updateMenu(model).then(() => {
       ElMessage({
         type: 'success',
         message: '菜单修改成功',
@@ -349,7 +353,7 @@ const handleFormSubmit = (form: Menu, done: any) => {
       done()
     })
   } else {
-    addMenu(form).then(() => {
+    addMenu(model).then(() => {
       ElMessage({
         type: 'success',
         message: '菜单创建成功',

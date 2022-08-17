@@ -27,8 +27,8 @@ const props = defineProps({
     },
   },
   height: {
-    type: Number,
-    default: 575,
+    type: [Boolean, Number],
+    default: false,
   },
   rowKey: {
     type: String,
@@ -86,7 +86,7 @@ const {
 } = toRefs(props) as {
   data: Ref<any>
   columns: Ref<Column[]>
-  height: Ref<number>
+  height: Ref<boolean | number>
   rowKey: Ref<string>
   loading: Ref<boolean>
   tableActionbar: Ref<boolean | Actionbar>
@@ -102,6 +102,7 @@ const {
  */
 const actionbar = tableActionbar.value as Actionbar
 const tableRef = ref<InstanceType<typeof ElTable>>()
+const tableHeight = height.value as number
 /**
  * emits
  */
@@ -132,12 +133,14 @@ onMounted(() => {
 })
 </script>
 <template>
+  <!-- :height="560" -->
   <el-table
     ref="tableRef"
     v-loading="loading"
     :data="data"
     style="width: 100%"
-    :height="height"
+    :height="tableHeight"
+    max-height="660"
     stripe
     border
     :row-key="rowKey"
@@ -231,3 +234,8 @@ onMounted(() => {
     </el-table-column>
   </el-table>
 </template>
+<style lang="scss" scoped>
+.el-table {
+  margin-bottom: 15px;
+}
+</style>
