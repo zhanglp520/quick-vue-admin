@@ -11,6 +11,7 @@ import {
   onActivated,
 } from 'vue'
 import { ElMessage, ElTree, FormInstance } from 'element-plus'
+import { number } from 'echarts'
 import QuickSearch from '@/components/QuickSearch/index.vue'
 import QuickTable from '@/components/QuickTable/index.vue'
 import QuickToolbar from '@/components/QuickToolbar/index.vue'
@@ -91,6 +92,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  height: {
+    type: [Boolean, Number],
+    default: false,
+  },
 })
 /**
  * props to ref
@@ -110,6 +115,7 @@ const {
   formItems,
   formInline,
   loading,
+  height,
 } = toRefs(props) as {
   searchFormModel: Ref<boolean | any>
   searchFormItems: Ref<FormItem[]>
@@ -125,6 +131,7 @@ const {
   tableToolbar: Ref<boolean | Toolbar>
   page: Ref<Page>
   loading: Ref<boolean>
+  height: Ref<boolean | number>
 }
 /**
  * 类型转换
@@ -503,6 +510,7 @@ onActivated(() => {
           :hidden-edit-button="actionbar?.hiddenEditButton"
           :hidden-delete-button="actionbar?.hiddenDeleteButton"
           :hidden-detail-button="actionbar?.hiddenDetailButton"
+          :height="height"
           @on-row-edit="handleEdit"
           @on-row-delete="handleDelete"
           @on-row-detail="handleDetail"
