@@ -5,7 +5,6 @@ import { Column, Actionbar, Toolbar } from '@/types/table'
 import { Log, SearchLog } from '@/types/log'
 import { FormItem } from '@/types/form'
 import { Page } from '@/types/page'
-import QuickCrud from '@/components/QuickCrud/index.vue'
 import { getLogPageList, removeLog, batchRemove } from '@/api/log'
 
 /**

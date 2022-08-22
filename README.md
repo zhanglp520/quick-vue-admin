@@ -54,6 +54,24 @@ github： git clone https://github.com/zhanglp520/quick-vue3-admin..git
 gitlab git clone http://110.42.130.88:8099/zhanglp520/quick-vue3-admin.git
 ```
 
+- 切换淘宝镜像
+
+```bash
+npm config set registry https://registry.npm.taobao.org
+```
+
+- 切换 npm
+
+```bash
+npm config set registry https://registry.npmjs.org
+```
+
+- 切换是否成功验证
+
+```bash
+npm config get registry
+```
+
 - 安装 pnpm
 
 ```bash

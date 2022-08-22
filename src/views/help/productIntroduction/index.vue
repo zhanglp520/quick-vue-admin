@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const yanshi = () => {
-  window.open('http://quick.ainiteam.com/')
+  window.open('https://quick.ainiteam.com/')
 }
 const kaiyuan = () => {
   window.open('https://gitee.com/zhanglp520/quick-vue3-admin/')

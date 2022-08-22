@@ -4,6 +4,7 @@ import 'element-plus/dist/index.css'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import en from 'element-plus/es/locale/lang/en'
 import * as Elicons from '@element-plus/icons-vue'
+import quick from 'quick-vue3-ui'
 import 'quick-vue3-ui/dist/style.css'
 import * as echarts from 'echarts'
 import App from './App.vue'
@@ -11,6 +12,8 @@ import { router } from './router'
 import pinia from './store'
 import i18n from './i18n'
 import { useAppStore } from './store/modules/app'
+
+console.log('quick', quick)
 
 const app = createApp(App)
 const appStore = useAppStore(pinia)
@@ -23,6 +26,7 @@ app
   .use(ElementPlus, {
     locale: appStore.getLanguage === 'zh' ? zhCn : en,
   })
+  .use(quick)
   .use(pinia)
   .use(router)
   .use(i18n)

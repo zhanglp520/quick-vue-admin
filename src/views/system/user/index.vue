@@ -5,7 +5,6 @@ import { Column, Actionbar, Toolbar } from '@/types/table'
 import { User, SearchUser } from '@/types/user'
 import { FormItem } from '@/types/form'
 import { Page } from '@/types/page'
-import QuickCrud from '@/components/QuickCrud/index.vue'
 import {
   getUserPageList,
   addUser,

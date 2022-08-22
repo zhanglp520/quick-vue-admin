@@ -4,7 +4,6 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { Column, Actionbar, Toolbar } from '@/types/table'
 import { DictionaryType } from '@/types/dictionaryType'
 import { FormItem } from '@/types/form'
-import QuickCrud from '@/components/QuickCrud/index.vue'
 import {
   getDictionaryTypeList,
   addDictionaryType,
