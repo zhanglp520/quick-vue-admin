@@ -10,13 +10,12 @@ import {
   nextTick,
   onActivated,
 } from 'vue'
-import { ElMessage, ElTree, FormInstance } from 'element-plus'
-import { number } from 'echarts'
+import { ElMessage, ElTree } from 'element-plus'
 import QuickSearch from '@/components/QuickSearch/index.vue'
 import QuickTable from '@/components/QuickTable/index.vue'
 import QuickToolbar from '@/components/QuickToolbar/index.vue'
 import QuickForm from '@/components/QuickForm/index.vue'
-import { Actionbar, Toolbar } from '@/types/table'
+import { Actionbar, Column, Toolbar } from '@/types/table'
 import { FormItem } from '@/types/form'
 import { Page } from '@/types/page'
 import { LeftTree, Tree } from '@/types/tree'
@@ -118,18 +117,18 @@ const {
   height,
 } = toRefs(props) as {
   searchFormModel: Ref<boolean | any>
-  searchFormItems: Ref<FormItem[]>
+  searchFormItems: Ref<Array<FormItem>>
   dialogTitle: Ref<boolean | any>
   formModel: Ref<any>
-  formItems: Ref<FormItem[]>
+  formItems: Ref<Array<FormItem>>
   formInline: Ref<boolean>
-  leftTree: Ref<any>
+  leftTree: Ref<boolean | object>
   leftTreeRefresh: Ref<boolean>
   tableData: Ref<any>
-  tableColumns: Ref<any>
+  tableColumns: Ref<Array<Column>>
   tableActionbar: Ref<boolean | Actionbar>
   tableToolbar: Ref<boolean | Toolbar>
-  page: Ref<Page>
+  page: Ref<boolean | Page>
   loading: Ref<boolean>
   height: Ref<boolean | number>
 }

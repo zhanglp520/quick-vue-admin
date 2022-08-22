@@ -49,7 +49,7 @@ const { model, formInline, formItems, formType, actionSlot, hiddenAction } =
   toRefs(props) as {
     model: Ref<any>
     formInline: Ref<boolean>
-    formItems: Ref<FormItem[]>
+    formItems: Ref<Array<FormItem>>
     formType: Ref<string>
     actionSlot: Ref<boolean>
     hiddenAction: Ref<boolean>

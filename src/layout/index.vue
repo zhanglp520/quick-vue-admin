@@ -104,7 +104,6 @@ watch(tabList, (val) => {
               v-model="editableTabsValue"
               type="card"
               closable
-              class="demo-tabs"
               @edit="handleTabsEdit"
               @tab-change="handleClick"
             >
@@ -144,11 +143,6 @@ watch(tabList, (val) => {
 }
 </style>
 <style>
-.demo-tabs > .el-tabs__content {
-  padding: 10px;
-  color: #6b778c;
-  font-size: 32px;
-}
 .el-header {
   padding: 0;
   height: 50px;
