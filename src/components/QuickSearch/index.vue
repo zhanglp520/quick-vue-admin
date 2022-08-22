@@ -32,7 +32,7 @@ const props = defineProps({
 const { model, items, searchButtonName, resetButtonName, hiddenResetButton } =
   toRefs(props) as {
     model: Ref<any>
-    items: Ref<FormItem[]>
+    items: Ref<Array<FormItem>>
     searchButtonName: Ref<any>
     resetButtonName: Ref<any>
     hiddenResetButton: Ref<any>

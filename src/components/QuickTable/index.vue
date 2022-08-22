@@ -85,7 +85,7 @@ const {
   hiddenDetailButton,
 } = toRefs(props) as {
   data: Ref<any>
-  columns: Ref<Column[]>
+  columns: Ref<Array<Column>>
   height: Ref<boolean | number>
   rowKey: Ref<string>
   loading: Ref<boolean>
