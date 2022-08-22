@@ -4,7 +4,6 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { Column, Actionbar, Toolbar } from '@/types/table'
 import { Role } from '@/types/role'
 import { FormItem } from '@/types/form'
-import QuickCrud from '@/components/QuickCrud/index.vue'
 import { getRoleList, addRole, updateRole, deleteRole } from '@/api/role'
 
 /**

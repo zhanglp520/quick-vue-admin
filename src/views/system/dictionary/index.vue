@@ -7,7 +7,6 @@ import { Dictionary } from '@/types/dictionary'
 import { FormItem } from '@/types/form'
 import { Options } from '@/types/options'
 import { Tree, LeftTree } from '@/types/tree'
-import QuickCrud from '@/components/QuickCrud/index.vue'
 import { getDictionaryTypeList } from '@/api/dictionaryType'
 import {
   getDictionaryList,

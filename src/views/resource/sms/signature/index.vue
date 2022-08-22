@@ -6,7 +6,6 @@ import { Column, Actionbar, Toolbar } from '@/types/table'
 import { Role } from '@/types/role'
 import { FormItem } from '@/types/form'
 import { SearchUser } from '@/types/user'
-import QuickCrud from '@/components/QuickCrud/index.vue'
 import { getRoleList, addRole, updateRole, deleteRole } from '@/api/role'
 
 /**

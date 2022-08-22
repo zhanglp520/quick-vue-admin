@@ -7,7 +7,6 @@ import { Column, Actionbar, Toolbar } from '@/types/table'
 import { Menu } from '@/types/menu'
 import { FormItem } from '@/types/form'
 import { Options } from '@/types/options'
-import QuickCrud from '@/components/QuickCrud/index.vue'
 import { getMenuList, addMenu, updateMenu, deleteMenu } from '@/api/menu'
 
 /**

@@ -7,7 +7,6 @@ import { Dept, DeptTree } from '@/types/dept'
 import { FormItem } from '@/types/form'
 import { Options } from '@/types/options'
 import { Tree, LeftTree } from '@/types/tree'
-import QuickCrud from '@/components/QuickCrud/index.vue'
 import { getDeptList, addDept, updateDept, deleteDept } from '@/api/dept'
 
 /**

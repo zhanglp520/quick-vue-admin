@@ -5,7 +5,6 @@ import { treeFormat } from '@/utils'
 import { Column, Toolbar } from '@/types/table'
 import { User } from '@/types/user'
 import { Tree, LeftTree } from '@/types/tree'
-import QuickCrud from '@/components/QuickCrud/index.vue'
 import { getRoleList, getUserPermission, assignUser } from '@/api/role'
 import { getUserList } from '@/api/user'
 
