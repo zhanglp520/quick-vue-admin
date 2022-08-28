@@ -1,12 +1,16 @@
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import {
+  Column,
+  Actionbar,
+  Toolbar,
+  FormItem,
+  Options,
+} from '@ainiteam/quick-vue3-ui'
 import { selectTreeFormat, listToTree } from '@/utils/index'
 import elementPlusIcons from '@/config/custormIcons.json'
-import { Column, Actionbar, Toolbar } from '@/types/table'
 import { Menu } from '@/types/menu'
-import { FormItem } from '@/types/form'
-import { Options } from '@/types/options'
 import { getMenuList, addMenu, updateMenu, deleteMenu } from '@/api/menu'
 
 /**

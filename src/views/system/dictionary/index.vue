@@ -1,12 +1,17 @@
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import {
+  Column,
+  Actionbar,
+  Toolbar,
+  FormItem,
+  Options,
+  Tree,
+  LeftTree,
+} from '@ainiteam/quick-vue3-ui'
 import { dicFormat, treeFormat } from '@/utils'
-import { Column, Actionbar, Toolbar } from '@/types/table'
 import { Dictionary } from '@/types/dictionary'
-import { FormItem } from '@/types/form'
-import { Options } from '@/types/options'
-import { Tree, LeftTree } from '@/types/tree'
 import { getDictionaryTypeList } from '@/api/dictionaryType'
 import {
   getDictionaryList,

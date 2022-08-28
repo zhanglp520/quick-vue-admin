@@ -1,12 +1,17 @@
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import {
+  Column,
+  Actionbar,
+  Toolbar,
+  FormItem,
+  Options,
+  Tree,
+  LeftTree,
+} from '@ainiteam/quick-vue3-ui'
 import { selectTreeFormat } from '@/utils'
-import { Column, Actionbar, Toolbar } from '@/types/table'
 import { Dept, DeptTree } from '@/types/dept'
-import { FormItem } from '@/types/form'
-import { Options } from '@/types/options'
-import { Tree, LeftTree } from '@/types/tree'
 import { getDeptList, addDept, updateDept, deleteDept } from '@/api/dept'
 
 /**

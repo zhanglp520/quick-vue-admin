@@ -1,9 +1,13 @@
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Column, Actionbar, Toolbar } from '@/types/table'
-import { FormItem } from '@/types/form'
-import { Page } from '@/types/page'
+import {
+  Column,
+  Actionbar,
+  Toolbar,
+  FormItem,
+  Page,
+} from '@ainiteam/quick-vue3-ui'
 import { Log, SearchLog } from '@/types/log'
 import { getLogPageList, removeLog, batchRemove } from '@/api/log'
 

@@ -14,7 +14,7 @@
     "skipLibCheck": true,
     "types": [
       "element-plus/global",
-      "quick-vue3-ui/global",
+      "@ainiteam/quick-vue3-ui",
       "pinia-plugin-persist"
     ],
     "suppressImplicitAnyIndexErrors": true,
