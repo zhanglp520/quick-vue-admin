@@ -36,6 +36,9 @@ export const useUserStore = defineStore('userStore', {
     getPermissionMenuList(): Array<Menu> {
       return this.permissionMenuList
     },
+    userInfo(): User {
+      return this.user
+    },
   },
   actions: {
     getPermission(id: string): Promise<QuickResponseData<Array<Menu>>> {
@@ -57,16 +60,16 @@ export const useUserStore = defineStore('userStore', {
         })
       })
     },
-    getUserPageList(parmas: object): Promise<QuickResponseData<Array<User>>> {
-      return new Promise((resolve) => {
-        getUserPageList(parmas).then((res) => {
-          const { data: userList } = res
-          this.userList = userList
+    // getUserPageList(parmas: object): Promise<QuickResponseData<Array<User>>> {
+    //   return new Promise((resolve) => {
+    //     getUserPageList(parmas).then((res) => {
+    //       const { data: userList } = res
+    //       this.userList = userList
 
-          resolve(res)
-        })
-      })
-    },
+    //       resolve(res)
+    //     })
+    //   })
+    // },
     getUserInfo(userName: string): Promise<User> {
       return new Promise((resolve) => {
         getUserInfo(userName).then((res) => {

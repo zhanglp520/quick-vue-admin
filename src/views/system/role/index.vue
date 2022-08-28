@@ -1,13 +1,75 @@
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import QuickCrud from '@/components/QuickCrud/index.vue'
-import { Column, Actionbar, Toolbar } from '@/types/table'
+import { Column, Actionbar, Toolbar, FormItem } from '@ainiteam/quick-vue3-ui'
 import { Role } from '@/types/role'
-import { FormItem } from '@/types/form'
 import { getRoleList, addRole, updateRole, deleteRole } from '@/api/role'
 
+/**
+ * 属性
+ */
+const loading = ref(false)
 const dataList = reactive<Array<Role>>([])
+/**
+ * 工具栏
+ */
+const tableToolbar = reactive<Toolbar>({
+  hiddenBatchDeleteButton: true,
+  hiddenImportButton: true,
+  hiddenExportButton: true,
+  hiddenPrintButton: true,
+})
+/**
+ * 操作栏
+ */
+const tableActionbar = reactive<Actionbar>({
+  width: 150,
+})
+/**
+ * 表格
+ */
+const tableColumns = reactive<Array<Column>>([
+  {
+    width: '50',
+    type: 'selection',
+  },
+  {
+    label: '角色编号',
+    prop: 'roleId',
+    width: '200',
+  },
+  {
+    label: '角色名称',
+    prop: 'roleName',
+  },
+])
+const handleDelete = (item: Role, done: any) => {
+  ElMessageBox.confirm(`你真的删除【${item.roleName}】的角色吗？`, '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    deleteRole(item.id).then(() => {
+      ElMessage({
+        type: 'success',
+        message: '角色删除成功',
+      })
+      done()
+    })
+  })
+}
+/**
+ * 加载数据
+ */
+const load = () => {
+  loading.value = true
+  getRoleList().then((res) => {
+    loading.value = false
+    const { data: roleList } = res
+    dataList.length = 0
+    dataList.push(...roleList)
+  })
+}
 /**
  * 表单
  */
@@ -53,7 +115,6 @@ const formItems = reactive<Array<FormItem>>([
   },
 ])
 const handleFormSubmit = (form: Role, done: any) => {
-  console.log('handleFormSubmit', form)
   if (form.id) {
     updateRole(form).then(() => {
       ElMessage({
@@ -72,61 +133,6 @@ const handleFormSubmit = (form: Role, done: any) => {
     })
   }
 }
-/**
- * 工具栏
- */
-const tableToolbar = reactive<Toolbar>({
-  hiddenBatchDeleteButton: true,
-  hiddenImportButton: true,
-  hiddenExportButton: true,
-  hiddenPrintButton: true,
-})
-/**
- * 表格
- */
-const tableColumns = reactive<Array<Column>>([
-  {
-    width: '50',
-    type: 'selection',
-  },
-  {
-    label: '角色编号',
-    prop: 'roleId',
-    width: '200',
-  },
-  {
-    label: '角色名称',
-    prop: 'roleName',
-  },
-])
-const handleDelete = (item: Role, done: any) => {
-  ElMessageBox.confirm(`你真的删除【${item.roleName}】的角色吗？`, '警告', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(() => {
-    deleteRole(item.id).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '角色删除成功',
-      })
-      done()
-    })
-  })
-}
-const tableActionbar = reactive<Actionbar>({
-  width: 150,
-})
-/**
- * 加载数据
- */
-const load = () => {
-  getRoleList().then((res) => {
-    const { data: roleList } = res
-    dataList.length = 0
-    dataList.push(...roleList)
-  })
-}
 </script>
 <template>
   <quick-crud
@@ -138,6 +144,7 @@ const load = () => {
     :table-actionbar="tableActionbar"
     :table-toolbar="tableToolbar"
     dialog-titles="dialogTitles"
+    :loading="loading"
     @on-load="load"
     @on-form-submit="handleFormSubmit"
     @on-delete="handleDelete"

@@ -34,8 +34,8 @@ export const selectTreeFormat = (data: any, options: SelectTreeOptions) => {
     options && options.children ? options.children : defaultOptions.children
   data.forEach((element: SelectTree) => {
     const obj: SelectTree = {
-      label: element[label],
-      value: element[value],
+      label: element[label].toString(),
+      value: element[value].toString(),
       children: [],
     }
     if (element[children] && element[children].length > 0) {
@@ -69,17 +69,6 @@ export const treeFormat = (data: any, options: TreeOptions) => {
   })
   return arr
 }
-export const listToTableTree = (data: any, pId = 0) => {
-  const arr = []
-  const parentData = data.filter((x: any) => x.pId === pId)
-  parentData.forEach((item: any) => {
-    const obj = item
-    obj.children = listToTableTree(data, item.id)
-    arr.push(obj)
-  })
-  return arr
-}
-
 export const tableTreeFormat = (data: any) => {
   const forderArr = []
   const menuArr = []

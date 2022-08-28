@@ -1,16 +1,14 @@
 <script lang="ts" setup>
-import { ElTree, ElMessage, ElMessageBox } from 'element-plus'
 import { nextTick, onMounted, reactive, ref } from 'vue'
+import { ElTree, ElMessage, ElMessageBox } from 'element-plus'
+import { Toolbar, Tree } from '@ainiteam/quick-vue3-ui'
 import { listToTree, treeFormat } from '@/utils'
 import { MenuTree } from '@/types/menu'
-import { Toolbar } from '@/types/table'
-import { Tree } from '@/types/tree'
 import { getRoleList, getMenuPermission, assignPermission } from '@/api/role'
 import { getMenuList } from '@/api/menu'
-import QuickToolbar from '@/components/QuickToolbar/index.vue'
 
 /**
- * 菜单tree
+ * 属性
  */
 const menuTreeRef = ref<InstanceType<typeof ElTree>>()
 const menuProps = reactive({
@@ -20,19 +18,6 @@ const menuProps = reactive({
 })
 const menuTreeData = reactive<Array<MenuTree>>([])
 const menuTreeList = reactive<Array<MenuTree>>([])
-const menuLoad = () => {
-  getMenuList().then((res) => {
-    const { data: menuList } = res
-    const menuTree = listToTree(menuList, 0, {
-      pId: 'pid',
-    })
-    menuTreeList.length = 0
-    menuTreeList.push(...menuTree)
-  })
-}
-/**
- * 角色tree
- */
 const roleTreeRef = ref<InstanceType<typeof ElTree>>()
 const roleProps = reactive({
   id: 'id',
@@ -45,6 +30,75 @@ const currentTreeData = ref<Tree>({
   label: '',
   children: [],
 })
+/**
+ * 工具栏
+ */
+const handleGrant = () => {
+  const { id, label } = currentTreeData.value
+  if (!id) {
+    ElMessage({
+      type: 'warning',
+      message: '请选择一个角色',
+    })
+    return
+  }
+  ElMessageBox.confirm(`你真的要给【${label}】角色分配权限吗？`, {
+    confirmButtonText: 'OK',
+    cancelButtonText: 'Cancel',
+    type: 'warning',
+  })
+    .then(() => {
+      if (!menuTreeRef.value) {
+        return
+      }
+      const menuIdArr = menuTreeRef.value.getCheckedKeys(true)
+      const menuIds = menuIdArr.join(',')
+      assignPermission({
+        roleId: id,
+        menuIds,
+      }).then(() => {
+        ElMessage({
+          type: 'success',
+          message: '分配权限成功',
+        })
+      })
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '您已取消分配权限',
+      })
+    })
+}
+/**
+ * 操作栏
+ */
+const tableToolbar = reactive<Toolbar>({
+  btns: [
+    {
+      name: '分配权限',
+      position: 'left',
+      type: 'primary',
+      size: 'small',
+      click() {
+        handleGrant()
+      },
+    },
+  ],
+})
+/**
+ * 加载数据
+ */
+const menuLoad = () => {
+  getMenuList().then((res) => {
+    const { data: menuList } = res
+    const menuTree = listToTree(menuList, 0, {
+      pId: 'pid',
+    })
+    menuTreeList.length = 0
+    menuTreeList.push(...menuTree)
+  })
+}
 const handleNodeClick = (data: any) => {
   currentTreeData.value = data
   const { id } = currentTreeData.value
@@ -78,65 +132,11 @@ const roleTreeLoad = () => {
     })
   })
 }
-/**
- * 工具栏
- */
-const handleGrant = () => {
-  const { id, label } = currentTreeData.value
-  if (!id) {
-    ElMessage({
-      type: 'warning',
-      message: '请选择一个角色',
-    })
-    return
-  }
-  ElMessageBox.confirm(`你真的要给【${label}】角色分配权限吗？`, {
-    confirmButtonText: 'OK',
-    cancelButtonText: 'Cancel',
-    type: 'warning',
-  })
-    .then(() => {
-      if (!menuTreeRef.value) {
-        return
-      }
-      const menuIdArr = menuTreeRef.value.getCheckedKeys(false)
-      const menuIds = menuIdArr.join(',')
-      assignPermission({
-        roleId: id,
-        menuIds,
-      }).then(() => {
-        ElMessage({
-          type: 'success',
-          message: '分配权限成功',
-        })
-      })
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '您已取消分配权限',
-      })
-    })
-}
-const tableToolbar = reactive<Toolbar>({
-  btns: [
-    {
-      name: '分配权限',
-      position: 'left',
-      type: 'primary',
-      size: 'small',
-      click() {
-        handleGrant()
-      },
-    },
-  ],
-})
 onMounted(() => {
   roleTreeLoad()
   menuLoad()
 })
 </script>
-
 <template>
   <div clas="content">
     <el-row :gutter="20">
@@ -163,7 +163,6 @@ onMounted(() => {
             :hidden-print-button="true"
             :hidden-refresh-button="true"
           ></quick-toolbar>
-          <!-- :default-checked-keys="" -->
           <el-tree
             ref="menuTreeRef"
             :data="menuTreeData"

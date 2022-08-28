@@ -2,8 +2,17 @@ import layout from '../layout/index.vue'
 
 const staticRouter = [
   {
-    path: '/:catchAll(.*)',
-    component: () => import('@/pages/404/index.vue'),
+    path: '/',
+    name: 'fist',
+    component: layout,
+    redirect: '/home',
+    children: [
+      {
+        path: '/home',
+        name: 'home',
+        component: () => import('@/views/home/index.vue'),
+      },
+    ],
   },
   {
     path: '/login',
@@ -33,6 +42,10 @@ const staticRouter = [
         component: () => import('../views/changePassword/index.vue'),
       },
     ],
+  },
+  {
+    path: '/:catchAll(.*)',
+    component: () => import('@/pages/404/index.vue'),
   },
 ]
 export default staticRouter

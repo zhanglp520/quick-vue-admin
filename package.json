@@ -1,7 +1,7 @@
 {
-  "name": "quick-server",
+  "name": "quick-vue3-admin",
   "private": true,
-  "version": "quick-server",
+  "version": "1.0.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -9,13 +9,10 @@
     "preview": "vite preview",
     "lint": "eslint --ext .js,ts,.vue, src",
     "lint-fix": "eslint --ext .js,ts,.vue, src --fix",
-    "prepare": "husky install",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:serve": "vitepress serve docs"
+    "prepare": "husky install"
   },
   "dependencies": {
-    "@element-plus/icons": "^0.0.11",
+    "@ainiteam/quick-vue3-ui": "^1.0.2",
     "@element-plus/icons-vue": "^2.0.6",
     "axios": "^0.27.2",
     "echarts": "5.3.2",
@@ -26,7 +23,6 @@
     "pinia": "^2.0.17",
     "pinia-plugin-persist": "^1.0.0",
     "pinia-use-persist": "^0.0.21",
-    "quick-vue3-ui": "1.0.5",
     "vue": "^3.2.25",
     "vue-i18n": "^9.1.9",
     "vue-router": "4"
@@ -51,12 +47,11 @@
     "unplugin-vue-define-options": "^0.6.1",
     "vite": "^2.9.5",
     "vite-plugin-html": "^3.2.0",
-    "vitepress": "^0.22.4",
     "vue-tsc": "^0.34.7"
   },
-  "description": "quick-server",
+  "description": "quick-vue3-admin是一套快速搭建后台系统框架，基于vite2+element-plus进行二次封装，使用最新技术栈vite2,vue3,typescript,pinia等等。",
   "main": "index.js",
-  "repository": "https://gitee.com/ainikeji/quick-vue3-admin.git",
-  "author": "15229380174 <zz15229380174@163.com>",
+  "repository": "https://gitee.com/zhanglp520/quick-vue3-admin.git",
+  "author": "15229380174 <zhanglp15229380174@163.com>",
   "license": "MIT"
 }

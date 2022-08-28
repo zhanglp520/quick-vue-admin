@@ -27,6 +27,9 @@ export const useMenuStore = defineStore('menuStore', {
     setActiveMenuId(activeMenuId: string) {
       this.activeMenuId = activeMenuId
     },
+    clear() {
+      this.permissionMenuTreeList = []
+    },
   },
   persist: {
     enabled: true,

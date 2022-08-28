@@ -1,10 +1,8 @@
 <script lang="ts" setup>
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import QuickCrud from '@/components/QuickCrud/index.vue'
-import { Column, Actionbar, Toolbar } from '@/types/table'
+import { Column, Actionbar, Toolbar, FormItem } from '@ainiteam/quick-vue3-ui'
 import { DictionaryType } from '@/types/dictionaryType'
-import { FormItem } from '@/types/form'
 import {
   getDictionaryTypeList,
   addDictionaryType,
@@ -12,7 +10,72 @@ import {
   deleteDictionaryType,
 } from '@/api/dictionaryType'
 
+/**
+ * 属性
+ */
+const loading = ref(false)
 const dataList = reactive<Array<DictionaryType>>([])
+/**
+ * 工具栏
+ */
+const tableToolbar = reactive<Toolbar>({
+  hiddenBatchDeleteButton: true,
+  hiddenImportButton: true,
+  hiddenExportButton: true,
+  hiddenPrintButton: true,
+})
+/**
+ * 操作栏
+ */
+const handleDelete = (item: DictionaryType, done: any) => {
+  ElMessageBox.confirm(`你真的删除【${item.name}】的字典分类吗？`, '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+  }).then(() => {
+    deleteDictionaryType(item.id).then(() => {
+      ElMessage({
+        type: 'success',
+        message: '字典分类删除成功',
+      })
+      done()
+    })
+  })
+}
+const tableActionbar = reactive<Actionbar>({
+  width: 100,
+  hiddenDetailButton: true,
+})
+/**
+ * 表格
+ */
+const tableColumns = reactive<Array<Column>>([
+  {
+    width: '50',
+    type: 'selection',
+  },
+  {
+    label: '分类编号',
+    prop: 'dicTypeId',
+    width: '200',
+  },
+  {
+    label: '字典分类',
+    prop: 'name',
+  },
+])
+/**
+ * 加载数据
+ */
+const load = () => {
+  loading.value = true
+  getDictionaryTypeList().then((res) => {
+    loading.value = false
+    const { data: dictionaryTypeList } = res
+    dataList.length = 0
+    dataList.push(...dictionaryTypeList)
+  })
+}
 /**
  * 表单
  */
@@ -58,7 +121,6 @@ const formItems = reactive<Array<FormItem>>([
   },
 ])
 const handleFormSubmit = (form: DictionaryType, done: any) => {
-  console.log('handleFormSubmit', form)
   if (form.id) {
     updateDictionaryType(form).then(() => {
       ElMessage({
@@ -77,62 +139,6 @@ const handleFormSubmit = (form: DictionaryType, done: any) => {
     })
   }
 }
-/**
- * 工具栏
- */
-const tableToolbar = reactive<Toolbar>({
-  hiddenBatchDeleteButton: true,
-  hiddenImportButton: true,
-  hiddenExportButton: true,
-  hiddenPrintButton: true,
-})
-/**
- * 表格
- */
-const tableColumns = reactive<Array<Column>>([
-  {
-    width: '50',
-    type: 'selection',
-  },
-  {
-    label: '分类编号',
-    prop: 'dicTypeId',
-    width: '200',
-  },
-  {
-    label: '字典分类',
-    prop: 'name',
-  },
-])
-const handleDelete = (item: DictionaryType, done: any) => {
-  ElMessageBox.confirm(`你真的删除【${item.name}】的字典分类吗？`, '警告', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(() => {
-    deleteDictionaryType(item.id).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '字典分类删除成功',
-      })
-      done()
-    })
-  })
-}
-const tableActionbar = reactive<Actionbar>({
-  width: 100,
-  hiddenDetailButton: true,
-})
-/**
- * 加载数据
- */
-const load = (parmas: object) => {
-  getDictionaryTypeList().then((res) => {
-    const { data: dictionaryTypeList } = res
-    dataList.length = 0
-    dataList.push(...dictionaryTypeList)
-  })
-}
 </script>
 <template>
   <quick-crud
@@ -144,6 +150,7 @@ const load = (parmas: object) => {
     :table-actionbar="tableActionbar"
     :table-toolbar="tableToolbar"
     dialog-titles="dialogTitles"
+    :loading="loading"
     @on-load="load"
     @on-form-submit="handleFormSubmit"
     @on-delete="handleDelete"

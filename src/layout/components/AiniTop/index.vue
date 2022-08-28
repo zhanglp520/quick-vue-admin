@@ -1,34 +1,43 @@
 <script setup lang="ts">
+import { ref, computed, onMounted, watch } from 'vue'
 import { ElMessageBox } from 'element-plus'
 import {
-  // Document,
-  // Location,
   Setting,
-  ArrowRight,
   Search,
   Fold,
-  // Expand,
   ChatDotRound,
   FullScreen,
   Phone,
 } from '@element-plus/icons-vue'
-import { computed } from 'vue'
 import { useRouter } from 'vue-router'
-// import AiniLanguage from '@/components/AiniLanguage/index.vue'
-import { useAppStore } from '../../../store/modules/app'
+import { useAppStore } from '@/store/modules/app'
+import { useUserStore } from '@/store/modules/user'
+import { useMenuStore } from '@/store/modules/menu'
+import QuickBreadcrumb from '@/components/QuickBreadcrumb/index.vue'
+import { Menu } from '@/types/menu'
 
 const router = useRouter()
 const appStore = useAppStore()
+const userStore = useUserStore()
+const menuStore = useMenuStore()
+
 const isCollapse = computed(() => appStore.getCollapse)
+const bredcrumbData = ref<Array<string>>([])
+const userInfo = computed(() => userStore.userInfo)
+const permissionMenuList = computed(() => userStore.getPermissionMenuList)
 const collapse = () => {
   appStore.setCollapse(!isCollapse.value)
 }
+const activeMenuId = computed(() => menuStore.getAciveMenuId)
+
 const loginOut = () => {
   ElMessageBox.confirm('你真的要退出系统吗?', '警告', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
+    localStorage.clear()
+    sessionStorage.clear()
     router.push('/login')
   })
 }
@@ -53,6 +62,39 @@ const handleCommand = (cmd: string) => {
       break
   }
 }
+const formatBredcrumbData = (currentMenuId: any) => {
+  bredcrumbData.value = []
+  const menu: Menu | undefined = permissionMenuList.value.find(
+    (x: Menu) => x.id.toString() === currentMenuId
+  )
+  if (!menu) {
+    return
+  }
+  const { pid, id } = menu
+  if (id === 'home') {
+    return
+  }
+  bredcrumbData.value.push(menu.menuName)
+  const parentMenu: Menu | undefined = permissionMenuList.value.find(
+    (x) => x.id === pid
+  )
+  if (parentMenu) {
+    bredcrumbData.value.push(parentMenu.menuName)
+    const parentMenu1: Menu | undefined = permissionMenuList.value.find(
+      (x) => x.id === parentMenu.pid
+    )
+    if (parentMenu1) {
+      bredcrumbData.value.push(parentMenu1.menuName)
+    }
+  }
+  bredcrumbData.value.reverse()
+}
+watch(activeMenuId, (val: string) => {
+  formatBredcrumbData(val)
+})
+onMounted(() => {
+  formatBredcrumbData(activeMenuId.value)
+})
 </script>
 
 <template>
@@ -62,11 +104,7 @@ const handleCommand = (cmd: string) => {
         <el-icon><Fold /></el-icon>
       </span>
       <div>
-        <el-breadcrumb :separator-icon="ArrowRight">
-          <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-          <el-breadcrumb-item>系统管理</el-breadcrumb-item>
-          <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-        </el-breadcrumb>
+        <quick-breadcrumb :data="bredcrumbData"></quick-breadcrumb>
       </div>
     </div>
     <div class="right">
@@ -85,7 +123,9 @@ const handleCommand = (cmd: string) => {
       <span class="test">
         <el-dropdown @command="handleCommand">
           <span class="el-dropdown-link">
-            <el-avatar :size="30"> user </el-avatar>
+            <el-avatar :size="30">
+              {{ userInfo.userName.charAt(0).toUpperCase() }}
+            </el-avatar>
           </span>
           <template #dropdown>
             <el-dropdown-menu>
@@ -106,7 +146,6 @@ const handleCommand = (cmd: string) => {
         <el-icon><Setting /></el-icon>
       </span>
     </div>
-    <!-- <aini-language></aini-language> -->
   </div>
 </template>
 

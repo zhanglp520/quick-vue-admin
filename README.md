@@ -28,15 +28,19 @@ quick-vue3-admin 是一款免费开源快速搭建中后台系统框架。本框
 
 演示账号密码：admin/123456
 
-## 文档
-- [quick-vue3-template](https://template.ainiteam.com/) - quick帮助文档
+## 开发文档
+
+- [quick-vue3-template](https://doc.ainiteam.com/) - quick-vue3-admin 开发文档
+
+## 组件文档
+
+- [quick-vue3-template](https://template.ainiteam.com/) - quick-vue3-admin 帮助文档
 
 账号密码：admin/123456
 
 ## 接口文档
 
-- [quick接口文档](https://console-docs.apipost.cn/preview/0e11a2eb3c3883a7/4fff7a394c074ac7) - quick接口文档
-
+- [quick 接口文档](https://console-docs.apipost.cn/preview/0e11a2eb3c3883a7/4fff7a394c074ac7) - quick 接口文档
 
 ## 安装使用
 
@@ -48,6 +52,24 @@ quick-vue3-admin 是一款免费开源快速搭建中后台系统框架。本框
 github： git clone https://github.com/zhanglp520/quick-vue3-admin..git
 
 gitlab git clone http://110.42.130.88:8099/zhanglp520/quick-vue3-admin.git
+```
+
+- 切换淘宝镜像
+
+```bash
+npm config set registry https://registry.npm.taobao.org
+```
+
+- 切换 npm
+
+```bash
+npm config set registry https://registry.npmjs.org
+```
+
+- 切换是否成功验证
+
+```bash
+npm config get registry
 ```
 
 - 安装 pnpm
