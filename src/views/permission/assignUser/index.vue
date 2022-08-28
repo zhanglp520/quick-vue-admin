@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox, ElTable } from 'element-plus'
+import { Column, Toolbar, Tree, LeftTree } from '@ainiteam/quick-vue3-ui'
 import { treeFormat } from '@/utils'
-import { Column, Toolbar } from '@/types/table'
 import { User } from '@/types/user'
-import { Tree, LeftTree } from '@/types/tree'
 import { getRoleList, getUserPermission, assignUser } from '@/api/role'
 import { getUserList } from '@/api/user'
 

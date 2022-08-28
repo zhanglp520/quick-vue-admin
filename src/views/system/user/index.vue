@@ -1,10 +1,14 @@
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Column, Actionbar, Toolbar } from '@/types/table'
+import {
+  Column,
+  FormItem,
+  Page,
+  Actionbar,
+  Toolbar,
+} from '@ainiteam/quick-vue3-ui'
 import { User, SearchUser } from '@/types/user'
-import { FormItem } from '@/types/form'
-import { Page } from '@/types/page'
 import {
   getUserPageList,
   addUser,

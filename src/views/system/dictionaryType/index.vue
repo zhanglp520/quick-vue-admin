@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Column, Actionbar, Toolbar } from '@/types/table'
+import { Column, Actionbar, Toolbar, FormItem } from '@ainiteam/quick-vue3-ui'
 import { DictionaryType } from '@/types/dictionaryType'
-import { FormItem } from '@/types/form'
 import {
   getDictionaryTypeList,
   addDictionaryType,
