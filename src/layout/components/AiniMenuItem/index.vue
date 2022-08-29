@@ -1,5 +1,6 @@
 <script lang="ts" setup>
  import { Ref, defineProps, toRefs } from 'vue'
+ import { ElMessage } from 'element-plus'
 import { useTabStore } from '@/store/modules/tab'
 import { Menubar } from '@/types/menu'
 import { Tab } from '@/types/tab'
@@ -37,6 +38,14 @@ const menuClick = (item:Menubar) => {
       id: id.toString(),
       name: menuName,
       path: routerPath,
+    }
+    const tabList=tabStore.getTabList
+    if(tabList.length>=15){
+      ElMessage({
+      type: 'warning',
+      message: '选项卡最多15个，请关闭部分再试',
+    })
+      return
     }
     tabStore.addTab(tab)
   }
