@@ -115,7 +115,7 @@ const kaiyuan = () => {
             </div>
           </template>
           <p>
-            1.ui开发文档：<el-link
+            1.开发文档：<el-link
               type="primary"
               href=" https://doc.ainiteam.com/"
             >
