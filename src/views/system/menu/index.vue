@@ -31,23 +31,23 @@ const tableToolbar = reactive<Toolbar>({
 /**
  * 操作栏
  */
-const handleEdit = (form: Menu, done: any) => {
-  const model = { ...form }
-  if (!model.pid) {
-    model.pid = ''
+const handleEdit = (item: Menu, done: any) => {
+  const form = { ...item }
+  if (!form.pId) {
+    form.pId = ''
   } else {
-    model.pid = model.pid.toString()
+    form.pId = form.pId.toString()
   }
-  done(model)
+  done(form)
 }
-const handleDetail = (form: Menu, done: any) => {
-  const model = { ...form }
-  if (!model.pid) {
-    model.pid = ''
+const handleDetail = (item: Menu, done: any) => {
+  const form = { ...item }
+  if (!form.pId) {
+    form.pId = ''
   } else {
-    model.pid = model.pid.toString()
+    form.pId = form.pId.toString()
   }
-  done(model)
+  done(form)
 }
 const handleDelete = (item: Menu, done: any) => {
   ElMessageBox.confirm(`你真的删除【${item.menuName}】的菜单吗？`, '警告', {
@@ -157,14 +157,14 @@ const load = () => {
     loading.value = false
     const { data: menuList } = res
     const menuTree = listToTree(menuList, 0, {
-      pId: 'pid',
+      pId: 'pId',
     })
     dataList.length = 0
     dataList.push(...menuTree)
 
     const parentMenuList = menuList.filter((x) => x.menuType !== 2)
     const parentTree = listToTree(parentMenuList, 0, {
-      pId: 'pid',
+      pId: 'pId',
     })
     const selectTreeData = selectTreeFormat(parentTree, {
       value: 'id',
@@ -191,7 +191,7 @@ const formModel = reactive<Menu>({
   menuType: 0,
   icon: '',
   sort: 0,
-  pid: '',
+  pId: '',
   link: 0,
   linkUrl: '',
   enabled: 1,
@@ -299,12 +299,12 @@ const formItems = reactive<Array<FormItem>>([
   {
     label: '父级菜单',
     labelWidth: '80px',
-    vModel: 'pid',
+    vModel: 'pId',
     placeholder: '父级菜单',
     type: 'tree',
     options: parentTreeList,
     width: '400px',
-    prop: 'pid',
+    prop: 'pId',
   },
   {
     label: '是否启用',
@@ -344,8 +344,8 @@ const formItems = reactive<Array<FormItem>>([
 ])
 const handleFormSubmit = (form: Menu, done: any) => {
   const model = { ...form }
-  if (!model.pid) {
-    model.pid = '0'
+  if (!model.pId) {
+    model.pId = '0'
   }
   if (model.id) {
     updateMenu(model).then(() => {

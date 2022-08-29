@@ -54,7 +54,7 @@ const formatRouter = (data: Menu[]) => {
         link: element.link,
       },
     }
-    const childMenu = secondMenuArr.filter((x) => x.pid === element.id)
+    const childMenu = secondMenuArr.filter((x) => x.pId === element.id)
     if (childMenu.length > 0) {
       routerObj.redirect = childMenu[0].path
       childMenu.forEach((childElement: Menu) => {

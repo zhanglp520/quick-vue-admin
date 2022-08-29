@@ -93,7 +93,7 @@ const menuLoad = () => {
   getMenuList().then((res) => {
     const { data: menuList } = res
     const menuTree = listToTree(menuList, 0, {
-      pId: 'pid',
+      pId: 'pId',
     })
     menuTreeList.length = 0
     menuTreeList.push(...menuTree)

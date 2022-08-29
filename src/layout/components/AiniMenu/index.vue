@@ -41,7 +41,7 @@ const homeMenuClick = () => {
     menuType: '0',
     icon: '',
     sort: 0,
-    pid: '0',
+    pId: '0',
     link: 0,
     enabled: 0,
     status: 0,
