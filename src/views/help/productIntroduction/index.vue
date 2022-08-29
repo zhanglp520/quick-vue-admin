@@ -115,7 +115,7 @@ const kaiyuan = () => {
             </div>
           </template>
           <p>
-            1.开发文档：<el-link
+            1.ui开发文档：<el-link
               type="primary"
               href=" https://doc.ainiteam.com/"
             >
@@ -126,12 +126,6 @@ const kaiyuan = () => {
               href="https://console-docs.apipost.cn/preview/0e11a2eb3c3883a7/4fff7a394c074ac7"
             >
               https://console-docs.apipost.cn/preview/0e11a2eb3c3883a7/4fff7a394c074ac7</el-link
-            ><br />
-            3.组件文档：<el-link
-              type="primary"
-              href="https://template.ainiteam.com/"
-            >
-              https://template.ainiteam.com/</el-link
             ><br />
             4.码云地址：<el-link
               type="primary"

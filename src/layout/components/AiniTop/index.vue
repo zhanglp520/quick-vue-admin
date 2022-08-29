@@ -70,18 +70,18 @@ const formatBredcrumbData = (currentMenuId: any) => {
   if (!menu) {
     return
   }
-  const { pid, id } = menu
+  const { pId, id } = menu
   if (id === 'home') {
     return
   }
   bredcrumbData.value.push(menu.menuName)
   const parentMenu: Menu | undefined = permissionMenuList.value.find(
-    (x) => x.id === pid
+    (x) => x.id === pId
   )
   if (parentMenu) {
     bredcrumbData.value.push(parentMenu.menuName)
     const parentMenu1: Menu | undefined = permissionMenuList.value.find(
-      (x) => x.id === parentMenu.pid
+      (x) => x.id === parentMenu.pId
     )
     if (parentMenu1) {
       bredcrumbData.value.push(parentMenu1.menuName)

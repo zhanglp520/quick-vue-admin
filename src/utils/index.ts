@@ -85,11 +85,11 @@ export const tableTreeFormat = (data: any) => {
     }
   })
   menuArr.forEach((element, index) => {
-    const children = btnArr.filter((x) => x.pid === element.id)
+    const children = btnArr.filter((x) => x.pId === element.id)
     menuArr[index].children = children
   })
   forderArr.forEach((element, index) => {
-    const children = menuArr.filter((x) => x.pid === element.id)
+    const children = menuArr.filter((x) => x.pId === element.id)
     forderArr[index].children = children
   })
   return forderArr
@@ -111,11 +111,11 @@ export const menuTreeFormat = (data: any) => {
     }
   })
   menuArr.forEach((element, index) => {
-    const children = btnArr.filter((x) => x.pid === element.id)
+    const children = btnArr.filter((x) => x.pId === element.id)
     menuArr[index].children = children
   })
   forderArr.forEach((element, index) => {
-    const children = menuArr.filter((x) => x.pid === element.id)
+    const children = menuArr.filter((x) => x.pId === element.id)
     forderArr[index].children = children
   })
   return forderArr
@@ -133,7 +133,7 @@ export const menuFormat = (data: any) => {
     }
   })
   forderArr.forEach((element, index) => {
-    const children = menuArr.filter((x) => x.pid === element.id)
+    const children = menuArr.filter((x) => x.pId === element.id)
     forderArr[index].children = children
   })
   return forderArr
