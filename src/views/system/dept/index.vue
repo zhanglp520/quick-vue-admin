@@ -13,6 +13,7 @@ import {
 import { selectTreeFormat } from '@/utils'
 import { Dept, DeptTree } from '@/types/dept'
 import { getDeptList, addDept, updateDept, deleteDept } from '@/api/dept'
+import { Menu } from '@/types/menu'
 
 /**
  * 属性
@@ -29,6 +30,13 @@ const currentTreeData = ref<Tree>({
 /**
  * 工具栏
  */
+const handleAdd = (item: Dept, done: any) => {
+  const form = { ...item }
+  form.pId = currentTreeData.value.id
+  console.log('form', form)
+
+  done(form)
+}
 const tableToolbar = reactive<Toolbar>({
   hiddenBatchDeleteButton: true,
   hiddenImportButton: true,
@@ -268,5 +276,6 @@ const handleFormSubmit = (form: Dept, done: any) => {
     @on-tree-click="handleTreeClick"
     @on-form-submit="handleFormSubmit"
     @on-delete="handleDelete"
+    @on-add="handleAdd"
   ></quick-crud>
 </template>

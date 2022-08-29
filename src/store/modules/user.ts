@@ -51,7 +51,7 @@ export const useUserStore = defineStore('userStore', {
           // const userMenuList = menuFormat(dt)
           const dtNew = dt.filter((x) => x.menuType !== 2)
           const userMenuList = listToTree(dtNew, 0, {
-            pId: 'pid',
+            pId: 'pId',
           })
 
           const m = JSON.parse(JSON.stringify(userMenuList))

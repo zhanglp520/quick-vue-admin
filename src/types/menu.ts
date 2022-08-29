@@ -7,7 +7,7 @@ export interface Menu {
   menuType: number
   icon: string
   sort: number
-  pid: string
+  pId: string
   link: number
   linkUrl: string
   enabled: number

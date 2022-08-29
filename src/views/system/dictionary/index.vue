@@ -35,6 +35,11 @@ const currentTreeData = ref<Tree>({
 /**
  * 工具栏
  */
+const handleAdd = (item: Dictionary, done: any) => {
+  const form = { ...item }
+  form.dicTypeId = currentTreeData.value.id
+  done(form)
+}
 const tableToolbar = reactive<Toolbar>({
   hiddenBatchDeleteButton: true,
   hiddenImportButton: true,
@@ -221,5 +226,6 @@ const handleFormSubmit = (form: Dictionary, done: any) => {
     @on-tree-click="handleTreeClick"
     @on-form-submit="handleFormSubmit"
     @on-delete="handleDelete"
+    @on-add="handleAdd"
   ></quick-crud>
 </template>

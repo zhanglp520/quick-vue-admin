@@ -28,15 +28,9 @@ quick-vue3-admin 是一款免费开源快速搭建中后台系统框架。本框
 
 演示账号密码：admin/123456
 
-## 开发文档
+## ui 开发文档
 
-- [quick-vue3-template](https://doc.ainiteam.com/) - quick-vue3-admin 开发文档
-
-## 组件文档
-
-- [quick-vue3-template](https://template.ainiteam.com/) - quick-vue3-admin 帮助文档
-
-账号密码：admin/123456
+- [quick-vue3-ui](https://doc.ainiteam.com/) - quick-vue3-ui ui 开发文档
 
 ## 接口文档
 
