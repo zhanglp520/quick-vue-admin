@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue'
-import QuickForm from '../../components/QuickForm/index.vue'
 import { userStore, form, formItems, handleSubmit, handleClear } from './idnex'
 
 onMounted(() => {
