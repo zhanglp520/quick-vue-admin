@@ -9,7 +9,7 @@ import {
   Options,
 } from '@ainiteam/quick-vue3-ui'
 import { selectTreeFormat, listToTree } from '@/utils/index'
-import elementPlusIcons from '@/config/custormIcons.json'
+import custormIcons from '@/config/custormIcons.json'
 import { Menu } from '@/types/menu'
 import { getMenuList, addMenu, updateMenu, deleteMenu } from '@/api/menu'
 
@@ -266,9 +266,12 @@ const formItems = reactive<Array<FormItem>>([
     placeholder: '菜单图标',
     prop: 'icon',
     type: 'icon',
-    options: elementPlusIcons,
+    options: custormIcons,
     width: '400px',
     select: (val) => {
+      console.log('111111111112222222222')
+
+      debugger
       formModel.icon = val
     },
   },

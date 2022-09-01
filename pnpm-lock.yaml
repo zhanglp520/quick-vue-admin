@@ -1,7 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
-  '@ainiteam/quick-vue3-ui': ^1.0.2
+  '@ainiteam/quick-vue3-ui': ^1.0.4
   '@element-plus/icons-vue': ^2.0.6
   '@types/js-md5': ^0.4.3
   '@types/node': ^17.0.30
@@ -37,7 +37,7 @@ specifiers:
   vue-tsc: ^0.34.7
 
 dependencies:
-  '@ainiteam/quick-vue3-ui': 1.0.2
+  '@ainiteam/quick-vue3-ui': 1.0.4
   '@element-plus/icons-vue': registry.npmmirror.com/@element-plus/icons-vue/2.0.9_vue@3.2.37
   axios: registry.npmmirror.com/axios/0.27.2
   echarts: registry.npmmirror.com/echarts/5.3.2
@@ -76,8 +76,8 @@ devDependencies:
 
 packages:
 
-  /@ainiteam/quick-vue3-ui/1.0.2:
-    resolution: {integrity: sha512-d8BZJRa9WEc3NBK6sBoV7k+9sviIzt6kzRmdO1SG2mg777NfnYpQOF4sx3Gsa8SosIl1q0A7iJyG5JydCjQs7w==}
+  /@ainiteam/quick-vue3-ui/1.0.4:
+    resolution: {integrity: sha512-XgH43ru9wGzPFH/Ed/d0b5S+eXuq1mOUvWvuUQZKUJjDRGFEGTI9HZaKMisuXNFgtuSNn8etOhUZxY2+Qg7e6A==}
     engines: {node: v16.13.1, pnpm: 6.32.9}
     requiresBuild: true
     dependencies:
