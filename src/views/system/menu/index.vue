@@ -9,8 +9,9 @@ import {
   Options,
 } from '@ainiteam/quick-vue3-ui'
 import { selectTreeFormat, listToTree } from '@/utils/index'
-import elementPlusIcons from '@/config/custormIcons.json'
 import { Menu } from '@/types/menu'
+import '@/assets/iconfont/quickIconFont.js'
+import quickIconFont from '@/config/quickIconFont.json'
 import { getMenuList, addMenu, updateMenu, deleteMenu } from '@/api/menu'
 
 /**
@@ -266,9 +267,17 @@ const formItems = reactive<Array<FormItem>>([
     placeholder: '菜单图标',
     prop: 'icon',
     type: 'icon',
-    options: elementPlusIcons,
+    iconOptions: [
+      {
+        label: 'quick官网',
+        data: quickIconFont,
+      },
+    ],
     width: '400px',
     select: (val) => {
+      console.log('111111111112222222222')
+
+      debugger
       formModel.icon = val
     },
   },
