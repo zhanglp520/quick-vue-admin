@@ -10,6 +10,7 @@ specifiers:
   '@typescript-eslint/parser': ^5.22.0
   '@vitejs/plugin-vue': ^2.3.1
   axios: ^0.27.2
+  crypto-js: ^4.1.1
   echarts: 5.3.2
   element-plus: ^2.1.11
   eslint: ^8.14.0
@@ -39,6 +40,7 @@ specifiers:
 dependencies:
   '@element-plus/icons-vue': registry.npmmirror.com/@element-plus/icons-vue/2.0.9_vue@3.2.37
   axios: registry.npmmirror.com/axios/0.27.2
+  crypto-js: registry.npmmirror.com/crypto-js/4.1.1
   echarts: registry.npmmirror.com/echarts/5.3.2
   element-plus: registry.npmmirror.com/element-plus/2.2.14_vue@3.2.37
   js-cookie: registry.npmmirror.com/js-cookie/3.0.1

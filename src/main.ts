@@ -29,3 +29,4 @@ app
   .use(router)
   .use(i18n)
   .mount('#app')
+console.log('app', app)

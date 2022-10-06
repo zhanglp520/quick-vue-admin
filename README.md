@@ -124,7 +124,7 @@ pnpm run preview
 
 1.  Fork 本仓库
 2.  新建 Feat_xxx 分支
-3.  提交代码
+3.  提交代码,提交代码规则：(^(Fix|Update|New|Breaking|Docs|Build|Upgrade|Chor)?: .{1,72})
 4.  新建 Pull Request
 5.  点个 star 把
 6.  如需加入开源，请联系管理员
