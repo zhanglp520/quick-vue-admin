@@ -4,7 +4,7 @@ import { router } from '@/router'
 import { User } from '@/types/user'
 import { QuickResponseData } from '@/utils/request'
 import { Menu, Menubar } from '@/types/menu'
-import { getUserInfo, getUserPageList, getPermission } from '@/api/user'
+import { getUserByUserName, getUserPageList, getPermission } from '@/api/user'
 
 interface UserState {
   user: User
@@ -53,7 +53,6 @@ export const useUserStore = defineStore('userStore', {
           const userMenuList = listToTree(dtNew, 0, {
             pId: 'pId',
           })
-
           const m = JSON.parse(JSON.stringify(userMenuList))
           this.menuList = m
           resolve(res)
@@ -72,7 +71,7 @@ export const useUserStore = defineStore('userStore', {
     // },
     getUserInfo(userName: string): Promise<User> {
       return new Promise((resolve) => {
-        getUserInfo(userName).then((res) => {
+        getUserByUserName(userName).then((res) => {
           const { data: user } = res
           this.user = user
           resolve(user)

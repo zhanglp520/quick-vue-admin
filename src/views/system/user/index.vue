@@ -39,13 +39,19 @@ const page = reactive<Page>({
  */
 const searchForm = reactive<SearchUser>({
   userName: '',
+  keyword: '',
 })
 const searchFormItems = reactive<Array<FormItem>>([
   {
-    label: '用户名',
-    vModel: 'userName',
-    placeholder: '用户名',
+    label: '',
+    vModel: 'keyword',
+    placeholder: '用户名|手机号',
   },
+  // {
+  //   label: '用户名',
+  //   vModel: 'userName',
+  //   placeholder: '用户名',
+  // },
 ])
 /**
  * 工具栏
@@ -234,14 +240,12 @@ const load = (parmas: object) => {
   loading.value = true
   getUserPageList(parmas).then((res) => {
     loading.value = false
-    const { data: userList, page: pagination } = res
+    const { data: userList, total } = res
     if (userList) {
       dataList.length = 0
       dataList.push(...userList)
     }
-    if (pagination) {
-      page.total = pagination.total
-    }
+    page.total = total
   })
 }
 /**

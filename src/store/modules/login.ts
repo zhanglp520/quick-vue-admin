@@ -37,14 +37,14 @@ export const useLoginStore = defineStore('loginStore', {
       return new Promise((resolve, reject) => {
         userLogin({
           tenant,
-          userName,
-          userPassword: quickMd5(userPassword),
+          username: userName,
+          password: quickMd5(userPassword),
         })
           .then((res) => {
             const { data: loginData } = res
-            const { token } = loginData
-            if (token) {
-              this.token = token
+            const { accessToken } = loginData
+            if (accessToken) {
+              this.token = accessToken
             }
             this.tenant = tenant
             this.userName = userName

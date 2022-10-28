@@ -2,8 +2,8 @@ import { LoginData, LoginParams } from '@/types/lgoin'
 import request, { QuickResponseData } from '@/utils/request'
 
 const Api = {
-  login: '/api/login',
-  loginOut: '/api/loginOut',
+  login: '/api/v1/auth/login',
+  loginOut: '/api/v1/auth/loginOut',
 }
 export const userLogin = (
   data: LoginParams

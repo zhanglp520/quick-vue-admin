@@ -1,14 +1,12 @@
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
-import { toTuofeng } from './index'
-import { Page } from '@/types/page'
 import { useLoginStore } from '@/store/modules/login'
 
 export interface QuickResponseData<T = any> {
-  status: number
-  msg: string
+  code: number
+  message: string
   data: T
-  page: Page
+  total: number
 }
 
 const baseURL = import.meta.env.VITE_APP_BASE_URL
@@ -42,22 +40,45 @@ quickRequest.interceptors.request.use(
 quickRequest.interceptors.response.use(
   (res) => {
     console.info('response', res)
-    const { data } = res
-    const { status, data: payload, page, msg } = data as QuickResponseData<any>
-    if (status === 1) {
-      ElMessage.error(msg)
+    const { data: resultData } = res
+    const { code, data, message } = resultData as QuickResponseData<any>
+    if (code === 1) {
+      ElMessage.error(message)
     } else {
-      const jsonStr = toTuofeng(JSON.stringify(payload))
-      const result = JSON.parse(jsonStr)
+      const { payload, total } = data
+      if (payload) {
+        return Promise.resolve({
+          data: payload,
+          total,
+        })
+      }
       return Promise.resolve({
-        data: result,
-        page,
+        data,
       })
     }
-    return Promise.reject(msg)
+    return Promise.reject(message)
   },
   (error) => {
-    ElMessage.error(error)
+    const { response } = error
+    const { status } = response
+    if (status === 401) {
+      ElMessageBox.confirm('登录过期，请重新登录', '警告', {
+        confirmButtonText: '去登录',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(() => {
+          // 确定
+
+          localStorage.clear()
+          sessionStorage.clear()
+        })
+        .catch(() => {
+          // 取消
+        })
+    } else {
+      ElMessage.error(error)
+    }
     return Promise.reject(error)
   }
 )
