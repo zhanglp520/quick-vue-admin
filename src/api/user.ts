@@ -3,6 +3,7 @@ import { ChangePassword, User } from '../types/user'
 import request, { QuickResponseData } from '../utils/request'
 
 const Api = {
+  export: '/api/v1/user/exportUser',
   pageList: '/api/v1/user',
   list: '/api/v1/user/getUserList',
   detail: '/api/v1/user',
@@ -17,7 +18,15 @@ const Api = {
   enabled: '/api/user/enabled',
   disable: '/api/user/disable',
 }
-
+export const exportUser = (): // params: object
+Promise<QuickResponseData<any>> => {
+  return request<QuickResponseData<Array<User>>>({
+    url: Api.export,
+    method: 'GET',
+    responseType: 'arraybuffer',
+    // params,
+  })
+}
 export const getUserPageList = (
   params: object
 ): Promise<QuickResponseData<Array<User>>> => {

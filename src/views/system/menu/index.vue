@@ -154,7 +154,9 @@ const tableColumns = reactive<Array<Column>>([
  */
 const load = () => {
   loading.value = true
+  debugger
   getMenuList().then((res) => {
+    debugger
     loading.value = false
     const { data: menuList } = res
     const menuTree = listToTree(menuList, 0, {

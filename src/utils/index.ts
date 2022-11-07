@@ -180,3 +180,24 @@ export const listToTree = (data, pId, options) => {
   })
   return arr
 }
+
+// 导出文件：请求参数增参数responseType: 'blob'
+export const exportFile = (file: any, fileName: string, type: string) => {
+  const blob = new Blob([file], { type })
+  const link = document.createElement('a')
+  const href = window.URL.createObjectURL(blob)
+  link.href = href
+  link.download = `${fileName}.xlsx`
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  window.URL.revokeObjectURL(href) // 释放掉blob对象
+}
+
+export const downloadExcel = (file: any, fileName: string) => {
+  exportFile(file, fileName, 'application/vnd.ms-excel')
+}
+
+export const downloadWord = (file: any, fileName: string) => {
+  exportFile(file, fileName, 'application/msword')
+}

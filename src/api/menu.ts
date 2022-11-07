@@ -2,10 +2,10 @@ import { Menu } from '../types/menu'
 import request, { QuickResponseData } from '../utils/request'
 
 const Api = {
-  list: '/api/menu/getList',
-  add: '/api/menu/add',
-  update: '/api/menu/update',
-  delete: '/api/menu/delete',
+  list: '/api/v1/menu',
+  add: '/api/v1/menu',
+  update: '/api/v1/menu',
+  delete: '/api/v1/menu',
 }
 export const getMenuList = (): Promise<QuickResponseData<Array<Menu>>> => {
   return request<QuickResponseData<Array<Menu>>>({
@@ -23,14 +23,14 @@ export const addMenu = (data: Menu) => {
 export const updateMenu = (data: Menu) => {
   return request({
     url: Api.update,
-    method: 'POST',
+    method: 'PUT',
     data,
   })
 }
 export const deleteMenu = (id: string) => {
   return request({
     url: Api.delete,
-    method: 'POST',
+    method: 'DELETE',
     data: {
       id,
     },
