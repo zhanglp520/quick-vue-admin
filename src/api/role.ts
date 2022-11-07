@@ -4,12 +4,12 @@ import { Role } from '../types/role'
 import request, { QuickResponseData } from '../utils/request'
 
 const Api = {
-  menuList: '/api/role/getMenuPermission',
-  userList: '/api/role/getUserPermission',
-  list: '/api/role/getList',
-  add: '/api/role/add',
-  update: '/api/role/update',
-  delete: '/api/role/delete',
+  menuList: '/api/v1/auth/getMenuListByRoleId',
+  userList: '/api/v1/auth/getUserListByRoleId',
+  list: '/api/v1/role/getRoleList',
+  add: '/api/v1/role',
+  update: '/api/v1/role',
+  delete: '/api/v1/role',
   assignPermission: '/api/role/assignPermission',
   assignUser: '/api/role/assignUser',
 }
@@ -17,22 +17,16 @@ export const getMenuPermission = (
   roleId: string
 ): Promise<QuickResponseData<Array<Menu>>> => {
   return request<QuickResponseData<Array<Menu>>>({
-    url: Api.menuList,
+    url: `${Api.menuList}/${roleId}`,
     method: 'GET',
-    params: {
-      id: roleId,
-    },
   })
 }
 export const getUserPermission = (
   roleId: string
 ): Promise<QuickResponseData<Array<string>>> => {
   return request<QuickResponseData<Array<string>>>({
-    url: Api.userList,
+    url: `${Api.userList}/${roleId}`,
     method: 'GET',
-    params: {
-      id: roleId,
-    },
   })
 }
 
@@ -53,14 +47,14 @@ export const addRole = (data: Role) => {
 export const updateRole = (data: Role) => {
   return request({
     url: Api.update,
-    method: 'POST',
+    method: 'PUT',
     data,
   })
 }
 export const deleteRole = (id: string) => {
   return request({
     url: Api.delete,
-    method: 'POST',
+    method: 'DELETE',
     data: {
       id,
     },

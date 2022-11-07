@@ -1,5 +1,6 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { useRouter } from 'vue-router'
 import { useLoginStore } from '@/store/modules/login'
 
 export interface QuickResponseData<T = any> {
@@ -9,6 +10,7 @@ export interface QuickResponseData<T = any> {
   total: number
 }
 
+const router = useRouter()
 const baseURL = import.meta.env.VITE_APP_BASE_URL
 const quickRequest: AxiosInstance = axios.create({
   baseURL,
@@ -41,6 +43,10 @@ quickRequest.interceptors.response.use(
   (res) => {
     console.info('response', res)
     const { data: resultData } = res
+    debugger
+    if (res.config.url === '/api/v1/user/exportUser') {
+      return resultData
+    }
     const { code, data, message } = resultData as QuickResponseData<any>
     if (code === 1) {
       ElMessage.error(message)
@@ -63,19 +69,14 @@ quickRequest.interceptors.response.use(
     const { status } = response
     if (status === 401) {
       ElMessageBox.confirm('登录过期，请重新登录', '警告', {
-        confirmButtonText: '去登录',
+        confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
+      }).then(() => {
+        localStorage.clear()
+        sessionStorage.clear()
+        router.push('/login')
       })
-        .then(() => {
-          // 确定
-
-          localStorage.clear()
-          sessionStorage.clear()
-        })
-        .catch(() => {
-          // 取消
-        })
     } else {
       ElMessage.error(error)
     }

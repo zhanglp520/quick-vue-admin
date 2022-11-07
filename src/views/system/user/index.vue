@@ -10,6 +10,7 @@ import {
 } from '@ainiteam/quick-vue3-ui'
 import { User, SearchUser } from '@/types/user'
 import {
+  exportUser,
   getUserPageList,
   addUser,
   updateUser,
@@ -19,6 +20,7 @@ import {
   enableUser,
   disableUser,
 } from '@/api/user'
+import { downloadExcel } from '@/utils'
 
 /**
  * 属性
@@ -75,8 +77,22 @@ const handleBatchDelete = (data: any, done: any) => {
 const handleImport = (done: any) => {
   done()
 }
+// function saveFile(file: any, filename: string) {
+//   const fileBinary = Buffer.from(file, 'binary')
+//   const blob = new Blob([fileBinary], { type: 'application/vnd.ms-excel' })
+//   const href = URL.createObjectURL(blob) // 创建新的URL表示指定的blob对象
+//   const a = document.createElement('a') // 创建a标签
+//   a.style.display = 'none'
+//   a.href = href // 指定下载链接
+//   a.download = `${filename}.xlsx` // 指定下载文件名
+//   a.click() // 触发下载
+//   URL.revokeObjectURL(a.href) // 释放URL对象
+// }
 const handleExport = () => {
   // window.open(`${window.location.origin}/用户报表.xlsx`)//TODO:导出bug
+  exportUser().then((res) => {
+    downloadExcel(res, '用户列表')
+  })
 }
 const handlePrint = () => {
   window.print()
