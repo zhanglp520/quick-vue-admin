@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useUserStore } from '@/store/modules/user'
 
 const router = useRouter()
+const userStore = useUserStore()
+const permissionMenuList = computed(() => userStore.getPermissionMenuList)
 const dialogVisible = ref(false)
 const title = ref('')
 const open = (item: any) => {
@@ -10,63 +13,20 @@ const open = (item: any) => {
   title.value = item.name
   router.push(item.path)
 }
-const shortcutDataList = ref([
-  {
-    id: 1,
-    name: '腾讯QQ',
-    path: '/system/user',
-    icon: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fwww.d3sy.com%2Fd%2Ffile%2Fapp%2F20220417%2Fktlopkjx3wv.png&refer=http%3A%2F%2Fwww.d3sy.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1670431259&t=e2b2811328fad37ab0c4a9e5471c11dc',
-  },
-  {
-    id: 2,
-    name: '用户管理',
-    path: '/system/user',
-    icon: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-  },
-  {
-    id: 3,
-    name: '角色管理',
-    path: '/system/role',
-    icon: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-  },
-  {
-    id: 4,
-    name: '菜单管理',
-    path: '/system/menu',
-    icon: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-  },
-  {
-    id: 5,
-    name: '组织管理',
-    path: '/system/org',
-    icon: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-  },
-  {
-    id: 5,
-    name: '组织管理',
-    icon: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-  },
-  {
-    id: 5,
-    name: '组织管理',
-    icon: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-  },
-  {
-    id: 5,
-    name: '组织管理',
-    icon: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-  },
-  {
-    id: 5,
-    name: '组织管理',
-    icon: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-  },
-  {
-    id: 5,
-    name: '组织管理',
-    icon: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-  },
-])
+const shortcutDataList = ref<any>([])
+onMounted(() => {
+  const menuList = permissionMenuList.value.filter((x) => x.menuType === 1)
+  menuList.forEach((element) => {
+    console.log('element.icon', element.icon)
+
+    shortcutDataList.value.push({
+      id: element.menuId,
+      name: element.menuName,
+      path: element.path,
+      icon: element.icon,
+    })
+  })
+})
 </script>
 
 <template>
@@ -79,11 +39,14 @@ const shortcutDataList = ref([
         @dblclick="open(item)"
       >
         <div>
-          <el-image
+          <el-icon size="large" color="#fff">
+            <component :is="item.icon" />
+          </el-icon>
+          <!-- <el-image
             style="width: 50px; height: 50px"
             :src="item.icon"
             fit="fill"
-          />
+          /> -->
         </div>
         <div class="title">
           {{ item.name }}
@@ -143,6 +106,7 @@ const shortcutDataList = ref([
     // opacity: 1;
     .title {
       color: #fff;
+      font-size: 12px;
     }
   }
   .shortcut:hover {
