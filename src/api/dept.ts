@@ -2,11 +2,11 @@ import { Dept } from '../types/dept'
 import request, { QuickResponseData } from '../utils/request'
 
 const Api = {
-  list_pid: '/api/dept/getListByPId',
-  list: '/api/dept/getList',
-  add: '/api/dept/add',
-  update: '/api/dept/update',
-  delete: '/api/dept/delete',
+  list_pid: '/api/v1/dept/getListByPId',
+  list: '/api/v1/dept',
+  add: '/api/v1/dept/add',
+  update: '/api/v1/dept/update',
+  delete: '/api/v1/dept/delete',
 }
 export const getDeptListByPId = (
   pId: number

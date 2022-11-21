@@ -1,7 +1,7 @@
 export interface Dept {
   id: string
   deptId: string
-  name: string
+  deptName: string
   pId: string
 }
 export interface DeptTree extends Dept {

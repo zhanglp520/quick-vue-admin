@@ -52,7 +52,7 @@ const handleEdit = (form: Dept, done: any) => {
   done(model)
 }
 const handleDelete = (item: Dept, done: any) => {
-  ElMessageBox.confirm(`你真的删除【${item.name}】的部门吗？`, '警告', {
+  ElMessageBox.confirm(`你真的删除【${item.deptName}】的部门吗？`, '警告', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning',
@@ -85,7 +85,7 @@ const tableColumns = reactive<Array<Column>>([
   },
   {
     label: '部门名称',
-    prop: 'name',
+    prop: 'deptName',
   },
 ])
 const deptTreeFormat = (data: Array<Dept>, pId = '0') => {
@@ -98,14 +98,14 @@ const deptTreeFormat = (data: Array<Dept>, pId = '0') => {
   const parentData = data.find((x: Dept) => x.pId.toString() === pId)
   if (parentData) {
     obj.id = parentData.id.toString()
-    obj.label = parentData.name
+    obj.label = parentData.deptName
     const parentId = parentData.id.toString()
     const companyData = data.filter((x: Dept) => x.pId.toString() === parentId)
     companyData.forEach((item: Dept) => {
       if (companyData) {
         const companyObj: Tree = {
           id: item.id.toString(),
-          label: item.name,
+          label: item.deptName,
           children: [],
         }
         const companyPid = item.id.toString()
@@ -115,7 +115,7 @@ const deptTreeFormat = (data: Array<Dept>, pId = '0') => {
         deptData.forEach((deptItem) => {
           companyObj.children.push({
             id: deptItem.id.toString(),
-            label: deptItem.name,
+            label: deptItem.deptName,
             children: [],
           })
         })
@@ -191,7 +191,7 @@ const dialogTitle = reactive({
 const formModel = reactive<Dept>({
   id: '',
   deptId: '',
-  name: '',
+  deptName: '',
   pId: '',
 })
 const formItems = reactive<Array<FormItem>>([
@@ -213,9 +213,9 @@ const formItems = reactive<Array<FormItem>>([
   {
     label: '部门名称',
     labelWidth: '80px',
-    vModel: 'name',
+    vModel: 'deptName',
     placeholder: '部门名称',
-    prop: 'name',
+    prop: 'deptName',
     rules: [
       {
         required: true,

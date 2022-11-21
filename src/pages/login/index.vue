@@ -93,7 +93,9 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   // background-color: green;
-  background: url('/images/login-bg.jpeg') no-repeat center center;
+  // background: url('@/assets/images/login-bg.jpeg') no-repeat center center;
+  background: url('../images/login-bg.jpeg') no-repeat center center;
+
   background-size: 100% 100%;
   border-radius: 5px;
   .form {
