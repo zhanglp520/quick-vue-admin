@@ -4,12 +4,12 @@ import { useRouter } from 'vue-router'
 import { useLoginStore } from '@/store/modules/login'
 
 export interface QuickResponseData<T = any> {
-  code: number
-  message: string
+  status: number
+  msg: string
   data: T
   total: number
 }
-
+let errNum = 0
 const router = useRouter()
 const baseURL = import.meta.env.VITE_APP_BASE_URL
 const quickRequest: AxiosInstance = axios.create({
@@ -43,13 +43,12 @@ quickRequest.interceptors.response.use(
   (res) => {
     console.info('response', res)
     const { data: resultData } = res
-    debugger
     if (res.config.url === '/api/v1/user/exportUser') {
       return resultData
     }
-    const { code, data, message } = resultData as QuickResponseData<any>
-    if (code === 1) {
-      ElMessage.error(message)
+    const { status, data, msg } = resultData as QuickResponseData<any>
+    if (status === 1) {
+      ElMessage.error(msg)
     } else {
       const { payload, total } = data
       if (payload) {
@@ -62,23 +61,28 @@ quickRequest.interceptors.response.use(
         data,
       })
     }
-    return Promise.reject(message)
+    return Promise.reject(msg)
   },
   (error) => {
     const { response } = error
     const { status } = response
     if (status === 401) {
-      ElMessageBox.confirm('登录过期，请重新登录', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      }).then(() => {
-        localStorage.clear()
-        sessionStorage.clear()
-        router.push('/login')
-      })
+      if (errNum === 0) {
+        ElMessageBox.confirm('登录过期，请重新登录', '警告', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }).then(() => {
+          errNum = 0
+          localStorage.clear()
+          sessionStorage.clear()
+          window.location.href = '/'
+        })
+        errNum += 1
+      }
     } else {
-      ElMessage.error(error)
+      // ElMessage.error(error)
+      console.error('error', error)
     }
     return Promise.reject(error)
   }
