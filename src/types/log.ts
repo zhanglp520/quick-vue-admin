@@ -1,12 +1,13 @@
 export interface Log {
   id: number
-  logTime: string
-  operateApi: string
-  requestParams?: string
-  errorMessage?: string
-  exceptionMessage?: string
+  type: number
   ip: string
-  logType: number
+  request: string
+  response: string
+  execution?: string
+  duration: number
+  operateId: string
+  createTime: string
 }
 export interface SearchLog {
   startTime?: string

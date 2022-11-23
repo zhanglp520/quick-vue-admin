@@ -86,9 +86,12 @@ const handleDelete = (item: Log, done: any) => {
 }
 const handleDetail = (item: Log, done: any) => {
   const form: Log = { ...item }
-  if (form.requestParams) {
-    const params = JSON.parse(form.requestParams)
-    form.requestParams = JSON.stringify(params, null, 4)
+  if (form.request) {
+    form.request = JSON.stringify(form.request, null, 4)
+    done(form)
+  }
+  if (form.response) {
+    form.response = JSON.stringify(form.response, null, 4)
     done(form)
   }
 }
@@ -107,7 +110,7 @@ const tableColumns = reactive<Array<Column>>([
   },
   {
     label: '日志时间',
-    prop: 'logTime',
+    prop: 'createTime',
     width: '200',
   },
   {
@@ -116,13 +119,23 @@ const tableColumns = reactive<Array<Column>>([
     width: '120',
   },
   {
-    label: '操作接口',
-    prop: 'operateApi',
-    width: '300',
+    label: '耗时（ms）',
+    prop: 'duration',
+    width: '150',
   },
   {
-    label: '请求参数',
-    prop: 'requestParams',
+    label: '操作人',
+    prop: 'operateId',
+    width: '200',
+  },
+  {
+    label: '请求类型',
+    prop: 'request.method',
+    width: '100',
+  },
+  {
+    label: '请求接口',
+    prop: 'request.url',
   },
 ])
 /**
@@ -134,13 +147,12 @@ const load = (params: any) => {
   if (logTime) {
     obj = {
       ...params,
-      logType: 0,
+      type: 0,
       startTime: logTime[0],
       endTime: logTime[1],
-      logTime: null,
     }
   } else {
-    obj = { ...params, logType: 0, logTime: null }
+    obj = { ...params, type: 0, logTime: null }
   }
   loading.value = true
   getLogPageList(obj).then((res) => {
@@ -163,13 +175,13 @@ const dialogTitle = reactive({
 })
 const formModel = reactive<Log>({
   id: 0,
-  logTime: '',
-  operateApi: '',
-  requestParams: '',
-  errorMessage: '',
-  exceptionMessage: '',
+  type: 1,
   ip: '',
-  logType: 0,
+  request: '',
+  response: '',
+  duration: 0,
+  operateId: '',
+  createTime: '',
 })
 const formItems = reactive<Array<FormItem>>([
   {
@@ -180,7 +192,7 @@ const formItems = reactive<Array<FormItem>>([
   {
     label: '日志时间',
     labelWidth: '80px',
-    vModel: 'logTime',
+    vModel: 'createTime',
   },
   {
     label: 'IP',
@@ -188,14 +200,30 @@ const formItems = reactive<Array<FormItem>>([
     vModel: 'ip',
   },
   {
-    label: '操作接口',
+    label: '耗时',
     labelWidth: '80px',
-    vModel: 'operateApi',
+    vModel: 'duration',
+  },
+  {
+    label: '操作人ID',
+    labelWidth: '80px',
+    vModel: 'operateId',
+  },
+  {
+    label: '操作人',
+    labelWidth: '80px',
+    vModel: 'operator',
   },
   {
     label: '请求参数',
     labelWidth: '80px',
-    vModel: 'requestParams',
+    vModel: 'request',
+    type: 'textarea',
+  },
+  {
+    label: '响应',
+    labelWidth: '80px',
+    vModel: 'response',
     type: 'textarea',
   },
 ])
@@ -213,6 +241,7 @@ const formItems = reactive<Array<FormItem>>([
     :search-form-model="searchForm"
     dialog-titles="dialogTitles"
     :page="page"
+    :form-inline="true"
     :loading="loading"
     @on-load="load"
     @on-detail="handleDetail"

@@ -2,9 +2,9 @@ import { Log } from '../types/log'
 import request, { QuickResponseData } from '../utils/request'
 
 const Api = {
-  pageList: '/api/log/getPageList',
-  remove: '/api/log/remove',
-  batchRemove: '/api/log/batchRemove',
+  pageList: '/api/v1/log',
+  remove: '/api/v1/log/remove',
+  batchRemove: '/api/v1/log/batchRemove',
 }
 
 export const getLogPageList = (
