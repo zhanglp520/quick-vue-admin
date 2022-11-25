@@ -1,7 +1,6 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
-import { useRouter } from 'vue-router'
-import { useLoginStore } from '@/store/modules/login'
+import { useAuthStore } from '@/store/modules/auth'
 
 export interface QuickResponseData<T = any> {
   status: number
@@ -9,8 +8,9 @@ export interface QuickResponseData<T = any> {
   data: T
   total: number
 }
-let errNum = 0
-const router = useRouter()
+let errFlag = false
+let isRefreshing = false
+const requestList: Array<any> = []
 const baseURL = import.meta.env.VITE_APP_BASE_URL
 const quickRequest: AxiosInstance = axios.create({
   baseURL,
@@ -20,12 +20,66 @@ const quickRequest: AxiosInstance = axios.create({
   },
 })
 
+const isTokenExpire = () => {
+  const authStore = useAuthStore()
+  const expiresTime = authStore.getExpiresIn
+  const currentTime = new Date().getTime() / 1000
+  const num = Number(expiresTime) - Number(currentTime)
+  // token 10分钟内即将过期，小于0时已过期
+  if (num < 10 * 60 * 1000) {
+    return true
+  }
+  return false
+}
+const saveRequest = (callback: any) => {
+  requestList.push(callback)
+}
+const handleRequest = (token: string) => {
+  requestList.forEach((callback) => {
+    callback(token)
+  })
+  requestList.length = 0
+}
+
 // 请求拦截器
 quickRequest.interceptors.request.use(
   (config) => {
+    // 登录请求
+    if (config.url === '/api/v2/auth/login') {
+      return config
+    }
+    // token过期
+    if (isTokenExpire() && config.url !== '/api/v2/auth/refreshToken') {
+      if (!isRefreshing) {
+        isRefreshing = true
+        const authStore = useAuthStore()
+        const quickRefreshToken = authStore.getRefreshToken
+        authStore
+          .refreshToken({ quickRefreshToken })
+          .then(() => {
+            const token = authStore.getAccessToken
+            if (token) {
+              handleRequest(token)
+            }
+          })
+          .finally(() => {
+            isRefreshing = false
+          })
+      }
+      const retry = new Promise((resolve) => {
+        saveRequest((token: string) => {
+          const cfg = config
+          if (cfg.headers) {
+            cfg.headers.authorization = `Bearer ${token}`
+          }
+          resolve(cfg)
+        })
+      })
+      return retry
+    }
     const cfg = config
-    const loginStore = useLoginStore()
-    const token = loginStore.getToken
+    const loginStore = useAuthStore()
+    const token = loginStore.getAccessToken
     if (cfg.headers) {
       cfg.headers.authorization = `Bearer ${token}`
     }
@@ -67,21 +121,27 @@ quickRequest.interceptors.response.use(
     const { response } = error
     const { status } = response
     if (status === 401) {
-      if (errNum === 0) {
+      if (!errFlag) {
         ElMessageBox.confirm('登录过期，请重新登录', '警告', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
-        }).then(() => {
-          errNum = 0
-          localStorage.clear()
-          sessionStorage.clear()
-          window.location.href = '/'
         })
-        errNum += 1
+          .then(() => {
+            errFlag = true
+            localStorage.clear()
+            sessionStorage.clear()
+            window.location.href = '/'
+          })
+          .catch(() => {
+            errFlag = false
+          })
       }
     } else {
-      // ElMessage.error(error)
+      if (!errFlag) {
+        errFlag = true
+        ElMessage.error(error)
+      }
       console.error('error', error)
     }
     return Promise.reject(error)
@@ -91,5 +151,4 @@ quickRequest.interceptors.response.use(
 const request = <T>(config: AxiosRequestConfig): Promise<T> => {
   return quickRequest.request<any, T>(config)
 }
-
 export default request

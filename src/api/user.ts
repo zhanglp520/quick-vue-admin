@@ -1,44 +1,28 @@
 import { Menu } from '@/types/menu'
 import { ChangePassword, User } from '../types/user'
 import request, { QuickResponseData } from '../utils/request'
+import { defaultVersion } from './version'
 
-const Api = {
-  export: '/api/v1/user/exportUser',
-  pageList: '/api/v1/user',
-  list: '/api/v1/user/getUserList',
-  detail: '/api/v1/user',
-  add: '/api/v1/user',
-  update: '/api/v1/user',
-  delete: '/api/v1/user',
-  info: '/api/v1/user/getUserByUserName',
-  permission: '/api/v1/auth',
-  changePassword: '/api/changePassword',
-  batchDeleteUser: '/api/user/batchRemove',
-  resetPassword: '/api/user/resetPassword',
-  enabled: '/api/user/enabled',
-  disable: '/api/user/disable',
-}
-export const exportUser = (): // params: object
-Promise<QuickResponseData<any>> => {
+const api = `${defaultVersion}/user`
+export const exportUser = (): Promise<QuickResponseData<any>> => {
   return request<QuickResponseData<Array<User>>>({
-    url: Api.export,
+    url: `${api}/exportUser`,
     method: 'GET',
     responseType: 'arraybuffer',
-    // params,
   })
 }
 export const getUserPageList = (
   params: object
 ): Promise<QuickResponseData<Array<User>>> => {
   return request<QuickResponseData<Array<User>>>({
-    url: Api.pageList,
+    url: api,
     method: 'GET',
     params,
   })
 }
 export const getUserList = (): Promise<QuickResponseData<Array<User>>> => {
   return request<QuickResponseData<Array<User>>>({
-    url: Api.list,
+    url: `${api}/getUserList`,
     method: 'GET',
   })
 }
@@ -46,13 +30,13 @@ export const getUserByUserName = (
   userName: string
 ): Promise<QuickResponseData<User>> => {
   return request<QuickResponseData<User>>({
-    url: `${Api.info}/${userName}`,
+    url: `${api}/getUserByUserName/${userName}`,
     method: 'GET',
   })
 }
 export const addUser = (data: User) => {
   return request({
-    url: Api.add,
+    url: api,
     method: 'POST',
     data,
   })
@@ -60,14 +44,14 @@ export const addUser = (data: User) => {
 export const updateUser = (data: User) => {
   const { id } = data
   return request({
-    url: `${Api.update}/${id}`,
+    url: `${api}/${id}`,
     method: 'PUT',
     data,
   })
 }
 export const deleteUser = (id: string) => {
   return request({
-    url: `${Api.delete}/${id}`,
+    url: `${api}/${id}`,
     method: 'DELETE',
   })
 }
@@ -76,51 +60,43 @@ export const getPermission = (
   userId: string
 ): Promise<QuickResponseData<Array<Menu>>> => {
   return request({
-    url: `${Api.permission}/${userId}`,
+    url: `${defaultVersion}/auth/${userId}`,
     method: 'GET',
   })
 }
-export const changePassword = (data: ChangePassword) => {
+export const changePassword = (id: number, data: ChangePassword) => {
+  const { oldPassword, newPassword } = data
   return request({
-    url: Api.changePassword,
+    url: `${api}/changePassword/${id}`,
     method: 'PATCH',
-    data,
+    data: {
+      oldPassword,
+      newPassword,
+    },
   })
 }
 
 export const batchDeleteUser = (ids: string) => {
   return request({
-    url: Api.batchDeleteUser,
+    url: `${api}/batchRemove/${ids}`,
     method: 'PATCH',
-    data: {
-      ids,
-    },
   })
 }
 export const resetUserPassword = (id: string) => {
   return request({
-    url: Api.resetPassword,
+    url: `${api}/resetPassword/${id}`,
     method: 'PATCH',
-    data: {
-      id,
-    },
   })
 }
 export const enableUser = (id: string) => {
   return request({
-    url: Api.enabled,
+    url: `${api}/enabled/${id}`,
     method: 'PATCH',
-    data: {
-      id,
-    },
   })
 }
 export const disableUser = (id: string) => {
   return request({
-    url: Api.disable,
+    url: `${api}/disable/${id}`,
     method: 'PATCH',
-    data: {
-      id,
-    },
   })
 }

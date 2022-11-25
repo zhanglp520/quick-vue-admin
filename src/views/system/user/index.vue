@@ -254,15 +254,19 @@ const tableColumns = reactive<Array<Column>>([
  */
 const load = (parmas: object) => {
   loading.value = true
-  getUserPageList(parmas).then((res) => {
-    loading.value = false
-    const { data: userList, total } = res
-    if (userList) {
-      dataList.length = 0
-      dataList.push(...userList)
-    }
-    page.total = total
-  })
+  getUserPageList(parmas)
+    .then((res) => {
+      loading.value = false
+      const { data: userList, total } = res
+      if (userList) {
+        dataList.length = 0
+        dataList.push(...userList)
+      }
+      page.total = total
+    })
+    .catch(() => {
+      loading.value = false
+    })
 }
 /**
  * 表单

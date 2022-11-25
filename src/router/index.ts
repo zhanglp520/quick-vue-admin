@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import pinia from '@/store'
-import { useLoginStore } from '@/store/modules/login'
+import { useAuthStore } from '@/store/modules/auth'
 import staticRouter from './staticRouter'
 import { addRoutes } from './dynamicRouter'
 
@@ -12,8 +12,8 @@ export const router = createRouter({
 })
 router.beforeEach((to, from, next) => {
   NProgress.start()
-  const loginStore = useLoginStore(pinia)
-  if (loginStore.getToken) {
+  const loginStore = useAuthStore(pinia)
+  if (loginStore.getAccessToken) {
     if (!to.name) {
       addRoutes(router)
       next({ ...to, replace: true })

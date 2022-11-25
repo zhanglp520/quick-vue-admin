@@ -3,21 +3,21 @@ import { UserFilled, Lock } from '@element-plus/icons-vue'
 import { onMounted, onUnmounted, reactive, ref } from 'vue'
 import { router } from '@/router'
 import pinia from '@/store'
-import { LoginParams } from '@/types/login'
-import { useLoginStore } from '@/store/modules/login'
+import { LoginParams } from '@/types/auth'
+import { useAuthStore } from '@/store/modules/auth'
 import { useUserStore } from '@/store/modules/user'
 
 /**
  * 属性
  */
 const title = ref('quick-vue3-admin')
-const loginStore = useLoginStore(pinia)
+const loginStore = useAuthStore(pinia)
 const userStore = useUserStore(pinia)
 const loading = ref(false)
 const form = reactive<LoginParams>({
   tenant: '',
   userName: '',
-  userPassword: '',
+  password: '',
 })
 /**
  * 函数
@@ -62,7 +62,7 @@ onUnmounted(() => {
         </div>
         <div class="item">
           <el-input
-            v-model="form.userPassword"
+            v-model="form.password"
             type="password"
             placeholder="密码"
             show-password
