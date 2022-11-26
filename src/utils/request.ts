@@ -26,7 +26,7 @@ const isTokenExpire = () => {
   const currentTime = new Date().getTime() / 1000
   const num = Number(expiresTime) - Number(currentTime)
   // token 10分钟内即将过期，小于0时已过期
-  if (num < 10 * 60 * 1000) {
+  if (num < 10 * 60) {
     return true
   }
   return false
