@@ -1,8 +1,5 @@
 import { defineStore } from 'pinia'
-import { menuFormat } from '@/utils/index'
-import { QuickResponseData } from '@/utils/request'
-import { Menu, Menubar, MenuTree } from '@/types/menu'
-import { getPermissionMenuList } from '../../api/menu'
+import { MenuTree } from '@/types/menu'
 
 interface MenuState {
   activeMenuId: string

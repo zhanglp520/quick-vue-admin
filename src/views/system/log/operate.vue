@@ -9,7 +9,7 @@ import {
   Page,
 } from '@ainiteam/quick-vue3-ui'
 import { Log, SearchLog } from '@/types/log'
-import { getLogPageList, removeLog, batchRemove } from '@/api/log'
+import { getLogPageList, removeLog, batchRemove } from '@/api/system/log'
 
 /**
  * 属性

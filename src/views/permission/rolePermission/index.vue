@@ -4,8 +4,9 @@ import { ElTree, ElMessage, ElMessageBox } from 'element-plus'
 import { Toolbar, Tree } from '@ainiteam/quick-vue3-ui'
 import { listToTree, treeFormat } from '@/utils'
 import { MenuTree } from '@/types/menu'
-import { getRoleList, getMenuPermission, assignPermission } from '@/api/role'
-import { getMenuList } from '@/api/menu'
+import { getMenuPermission, assignPermission } from '@/api/auth'
+import { getRoleList } from '@/api/system/role'
+import { getMenuList } from '@/api/system/menu'
 
 /**
  * 属性
@@ -103,13 +104,12 @@ const handleNodeClick = (data: any) => {
   currentTreeData.value = data
   const { id } = currentTreeData.value
   getMenuPermission(id).then((res) => {
-    const { data: menuList } = res
-    const value = menuList.map((x) => x.id)
+    const { data: keys } = res
     menuTreeData.length = 0
     menuTreeData.push(...menuTreeList)
     nextTick(() => {
       if (menuTreeRef.value) {
-        menuTreeRef.value.setCheckedKeys(value, false)
+        menuTreeRef.value.setCheckedKeys(keys, false)
       }
     })
   })

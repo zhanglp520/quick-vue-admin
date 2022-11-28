@@ -5,7 +5,7 @@ export interface Token {
 }
 export interface LoginParams {
   tenant: string
-  userName: string
+  username: string
   password: string
 }
 export interface LoginData extends Token {

@@ -1,6 +1,7 @@
 import { ElMessage, ElMessageBox } from 'element-plus'
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { useAuthStore } from '@/store/modules/auth'
+import { loginApi, refreshTokenApi } from '@/api/auth/'
 
 export interface QuickResponseData<T = any> {
   status: number
@@ -14,7 +15,7 @@ const requestList: Array<any> = []
 const baseURL = import.meta.env.VITE_APP_BASE_URL
 const quickRequest: AxiosInstance = axios.create({
   baseURL,
-  timeout: 1000 * 15,
+  timeout: 1000 * 30,
   headers: {
     'Content-Type': 'application/json;charset=utf-8',
   },
@@ -45,11 +46,12 @@ const handleRequest = (token: string) => {
 quickRequest.interceptors.request.use(
   (config) => {
     // 登录请求
-    if (config.url === '/api/v2/auth/login') {
+    if (config.url === loginApi) {
       return config
     }
     // token过期
-    if (isTokenExpire() && config.url !== '/api/v2/auth/refreshToken') {
+
+    if (isTokenExpire() && config.url !== refreshTokenApi) {
       if (!isRefreshing) {
         isRefreshing = true
         const authStore = useAuthStore()
@@ -97,9 +99,9 @@ quickRequest.interceptors.response.use(
   (res) => {
     console.info('response', res)
     const { data: resultData } = res
-    if (res.config.url === '/api/v1/user/exportUser') {
-      return resultData
-    }
+    // if (res.config.url === '/api/v1/user/exportUser') {
+    //   return resultData
+    // }
     const { status, data, msg } = resultData as QuickResponseData<any>
     if (status === 1) {
       ElMessage.error(msg)

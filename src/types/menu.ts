@@ -1,5 +1,5 @@
 export interface Menu {
-  id: string
+  id: number
   menuId: string
   menuName: string
   path: string
@@ -7,7 +7,7 @@ export interface Menu {
   menuType: number
   icon: string
   sort: number
-  pId: string
+  pId: number
   link: number
   linkUrl: string
   enabled: number

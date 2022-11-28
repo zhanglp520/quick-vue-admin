@@ -16,7 +16,7 @@ const userStore = useUserStore(pinia)
 const loading = ref(false)
 const form = reactive<LoginParams>({
   tenant: '',
-  userName: '',
+  username: '',
   password: '',
 })
 /**
@@ -54,7 +54,7 @@ onUnmounted(() => {
         </div>
         <div class="item">
           <el-input
-            v-model="form.userName"
+            v-model="form.username"
             placeholder="用户名"
             :prefix-icon="UserFilled"
             size="large"

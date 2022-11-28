@@ -12,7 +12,7 @@ import { selectTreeFormat, listToTree } from '@/utils/index'
 import { Menu } from '@/types/menu'
 import '@/assets/iconfont/quickIconFont.js'
 import quickIconFont from '@/config/quickIconFont.json'
-import { getMenuList, addMenu, updateMenu, deleteMenu } from '@/api/menu'
+import { getMenuList, addMenu, updateMenu, deleteMenu } from '@/api/system/menu'
 
 /**
  * 属性

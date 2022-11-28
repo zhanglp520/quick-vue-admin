@@ -1,9 +1,14 @@
+/*
+ *@Description: 用户管理模块api
+ *@Author: 土豆哥
+ *@Date: 2022-11-28 11:57:43
+ */
 import { Menu } from '@/types/menu'
-import { ChangePassword, User } from '../types/user'
-import request, { QuickResponseData } from '../utils/request'
-import { defaultVersion } from './version'
+import { ChangePassword, User } from '@/types/user'
+import request, { QuickResponseData } from '@/utils/request'
+import { user as api } from './index'
+import { auth as authApi } from '../auth/index'
 
-const api = `${defaultVersion}/user`
 export const exportUser = (): Promise<QuickResponseData<any>> => {
   return request<QuickResponseData<Array<User>>>({
     url: `${api}/exportUser`,
@@ -49,19 +54,10 @@ export const updateUser = (data: User) => {
     data,
   })
 }
-export const deleteUser = (id: string) => {
+export const deleteUser = (id: number) => {
   return request({
     url: `${api}/${id}`,
     method: 'DELETE',
-  })
-}
-
-export const getPermission = (
-  userId: string
-): Promise<QuickResponseData<Array<Menu>>> => {
-  return request({
-    url: `${defaultVersion}/auth/${userId}`,
-    method: 'GET',
   })
 }
 export const changePassword = (id: number, data: ChangePassword) => {
@@ -82,19 +78,19 @@ export const batchDeleteUser = (ids: string) => {
     method: 'PATCH',
   })
 }
-export const resetUserPassword = (id: string) => {
+export const resetUserPassword = (id: number) => {
   return request({
     url: `${api}/resetPassword/${id}`,
     method: 'PATCH',
   })
 }
-export const enableUser = (id: string) => {
+export const enableUser = (id: number) => {
   return request({
     url: `${api}/enabled/${id}`,
     method: 'PATCH',
   })
 }
-export const disableUser = (id: string) => {
+export const disableUser = (id: number) => {
   return request({
     url: `${api}/disable/${id}`,
     method: 'PATCH',

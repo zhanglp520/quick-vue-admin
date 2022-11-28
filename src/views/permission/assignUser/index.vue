@@ -4,8 +4,9 @@ import { ElMessage, ElMessageBox, ElTable } from 'element-plus'
 import { Column, Toolbar, Tree, LeftTree } from '@ainiteam/quick-vue3-ui'
 import { treeFormat } from '@/utils'
 import { User } from '@/types/user'
-import { getRoleList, getUserPermission, assignUser } from '@/api/role'
-import { getUserList } from '@/api/user'
+import { getUserPermission, assignUser } from '@/api/auth'
+import { getRoleList } from '@/api/system/role'
+import { getUserList } from '@/api/system/user'
 
 /**
  * 属性
@@ -142,7 +143,7 @@ const clearSelection = () => {
 const getRows = (data: string[]) => {
   const arr: User[] = []
   data.forEach((element: string) => {
-    const user = userList.find((x) => x.id === element)
+    const user = userList.find((x) => x.id === Number(element))
     if (user) {
       arr.push(user)
     }

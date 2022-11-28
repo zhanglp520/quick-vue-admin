@@ -1,43 +1,41 @@
-import { Dictionary } from '../types/dictionary'
-import request, { QuickResponseData } from '../utils/request'
+/*
+ *@Description: 字典管理模块api
+ *@Author: 土豆哥
+ *@Date: 2022-11-28 11:55:37
+ */
+import { Dictionary } from '@/types/dictionary'
+import request, { QuickResponseData } from '@/utils/request'
+import { dictionary as api } from './index'
 
-const Api = {
-  list: '/api/dictionary/getList',
-  add: '/api/dictionary/add',
-  update: '/api/dictionary/update',
-  delete: '/api/dictionary/delete',
-}
 export const getDictionaryList = (
-  dicTypeId: string
+  typeId: string
 ): Promise<QuickResponseData<Array<Dictionary>>> => {
   return request<QuickResponseData<Array<Dictionary>>>({
-    url: Api.list,
+    url: api,
     method: 'GET',
     params: {
-      dicTypeId,
+      typeId,
     },
   })
 }
 export const addDictionary = (data: Dictionary) => {
   return request({
-    url: Api.add,
+    url: api,
     method: 'POST',
     data,
   })
 }
 export const updateDictionary = (data: Dictionary) => {
+  const { id } = data
   return request({
-    url: Api.update,
+    url: `${api}/${id}`,
     method: 'POST',
     data,
   })
 }
-export const deleteDictionary = (id: string) => {
+export const deleteDictionary = (id: number) => {
   return request({
-    url: Api.delete,
+    url: `${api}/${id}`,
     method: 'POST',
-    data: {
-      id,
-    },
   })
 }

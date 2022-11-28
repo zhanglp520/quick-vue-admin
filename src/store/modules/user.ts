@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
-import { listToTree, menuFormat } from '@/utils/index'
-import { router } from '@/router'
+import { listToTree } from '@/utils/index'
 import { User } from '@/types/user'
 import { QuickResponseData } from '@/utils/request'
 import { Menu, Menubar } from '@/types/menu'
-import { getUserByUserName, getUserPageList, getPermission } from '@/api/user'
+import { getUserByUserName } from '@/api/system/user'
+import { getPermission } from '@/api/auth'
 
 interface UserState {
   user: User
@@ -15,7 +15,7 @@ export const useUserStore = defineStore('userStore', {
   state: (): UserState => {
     return {
       user: {
-        id: '',
+        id: 0,
         userId: '',
         userName: '',
         fullName: '',
@@ -59,16 +59,6 @@ export const useUserStore = defineStore('userStore', {
         })
       })
     },
-    // getUserPageList(parmas: object): Promise<QuickResponseData<Array<User>>> {
-    //   return new Promise((resolve) => {
-    //     getUserPageList(parmas).then((res) => {
-    //       const { data: userList } = res
-    //       this.userList = userList
-
-    //       resolve(res)
-    //     })
-    //   })
-    // },
     getUserInfo(userName: string): Promise<User> {
       return new Promise((resolve) => {
         getUserByUserName(userName).then((res) => {
@@ -81,5 +71,26 @@ export const useUserStore = defineStore('userStore', {
   },
   persist: {
     enabled: true,
+    // encryptionKey: 'myTest',
+    // strategies: [
+    //   {
+    //     key: 'login',
+    //     storage: sessionStorage,
+    //     // paths: ['token', 'refreshToken'],
+    //   },
+    // ],
+    // enabled: true, // 默认会以模块id为key，存储当前模块所有的状态；路由跳转会刷新掉store，尽量放在路由刷新后存储。
+    // strategies: [
+    //   {
+    //     key: 'token', // 默认userStore
+    //     // storage: sessionStorage, // sessionStorage|localStorage//默认sessionStorage
+    //     // paths: ['token'],
+    //   },
+    //   {
+    //     key: 'userInfo',
+    //     storage: localStorage,
+    //     paths: ['tenant', 'userName'],
+    //   },
+    // ],
   },
 })

@@ -3,7 +3,7 @@ import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Column, Actionbar, Toolbar, FormItem } from '@ainiteam/quick-vue3-ui'
 import { Role } from '@/types/role'
-import { getRoleList, addRole, updateRole, deleteRole } from '@/api/role'
+import { getRoleList, addRole, updateRole, deleteRole } from '@/api/system/role'
 
 /**
  * 属性

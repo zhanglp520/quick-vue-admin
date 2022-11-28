@@ -12,8 +12,7 @@ import {
 } from '@ainiteam/quick-vue3-ui'
 import { selectTreeFormat } from '@/utils'
 import { Dept, DeptTree } from '@/types/dept'
-import { getDeptList, addDept, updateDept, deleteDept } from '@/api/dept'
-import { Menu } from '@/types/menu'
+import { getDeptList, addDept, updateDept, deleteDept } from '@/api/system/dept'
 
 /**
  * 属性
@@ -33,8 +32,6 @@ const currentTreeData = ref<Tree>({
 const handleAdd = (item: Dept, done: any) => {
   const form = { ...item }
   form.pId = currentTreeData.value.id
-  console.log('form', form)
-
   done(form)
 }
 const tableToolbar = reactive<Toolbar>({
@@ -95,12 +92,12 @@ const deptTreeFormat = (data: Array<Dept>, pId = '0') => {
     label: '',
     children: [],
   }
-  const parentData = data.find((x: Dept) => x.pId.toString() === pId)
+  const parentData = data.find((x: Dept) => x.pId === Number(pId))
   if (parentData) {
     obj.id = parentData.id.toString()
     obj.label = parentData.deptName
-    const parentId = parentData.id.toString()
-    const companyData = data.filter((x: Dept) => x.pId.toString() === parentId)
+    const parentId = parentData.id
+    const companyData = data.filter((x: Dept) => x.pId === Number(parentId))
     companyData.forEach((item: Dept) => {
       if (companyData) {
         const companyObj: Tree = {
@@ -108,10 +105,8 @@ const deptTreeFormat = (data: Array<Dept>, pId = '0') => {
           label: item.deptName,
           children: [],
         }
-        const companyPid = item.id.toString()
-        const deptData = data.filter(
-          (x: Dept) => x.pId.toString() === companyPid
-        )
+        const companyPid = item.id
+        const deptData = data.filter((x: Dept) => x.pId === Number(companyPid))
         deptData.forEach((deptItem) => {
           companyObj.children.push({
             id: deptItem.id.toString(),
@@ -128,10 +123,10 @@ const deptTreeFormat = (data: Array<Dept>, pId = '0') => {
 }
 const listToTableTree = (data: Array<Dept>, pId = '0') => {
   const arr: Array<DeptTree> = []
-  const parentData = data.filter((x: Dept) => x.pId.toString() === pId)
+  const parentData = data.filter((x: Dept) => x.pId === Number(pId))
   parentData.forEach((item: Dept) => {
     const obj: DeptTree = { ...item, children: [] }
-    obj.children = listToTableTree(data, item.id)
+    obj.children = listToTableTree(data, item.id.toString())
     arr.push(obj)
   })
   return arr
@@ -178,6 +173,7 @@ const treeLoad = (done: any) => {
 }
 const handleTreeClick = (data: Tree, done: any) => {
   currentTreeData.value = data
+  load()
   done()
 }
 /**
@@ -189,10 +185,10 @@ const dialogTitle = reactive({
   detail: '部门详情',
 })
 const formModel = reactive<Dept>({
-  id: '',
+  id: 0,
   deptId: '',
   deptName: '',
-  pId: '',
+  pId: '0',
 })
 const formItems = reactive<Array<FormItem>>([
   {
@@ -271,7 +267,6 @@ const handleFormSubmit = (form: Dept, done: any) => {
     :left-tree-refresh="true"
     :loading="loading"
     @on-edit="handleEdit"
-    @on-load="load"
     @on-tree-load="treeLoad"
     @on-tree-click="handleTreeClick"
     @on-form-submit="handleFormSubmit"

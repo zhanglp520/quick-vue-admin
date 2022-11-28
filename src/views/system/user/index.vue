@@ -19,7 +19,7 @@ import {
   resetUserPassword,
   enableUser,
   disableUser,
-} from '@/api/user'
+} from '@/api/system/user'
 import { downloadExcel } from '@/utils'
 
 /**
