@@ -6,7 +6,6 @@ import pinia from '@/store'
 import { LoginParams } from '@/types/auth'
 import { useAuthStore } from '@/store/modules/auth'
 import { useUserStore } from '@/store/modules/user'
-
 /**
  * 属性
  */

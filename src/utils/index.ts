@@ -1,10 +1,10 @@
-import md5 from 'js-md5'
-import { Options, SelectTreeOptions, TreeOptions } from '../types/options'
-import { SelectTree, Tree } from '../types/tree'
+import { SelectTree, Tree } from '@ainiteam/quick-vue3-ui/dist/types/tree'
+import {
+  Options,
+  SelectTreeOptions,
+  TreeOptions,
+} from '@ainiteam/quick-vue3-ui/dist/types/options'
 
-export const quickMd5 = (str: string) => {
-  return md5(str)
-}
 export const dicFormat = (data: any, options: Options = {}) => {
   const arr: Options[] = []
   const defaultOptions = {
@@ -179,25 +179,4 @@ export const listToTree = (data, pId, options) => {
     arr.push({ ...element, children })
   })
   return arr
-}
-
-// 导出文件：请求参数增参数responseType: 'blob'
-export const exportFile = (file: any, fileName: string, type: string) => {
-  const blob = new Blob([file], { type })
-  const link = document.createElement('a')
-  const href = window.URL.createObjectURL(blob)
-  link.href = href
-  link.download = `${fileName}.xlsx`
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-  window.URL.revokeObjectURL(href) // 释放掉blob对象
-}
-
-export const downloadExcel = (file: any, fileName: string) => {
-  exportFile(file, fileName, 'application/vnd.ms-excel')
-}
-
-export const downloadWord = (file: any, fileName: string) => {
-  exportFile(file, fileName, 'application/msword')
 }

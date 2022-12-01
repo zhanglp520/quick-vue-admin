@@ -20,7 +20,7 @@ import {
   enableUser,
   disableUser,
 } from '@/api/system/user'
-import { downloadExcel } from '@/utils'
+import { downloadExcel } from '@/utils/download'
 
 /**
  * 属性
