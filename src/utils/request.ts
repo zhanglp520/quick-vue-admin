@@ -2,7 +2,11 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { useAuthStore } from '@/store/modules/auth'
 import { loginApi, refreshTokenApi } from '@/api/auth/'
-
+/*
+ *@Description: 请求库
+ *@Author: 土豆哥
+ *@Date: 2022-12-02 01:28:26
+ */
 export interface QuickResponseData<T = any> {
   status: number
   msg: string

@@ -6,7 +6,7 @@ import md5 from 'crypto-js/md5'
 import Base64 from 'crypto-js/enc-base64'
 
 /*
- *@Description: 加密库
+ *@Description: 加解密库
  *@Author: 土豆哥
  *@Date: 2022-12-02 00:40:51
  */

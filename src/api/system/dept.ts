@@ -1,12 +1,11 @@
+import { Dept } from '@/types/dept'
+import request, { QuickResponseData } from '@/utils/request'
+import { dept as api } from './index'
 /*
  *@Description: 部门管理模块api
  *@Author: 土豆哥
  *@Date: 2022-11-28 11:55:10
  */
-import { Dept } from '@/types/dept'
-import request, { QuickResponseData } from '@/utils/request'
-import { dept as api } from './index'
-
 export const getDeptListByPId = (
   pId: number
 ): Promise<QuickResponseData<Array<Dept>>> => {

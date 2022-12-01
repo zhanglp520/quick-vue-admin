@@ -1,12 +1,11 @@
+import { Dictionary } from '@/types/dictionary'
+import request, { QuickResponseData } from '@/utils/request'
+import { dictionary as api } from './index'
 /*
  *@Description: 字典管理模块api
  *@Author: 土豆哥
  *@Date: 2022-11-28 11:55:37
  */
-import { Dictionary } from '@/types/dictionary'
-import request, { QuickResponseData } from '@/utils/request'
-import { dictionary as api } from './index'
-
 export const getDictionaryList = (
   typeId: string
 ): Promise<QuickResponseData<Array<Dictionary>>> => {

@@ -4,7 +4,11 @@ import {
   SelectTreeOptions,
   TreeOptions,
 } from '@ainiteam/quick-vue3-ui/dist/types/options'
-
+/*
+ *@Description: 常用其他工具库
+ *@Author: 土豆哥
+ *@Date: 2022-12-02 01:28:55
+ */
 export const dicFormat = (data: any, options: Options = {}) => {
   const arr: Options[] = []
   const defaultOptions = {

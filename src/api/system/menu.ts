@@ -1,12 +1,11 @@
+import { Menu } from '@/types/menu'
+import request, { QuickResponseData } from '@/utils/request'
+import { menu as api } from './index'
 /*
  *@Description: 菜单管理模块api
  *@Author: 土豆哥
  *@Date: 2022-11-28 11:57:03
  */
-import { Menu } from '@/types/menu'
-import request, { QuickResponseData } from '@/utils/request'
-import { menu as api } from './index'
-
 export const getMenuList = (): Promise<QuickResponseData<Array<Menu>>> => {
   return request<QuickResponseData<Array<Menu>>>({
     url: api,

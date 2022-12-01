@@ -1,13 +1,12 @@
+import { Menu } from '@/types/menu'
+import { Role } from '@/types/role'
+import request, { QuickResponseData } from '@/utils/request'
+import { role as api } from './index'
 /*
  *@Description: 角色管理模块api
  *@Author: 土豆哥
  *@Date: 2022-11-28 11:57:27
  */
-import { Menu } from '@/types/menu'
-import { Role } from '@/types/role'
-import request, { QuickResponseData } from '@/utils/request'
-import { role as api } from './index'
-
 export const getRoleList = (): Promise<QuickResponseData<Array<Role>>> => {
   return request<QuickResponseData<Array<Role>>>({
     url: api,

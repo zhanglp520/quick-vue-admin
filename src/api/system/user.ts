@@ -1,14 +1,13 @@
-/*
- *@Description: 用户管理模块api
- *@Author: 土豆哥
- *@Date: 2022-11-28 11:57:43
- */
 import { Menu } from '@/types/menu'
 import { ChangePassword, User } from '@/types/user'
 import request, { QuickResponseData } from '@/utils/request'
 import { user as api } from './index'
 import { auth as authApi } from '../auth/index'
-
+/*
+ *@Description: 用户管理模块api
+ *@Author: 土豆哥
+ *@Date: 2022-11-28 11:57:43
+ */
 export const exportUser = (): Promise<QuickResponseData<any>> => {
   return request<QuickResponseData<Array<User>>>({
     url: `${api}/exportUser`,

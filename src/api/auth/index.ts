@@ -1,12 +1,11 @@
+import { LoginData, LoginParams, Token } from '@/types/auth'
+import request, { QuickResponseData } from '@/utils/request'
+import { defaultVersion } from '../index'
 /*
  *@Description:权限管理api
  *@Author: 土豆哥
  *@Date: 2022-11-28 11:51:50
  */
-import { LoginData, LoginParams, Token } from '@/types/auth'
-import request, { QuickResponseData } from '@/utils/request'
-import { defaultVersion } from '../index'
-
 export const auth = `${defaultVersion}/auths`
 const api = auth
 export const loginApi = `${api}/login`

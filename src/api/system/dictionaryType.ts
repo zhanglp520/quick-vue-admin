@@ -6,7 +6,11 @@
 import { DictionaryType } from '@/types/dictionaryType'
 import request, { QuickResponseData } from '@/utils/request'
 import { dictionaryType as api } from './index'
-
+/*
+ *@Description: 字典管理模块api
+ *@Author: 土豆哥
+ *@Date: 2022-11-28 11:55:37
+ */
 export const getDictionaryTypeList = (): Promise<
   QuickResponseData<Array<DictionaryType>>
 > => {
