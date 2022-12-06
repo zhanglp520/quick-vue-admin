@@ -5,7 +5,7 @@ import type { UploadInstance } from 'element-plus'
 import { Column, Actionbar, Toolbar, FormItem } from '@ainiteam/quick-vue3-ui'
 import { Role } from '@/types/role'
 import { SearchUser } from '@/types/user'
-import { getRoleList, addRole, updateRole, deleteRole } from '@/api/role'
+import { getRoleList, addRole, updateRole, deleteRole } from '@/api/system/role'
 
 /**
  * 属性
@@ -115,7 +115,6 @@ const handleImport = (done: any) => {
   //  this.$refs['centerIcon'][0].$children[0].$refs.input.click()
   // el-upload__input
   if (upload.value) {
-    debugger
     upload.value.handleStart()
   }
 }
@@ -188,16 +187,6 @@ const handleFormSubmit = (form: Role, done: any) => {
 }
 </script>
 <template>
-  <el-upload
-    ref="uploadRef"
-    class="upload-demo"
-    action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-    :auto-upload="true"
-  >
-    <template #trigger>
-      <el-button type="primary">上传</el-button>
-    </template>
-  </el-upload>
   <quick-crud
     :dialog-title="dialogTitle"
     :form-model="formModel"
@@ -214,5 +203,16 @@ const handleFormSubmit = (form: Role, done: any) => {
     @on-form-submit="handleFormSubmit"
     @on-delete="handleDelete"
     @on-import="handleImport"
-  ></quick-crud>
+  >
+    <el-upload
+      ref="uploadRef"
+      class="upload-demo"
+      action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+      :auto-upload="true"
+    >
+      <template #trigger>
+        <el-button type="primary">上传</el-button>
+      </template>
+    </el-upload>
+  </quick-crud>
 </template>

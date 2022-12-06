@@ -29,6 +29,8 @@ import { useAppStore } from './store/modules/app'
 // client.on('message', (data) => {
 //   console.log('message', data)
 // })
+// console.log('ElementPlus', ElementPlus)
+// console.log('quickUI', quickUI)
 
 const app = createApp(App)
 const appStore = useAppStore(pinia)

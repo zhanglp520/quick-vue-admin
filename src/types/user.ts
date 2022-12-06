@@ -14,7 +14,7 @@ export interface User {
   remark?: string
 }
 export interface SearchUser {
-  userName: string
+  keyword: string
 }
 export interface ChangePassword {
   oldPassword: string

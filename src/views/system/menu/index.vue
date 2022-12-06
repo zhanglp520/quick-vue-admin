@@ -154,9 +154,7 @@ const tableColumns = reactive<Array<Column>>([
  */
 const load = () => {
   loading.value = true
-  debugger
   getMenuList().then((res) => {
-    debugger
     loading.value = false
     const { data: menuList } = res
     const menuTree = listToTree(menuList, 0, {
@@ -277,9 +275,6 @@ const formItems = reactive<Array<FormItem>>([
     ],
     width: '400px',
     select: (val) => {
-      console.log('111111111112222222222')
-
-      debugger
       formModel.icon = val
     },
   },

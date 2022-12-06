@@ -1,5 +1,5 @@
 /*
- *@Description: 导出文件，请求参数增参数responseType: 'blob'
+ *@Description: 导出文件，请求参数增参数responseType: blob或arraybuffer
  *@Author: 土豆哥
  *@Date: 2022-12-02 01:03:27
  */

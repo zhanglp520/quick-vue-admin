@@ -103,9 +103,10 @@ quickRequest.interceptors.response.use(
   (res) => {
     console.info('response', res)
     const { data: resultData } = res
-    // if (res.config.url === '/api/v1/user/exportUser') {
-    //   return resultData
-    // }
+    // 导出文件
+    if (res.config.responseType === ('arraybuffer' || 'blob')) {
+      return resultData
+    }
     const { status, data, msg } = resultData as QuickResponseData<any>
     if (status === 1) {
       ElMessage.error(msg)

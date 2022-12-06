@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { userLogin, refreshToken } from '@/api/auth'
 import { LoginData, LoginParams, Token } from '@/types/auth'
-import quickCrypto from '@/utils/crypto'
+import { encryptForMd5 } from '@/utils/crypto'
 
 interface LoginState {
   quickAccessToken: string
@@ -33,13 +33,12 @@ export const useAuthStore = defineStore('loginStore', {
   },
   actions: {
     login(form: LoginParams): Promise<LoginData> {
-      debugger
       const { tenant, username, password } = form
       return new Promise((resolve, reject) => {
         userLogin({
           tenant,
           username,
-          password: quickCrypto.encryptForMd5(password),
+          password: encryptForMd5(password),
         })
           .then((res) => {
             const { data: loginData } = res

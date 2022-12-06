@@ -22,6 +22,19 @@ import {
 } from '@/api/system/user'
 import { downloadExcel } from '@/utils/download'
 
+// 导入
+const dialogVisible = ref(false)
+const action = 'https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15'
+const headers = reactive({
+  // authorization: `Bearer ${this.$store.getters.token}`,
+})
+const upload = () => {
+  dialogVisible.value = true
+}
+const handleClose = () => {
+  dialogVisible.value = false
+}
+
 /**
  * 属性
  */
@@ -40,7 +53,6 @@ const page = reactive<Page>({
  * 搜索
  */
 const searchForm = reactive<SearchUser>({
-  userName: '',
   keyword: '',
 })
 const searchFormItems = reactive<Array<FormItem>>([
@@ -49,11 +61,6 @@ const searchFormItems = reactive<Array<FormItem>>([
     vModel: 'keyword',
     placeholder: '用户名|手机号',
   },
-  // {
-  //   label: '用户名',
-  //   vModel: 'userName',
-  //   placeholder: '用户名',
-  // },
 ])
 /**
  * 工具栏
@@ -74,22 +81,12 @@ const handleBatchDelete = (data: any, done: any) => {
     })
   })
 }
+
 const handleImport = (done: any) => {
-  done()
+  upload()
+  // done()
 }
-// function saveFile(file: any, filename: string) {
-//   const fileBinary = Buffer.from(file, 'binary')
-//   const blob = new Blob([fileBinary], { type: 'application/vnd.ms-excel' })
-//   const href = URL.createObjectURL(blob) // 创建新的URL表示指定的blob对象
-//   const a = document.createElement('a') // 创建a标签
-//   a.style.display = 'none'
-//   a.href = href // 指定下载链接
-//   a.download = `${filename}.xlsx` // 指定下载文件名
-//   a.click() // 触发下载
-//   URL.revokeObjectURL(a.href) // 释放URL对象
-// }
 const handleExport = () => {
-  // window.open(`${window.location.origin}/用户报表.xlsx`)//TODO:导出bug
   exportUser().then((res) => {
     downloadExcel(res, '用户列表')
   })
@@ -197,9 +194,8 @@ const tableActionbar = reactive<Actionbar>({
  */
 const tableColumns = reactive<Array<Column>>([
   {
-    width: '100',
+    width: '50',
     type: 'selection',
-    align: 'center',
   },
   {
     label: '用户编号',
@@ -324,7 +320,7 @@ const validateEmail = (rule: any, value: string, callback: any) => {
   }
 }
 const formModel = reactive<User>({
-  id: '',
+  id: 0,
   userId: '',
   userName: '',
   fullName: '',
@@ -468,4 +464,10 @@ const handleFormSubmit = (form: User, done: any) => {
     @on-export="handleExport"
     @on-print="handlePrint"
   ></quick-crud>
+  <quick-upload
+    :dialog-visible="dialogVisible"
+    :action="action"
+    :headers="headers"
+    @on-close="handleClose"
+  ></quick-upload>
 </template>
