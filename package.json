@@ -50,6 +50,10 @@
     "vite-plugin-html": "^3.2.0",
     "vue-tsc": "^0.34.7"
   },
+  "engines": {
+    "node": "v18.12.1",
+    "pnpm": "7.18.0"
+  },
   "description": "quick-vue3-admin是一套快速搭建后台系统框架，基于vite2+element-plus进行二次封装，使用最新技术栈vite2,vue3,typescript,pinia等等。",
   "main": "index.js",
   "repository": "https://gitee.com/zhanglp520/quick-vue3-admin.git",
