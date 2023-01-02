@@ -5,11 +5,11 @@
 
 ## 简介
 
-quick-vue3-admin 是一款免费开源快速搭建中后台系统框架。本框架基于 vite2、vue3、element-plus、pinia 等最新主流技术并封装了通用的组件方便开发者提高工作效率。后期也会通过版本升级的方式来维护并更新，使开发者拥有一款长期并且稳定的脚手架。本团队还提供了基于 quick 框架开发的各类业务项目，如有相关需求联系管理员。
+quick-vue3-admin 是一款免费开源快速搭建中后台系统框架。本框架基于 vite2、vue3.2 语法糖模式、element-plus、pinia 等最新主流技术并封装了通用的组件方便开发者提高工作效率。后期也会通过版本升级的方式来维护并更新，使开发者拥有一款长期并且稳定的脚手架。本团队还提供了基于 quick 框架开发的各类业务项目，如有相关需求联系管理员。
 
 ## 软件特色
 
-1. 使用 vite2、vue3、element-plus、pinia 和 typescript 等前言技术
+1. 使用 vite2、vue3.2、element-plus、pinia 和 typescript 等前言技术
 2. 封装了通用的组件
 3. 提供了系统管理常用功能模块
 4. 提供权限管理模块
@@ -43,9 +43,9 @@ quick-vue3-admin 是一款免费开源快速搭建中后台系统框架。本框
 ```bash
 码云：git clone https://gitee.com/zhanglp520/quick-vue3-admin.git
 
-github： git clone https://github.com/zhanglp520/quick-vue3-admin..git
+github： git clone https://github.com/zhanglp520/quick-vue3-admin.git
 
-gitlab git clone http://110.42.130.88:8099/zhanglp520/quick-vue3-admin.git
+gitlab git clone  https://repository.ainiteam.com/zhanglp520/quick-vue3-admin.git
 ```
 
 - 切换淘宝镜像
@@ -84,7 +84,7 @@ pnpm install
 pnpm run dev
 ```
 
-运行命令执行服务启动后，浏览器输入：http://localhost:3001/
+运行命令执行服务启动后，浏览器输入：http://localhost:3102/
 
 - eslint 检测
 
