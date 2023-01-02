@@ -47,7 +47,7 @@ const page = reactive<Page>({
   current: 1,
   size: 10,
   sizes: [10, 20, 30, 40, 50],
-  total: 100,
+  total: 0,
 })
 /**
  * 搜索
@@ -208,6 +208,11 @@ const tableColumns = reactive<Array<Column>>([
   {
     width: '50',
     type: 'selection',
+  },
+  {
+    width: '60',
+    type: 'index',
+    label: '序号',
   },
   {
     label: '用户编号',
@@ -435,8 +440,9 @@ const formItems = reactive<Array<FormItem>>([
   },
 ])
 const handleFormSubmit = (form: User, done: any) => {
-  if (form.id) {
-    updateUser(form).then(() => {
+  const row = { ...form }
+  if (row.id) {
+    updateUser(row).then(() => {
       ElMessage({
         type: 'success',
         message: '用户修改成功',
@@ -444,7 +450,6 @@ const handleFormSubmit = (form: User, done: any) => {
       done()
     })
   } else {
-    const row = { ...form }
     row.id = undefined
     addUser(row).then(() => {
       ElMessage({

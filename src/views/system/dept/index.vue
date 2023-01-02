@@ -54,6 +54,9 @@ const handleDelete = (item: Dept, done: any) => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
+    if (!item.id) {
+      return
+    }
     deleteDept(item.id).then(() => {
       ElMessage({
         type: 'success',
@@ -185,7 +188,7 @@ const dialogTitle = reactive({
   detail: '部门详情',
 })
 const formModel = reactive<Dept>({
-  id: 0,
+  id: '',
   deptId: '',
   deptName: '',
   pId: '0',
@@ -234,8 +237,9 @@ const formItems = reactive<Array<FormItem>>([
   },
 ])
 const handleFormSubmit = (form: Dept, done: any) => {
-  if (form.id) {
-    updateDept(form).then(() => {
+  const row = { ...form }
+  if (row.id) {
+    updateDept(row).then(() => {
       ElMessage({
         type: 'success',
         message: '部门修改成功',
@@ -243,7 +247,8 @@ const handleFormSubmit = (form: Dept, done: any) => {
       done()
     })
   } else {
-    addDept(form).then(() => {
+    row.id = undefined
+    addDept(row).then(() => {
       ElMessage({
         type: 'success',
         message: '部门创建成功',

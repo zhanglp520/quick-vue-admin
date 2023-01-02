@@ -34,6 +34,11 @@ const tableColumns = reactive<Array<Column>>([
     type: 'selection',
   },
   {
+    width: '60',
+    type: 'index',
+    label: '序号',
+  },
+  {
     label: '角色编号',
     prop: 'roleId',
     width: '200',
@@ -49,6 +54,9 @@ const handleDelete = (item: Role, done: any) => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
+    if (!item.id) {
+      return
+    }
     deleteRole(item.id).then(() => {
       ElMessage({
         type: 'success',
@@ -115,8 +123,9 @@ const formItems = reactive<Array<FormItem>>([
   },
 ])
 const handleFormSubmit = (form: Role, done: any) => {
-  if (form.id) {
-    updateRole(form).then(() => {
+  const row = { ...form }
+  if (row.id) {
+    updateRole(row).then(() => {
       ElMessage({
         type: 'success',
         message: '角色修改成功',
@@ -124,7 +133,8 @@ const handleFormSubmit = (form: Role, done: any) => {
       done()
     })
   } else {
-    addRole(form).then(() => {
+    row.id = undefined
+    addRole(row).then(() => {
       ElMessage({
         type: 'success',
         message: '角色创建成功',

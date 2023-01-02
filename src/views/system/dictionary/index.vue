@@ -55,6 +55,9 @@ const handleDelete = (item: Dictionary, done: any) => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
+    if (!item.id) {
+      return
+    }
     deleteDictionary(item.id).then(() => {
       ElMessage({
         type: 'success',
@@ -191,8 +194,9 @@ const formItems = reactive<Array<FormItem>>([
   },
 ])
 const handleFormSubmit = (form: Dictionary, done: any) => {
-  if (form.id) {
-    updateDictionary(form).then(() => {
+  const row = { ...form }
+  if (row.id) {
+    updateDictionary(row).then(() => {
       ElMessage({
         type: 'success',
         message: '字典修改成功',
@@ -200,7 +204,8 @@ const handleFormSubmit = (form: Dictionary, done: any) => {
       done()
     })
   } else {
-    addDictionary(form).then(() => {
+    row.id = undefined
+    addDictionary(row).then(() => {
       ElMessage({
         type: 'success',
         message: '字典创建成功',

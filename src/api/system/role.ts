@@ -28,7 +28,7 @@ export const updateRole = (data: Role) => {
     data,
   })
 }
-export const deleteRole = (id: number) => {
+export const deleteRole = (id: string) => {
   return request({
     url: `${api}/${id}`,
     method: 'DELETE',

@@ -23,7 +23,7 @@ const page = reactive<Page>({
   current: 1,
   size: 10,
   sizes: [10, 20, 30, 40, 50],
-  total: 100,
+  total: 0,
 })
 /**
  * 搜索
@@ -44,46 +44,16 @@ const searchFormItems = reactive<Array<FormItem>>([
 /**
  * 工具栏
  */
-const handleBatchDelete = (data: any, done: any) => {
-  const { ids } = data
-  ElMessageBox.confirm(`你真的删除选择的日志吗？`, '警告', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(() => {
-    batchRemove(ids).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '日志删除成功',
-      })
-      done()
-    })
-  })
-}
 const tableToolbar = reactive<Toolbar>({
   hiddenImportButton: true,
   hiddenExportButton: true,
   hiddenAddButton: true,
   hiddenPrintButton: true,
+  hiddenBatchDeleteButton: true,
 })
 /**
  * 操作栏
  */
-const handleDelete = (item: Log, done: any) => {
-  ElMessageBox.confirm(`你真的删除【${item.id}】的日志吗？`, '警告', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(() => {
-    removeLog(item.id.toString()).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '日志删除成功',
-      })
-      done()
-    })
-  })
-}
 const handleDetail = (item: Log, done: any) => {
   const form: Log = { ...item }
   if (form.request) {
@@ -96,8 +66,9 @@ const handleDetail = (item: Log, done: any) => {
   }
 }
 const tableActionbar = reactive<Actionbar>({
-  width: 150,
+  width: 60,
   hiddenEditButton: true,
+  hiddenDeleteButton: true,
 })
 /**
  * 表格
@@ -157,14 +128,12 @@ const load = (params: any) => {
   loading.value = true
   getLogPageList(obj).then((res) => {
     loading.value = false
-    const { data: logList, page: pagination } = res
+    const { data: logList, total } = res
     if (logList) {
       dataList.length = 0
       dataList.push(...logList)
     }
-    if (pagination) {
-      page.total = pagination.total
-    }
+    page.total = total
   })
 }
 /**
@@ -174,7 +143,7 @@ const dialogTitle = reactive({
   detail: '日志详情',
 })
 const formModel = reactive<Log>({
-  id: 0,
+  id: '',
   type: 1,
   ip: '',
   request: '',

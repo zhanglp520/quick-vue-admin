@@ -1,5 +1,5 @@
 export interface Dept {
-  id: number
+  id: string | undefined
   deptId: string
   deptName: string
   pId: number | string

@@ -1,5 +1,5 @@
 export interface Menu {
-  id: number
+  id: string | undefined
   menuId: string
   menuName: string
   path: string

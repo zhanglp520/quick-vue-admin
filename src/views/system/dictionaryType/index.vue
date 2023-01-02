@@ -37,6 +37,9 @@ const handleDelete = (item: DictionaryType, done: any) => {
       type: 'warning',
     }
   ).then(() => {
+    if (!item.id) {
+      return
+    }
     deleteDictionaryType(item.id).then(() => {
       ElMessage({
         type: 'success',
@@ -125,8 +128,9 @@ const formItems = reactive<Array<FormItem>>([
   },
 ])
 const handleFormSubmit = (form: DictionaryType, done: any) => {
-  if (form.id) {
-    updateDictionaryType(form).then(() => {
+  const row = { ...form }
+  if (row.id) {
+    updateDictionaryType(row).then(() => {
       ElMessage({
         type: 'success',
         message: '用户修改成功',
@@ -134,7 +138,8 @@ const handleFormSubmit = (form: DictionaryType, done: any) => {
       done()
     })
   } else {
-    addDictionaryType(form).then(() => {
+    row.id = undefined
+    addDictionaryType(row).then(() => {
       ElMessage({
         type: 'success',
         message: '用户创建成功',

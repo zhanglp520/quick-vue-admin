@@ -28,13 +28,13 @@ export const updateDictionary = (data: Dictionary) => {
   const { id } = data
   return request({
     url: `${api}/${id}`,
-    method: 'POST',
+    method: 'PUT',
     data,
   })
 }
-export const deleteDictionary = (id: number) => {
+export const deleteDictionary = (id: string) => {
   return request({
     url: `${api}/${id}`,
-    method: 'POST',
+    method: 'DELETE',
   })
 }

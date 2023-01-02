@@ -15,17 +15,3 @@ export const getLogPageList = (
     params,
   })
 }
-
-export const removeLog = (id: number) => {
-  return request({
-    url: `${api}/remove/${id}`,
-    method: 'POST',
-  })
-}
-
-export const batchRemove = (ids: string) => {
-  return request({
-    url: `${api}/batchRemove/${ids}`,
-    method: 'POST',
-  })
-}

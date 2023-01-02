@@ -1,5 +1,5 @@
 export interface Log {
-  id: number
+  id: string | undefined
   type: number
   ip: string
   request: string

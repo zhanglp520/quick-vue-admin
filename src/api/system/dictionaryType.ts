@@ -31,13 +31,13 @@ export const updateDictionaryType = (data: DictionaryType) => {
   const { id } = data
   return request({
     url: `${api}/${id}`,
-    method: 'POST',
+    method: 'PUT',
     data,
   })
 }
 export const deleteDictionaryType = (id: string) => {
   return request({
     url: `${api}/${id}`,
-    method: 'POST',
+    method: 'DELETE',
   })
 }

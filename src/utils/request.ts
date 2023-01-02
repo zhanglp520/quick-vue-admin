@@ -101,7 +101,6 @@ quickRequest.interceptors.request.use(
 // 响应拦截器
 quickRequest.interceptors.response.use(
   (res) => {
-    debugger
     console.info('response', res)
     const { data: resultData } = res
     // 导出文件

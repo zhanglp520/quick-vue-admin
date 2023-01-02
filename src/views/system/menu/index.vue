@@ -184,7 +184,7 @@ const dialogTitle = reactive({
   detail: '菜单详情',
 })
 const formModel = reactive<Menu>({
-  id: 0,
+  id: '',
   menuId: '',
   menuName: '',
   path: '',
@@ -349,12 +349,12 @@ const formItems = reactive<Array<FormItem>>([
   },
 ])
 const handleFormSubmit = (form: Menu, done: any) => {
-  const model = { ...form }
-  if (!model.pId) {
-    model.pId = '0'
+  const row = { ...form }
+  if (!row.pId) {
+    row.pId = '0'
   }
-  if (model.id) {
-    updateMenu(model).then(() => {
+  if (row.id) {
+    updateMenu(row).then(() => {
       ElMessage({
         type: 'success',
         message: '菜单修改成功',
@@ -362,7 +362,8 @@ const handleFormSubmit = (form: Menu, done: any) => {
       done()
     })
   } else {
-    addMenu(model).then(() => {
+    row.id = undefined
+    addMenu(row).then(() => {
       ElMessage({
         type: 'success',
         message: '菜单创建成功',

@@ -31,13 +31,13 @@ export const updateDept = (data: Dept) => {
   const { id } = data
   return request({
     url: `${api}/${id}`,
-    method: 'POST',
+    method: 'PUT',
     data,
   })
 }
-export const deleteDept = (id: number | string) => {
+export const deleteDept = (id: string) => {
   return request({
     url: `${api}/${id}`,
-    method: 'POST',
+    method: 'DELETE',
   })
 }
