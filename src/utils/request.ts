@@ -101,28 +101,27 @@ quickRequest.interceptors.request.use(
 // 响应拦截器
 quickRequest.interceptors.response.use(
   (res) => {
+    debugger
     console.info('response', res)
     const { data: resultData } = res
     // 导出文件
     if (res.config.responseType === ('arraybuffer' || 'blob')) {
       return resultData
     }
-    const { status, data, msg } = resultData as QuickResponseData<any>
-    if (status === 1) {
-      ElMessage.error(msg)
-    } else {
-      const { payload, total } = data
-      if (payload) {
-        return Promise.resolve({
-          data: payload,
-          total,
-        })
-      }
+    const { data } = resultData as QuickResponseData<any>
+    if (!data) {
+      return Promise.resolve()
+    }
+    const { payload, total } = data
+    if (payload) {
       return Promise.resolve({
-        data,
+        data: payload,
+        total,
       })
     }
-    return Promise.reject(msg)
+    return Promise.resolve({
+      data,
+    })
   },
   (error) => {
     const { response } = error
@@ -144,6 +143,10 @@ quickRequest.interceptors.response.use(
             errFlag = false
           })
       }
+    } else if (status === 400) {
+      const { data: resultData } = response
+      const { msg } = resultData as QuickResponseData<any>
+      ElMessage.error(msg)
     } else {
       if (!errFlag) {
         errFlag = true

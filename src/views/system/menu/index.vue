@@ -184,7 +184,7 @@ const dialogTitle = reactive({
   detail: '菜单详情',
 })
 const formModel = reactive<Menu>({
-  id: '',
+  id: 0,
   menuId: '',
   menuName: '',
   path: '',
@@ -192,7 +192,7 @@ const formModel = reactive<Menu>({
   menuType: 0,
   icon: '',
   sort: 0,
-  pId: '',
+  pId: '0',
   link: 0,
   linkUrl: '',
   enabled: 1,

@@ -23,12 +23,17 @@ const form = reactive<LoginParams>({
  */
 const handleLogin = async (): Promise<void> => {
   loading.value = true
-  await loginStore.login(form)
-  loading.value = false
-  const user = await userStore.getUserInfo(loginStore.userName)
-  const { id } = user
-  await userStore.getPermission(id.toString())
-  router.push('/')
+  try {
+    await loginStore.login(form)
+    const user = await userStore.getUserInfo(loginStore.userName)
+    const { id } = user
+    await userStore.getPermission(id.toString())
+    router.push('/')
+  } catch (error) {
+    console.log('login error', error)
+  } finally {
+    loading.value = false
+  }
 }
 const keyDown = (e: KeyboardEvent) => {
   if (e.key === 'Enter') {

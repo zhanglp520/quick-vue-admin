@@ -7,11 +7,11 @@ export interface Menu {
   menuType: number
   icon: string
   sort: number
-  pId: number
+  pId: string
   link: number
   linkUrl: string
-  enabled: number
-  status: number
+  enabled: boolean
+  status: boolean
 }
 export interface MenuTree extends Menu {
   children: MenuTree[]

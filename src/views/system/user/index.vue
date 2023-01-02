@@ -106,6 +106,9 @@ const handleDelete = (item: User, done: any) => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
+    if (!item.id) {
+      return
+    }
     deleteUser(item.id).then(() => {
       ElMessage({
         type: 'success',
@@ -121,6 +124,9 @@ const handleResetPassword = (item: User, done: any) => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
+    if (!item.id) {
+      return
+    }
     resetUserPassword(item.id).then(() => {
       ElMessage({
         type: 'success',
@@ -136,6 +142,9 @@ const handleEnable = (item: User, done: any) => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
+    if (!item.id) {
+      return
+    }
     enableUser(item.id).then(() => {
       ElMessage({
         type: 'success',
@@ -151,6 +160,9 @@ const handleDisable = (item: User, done: any) => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
+    if (!item.id) {
+      return
+    }
     disableUser(item.id).then(() => {
       ElMessage({
         type: 'success',
@@ -165,26 +177,26 @@ const tableActionbar = reactive<Actionbar>({
   btns: [
     {
       name: '重置密码',
-      click(item: any, done: any) {
+      click(item: User, done: any) {
         handleResetPassword(item, done)
       },
     },
     {
       name: '启用',
-      click(item: any, done: any) {
+      click(item: User, done: any) {
         handleEnable(item, done)
       },
-      render(row: any) {
-        return row.enabled === 1
+      render(row: User) {
+        return row.enabled === 0
       },
     },
     {
       name: '禁用',
-      click(item: any, done: any) {
+      click(item: User, done: any) {
         handleDisable(item, done)
       },
-      render(row: any) {
-        return row.enabled !== 1
+      render(row: User) {
+        return row.enabled !== 0
       },
     },
   ],
@@ -227,7 +239,7 @@ const tableColumns = reactive<Array<Column>>([
     prop: 'enabled',
     width: '200',
     format: (row: User) => {
-      return row.enabled === 1 ? '禁用' : '启用'
+      return row.enabled === 1 ? '启用' : '禁用'
     },
   },
   {
@@ -320,7 +332,7 @@ const validateEmail = (rule: any, value: string, callback: any) => {
   }
 }
 const formModel = reactive<User>({
-  id: 0,
+  id: '',
   userId: '',
   userName: '',
   fullName: '',
@@ -432,7 +444,9 @@ const handleFormSubmit = (form: User, done: any) => {
       done()
     })
   } else {
-    addUser(form).then(() => {
+    const row = { ...form }
+    row.id = undefined
+    addUser(row).then(() => {
       ElMessage({
         type: 'success',
         message: '用户创建成功',

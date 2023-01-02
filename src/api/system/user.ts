@@ -53,13 +53,13 @@ export const updateUser = (data: User) => {
     data,
   })
 }
-export const deleteUser = (id: number) => {
+export const deleteUser = (id: string) => {
   return request({
     url: `${api}/${id}`,
     method: 'DELETE',
   })
 }
-export const changePassword = (id: number, data: ChangePassword) => {
+export const changePassword = (id: string, data: ChangePassword) => {
   const { oldPassword, newPassword } = data
   return request({
     url: `${api}/changePassword/${id}`,
@@ -74,22 +74,22 @@ export const changePassword = (id: number, data: ChangePassword) => {
 export const batchDeleteUser = (ids: string) => {
   return request({
     url: `${api}/batchRemove/${ids}`,
-    method: 'PATCH',
+    method: 'DELETE',
   })
 }
-export const resetUserPassword = (id: number) => {
+export const resetUserPassword = (id: string) => {
   return request({
     url: `${api}/resetPassword/${id}`,
     method: 'PATCH',
   })
 }
-export const enableUser = (id: number) => {
+export const enableUser = (id: string) => {
   return request({
     url: `${api}/enabled/${id}`,
     method: 'PATCH',
   })
 }
-export const disableUser = (id: number) => {
+export const disableUser = (id: string) => {
   return request({
     url: `${api}/disable/${id}`,
     method: 'PATCH',
