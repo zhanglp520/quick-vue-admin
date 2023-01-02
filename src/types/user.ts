@@ -19,5 +19,5 @@ export interface SearchUser {
 export interface ChangePassword {
   oldPassword: string
   newPassword: string
-  confirmPassword: string
+  confirmPassword?: string
 }

@@ -26,7 +26,8 @@ const staticRouter = [
     redirect: '/personalInfo/index',
     children: [
       {
-        path: 'index',
+        path: '/personalInfo/index',
+        name: 'PersonalInfoIndex',
         component: () => import('../views/personalInfo/index.vue'),
       },
     ],
@@ -38,7 +39,8 @@ const staticRouter = [
     redirect: '/changePassword/index',
     children: [
       {
-        path: 'index',
+        path: '/changePassword/index',
+        name: 'ChangePasswordIndex',
         component: () => import('../views/changePassword/index.vue'),
       },
     ],
