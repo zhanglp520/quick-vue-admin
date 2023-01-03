@@ -1,7 +1,7 @@
 {
   "name": "quick-vue3-admin",
   "private": true,
-  "version": "1.1.0",
+  "version": "2.0.0",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -12,23 +12,24 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@ainiteam/quick-vue3-ui": "1.0.7-alpha.3",
     "@element-plus/icons-vue": "^2.0.6",
     "axios": "^0.27.2",
+    "crypto-js": "^4.1.1",
     "echarts": "5.3.2",
     "element-plus": "^2.1.11",
     "js-cookie": "^3.0.1",
-    "js-md5": "^0.7.3",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.17",
     "pinia-plugin-persist": "^1.0.0",
     "pinia-use-persist": "^0.0.21",
+    "socket.io-client": "^4.5.3",
     "vue": "^3.2.25",
     "vue-i18n": "^9.1.9",
     "vue-router": "4"
   },
   "devDependencies": {
-    "@ainiteam/quick-vue3-ui": "^1.0.6",
-    "@types/js-md5": "^0.4.3",
+    "@types/crypto-js": "^4.1.1",
     "@types/node": "^17.0.30",
     "@types/nprogress": "^0.2.0",
     "@typescript-eslint/eslint-plugin": "^5.22.0",
@@ -48,6 +49,10 @@
     "vite": "^2.9.5",
     "vite-plugin-html": "^3.2.0",
     "vue-tsc": "^0.34.7"
+  },
+  "engines": {
+    "node": "v18.12.1",
+    "pnpm": "7.18.0"
   },
   "description": "quick-vue3-admin是一套快速搭建后台系统框架，基于vite2+element-plus进行二次封装，使用最新技术栈vite2,vue3,typescript,pinia等等。",
   "main": "index.js",

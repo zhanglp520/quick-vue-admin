@@ -8,7 +8,7 @@ import {
   addDictionaryType,
   updateDictionaryType,
   deleteDictionaryType,
-} from '@/api/dictionaryType'
+} from '@/api/system/dictionaryType'
 
 /**
  * 属性
@@ -28,11 +28,18 @@ const tableToolbar = reactive<Toolbar>({
  * 操作栏
  */
 const handleDelete = (item: DictionaryType, done: any) => {
-  ElMessageBox.confirm(`你真的删除【${item.name}】的字典分类吗？`, '警告', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(() => {
+  ElMessageBox.confirm(
+    `你真的删除【${item.dicTypeName}】的字典分类吗？`,
+    '警告',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }
+  ).then(() => {
+    if (!item.id) {
+      return
+    }
     deleteDictionaryType(item.id).then(() => {
       ElMessage({
         type: 'success',
@@ -61,7 +68,7 @@ const tableColumns = reactive<Array<Column>>([
   },
   {
     label: '字典分类',
-    prop: 'name',
+    prop: 'dicTypeName',
   },
 ])
 /**
@@ -87,7 +94,7 @@ const dialogTitle = reactive({
 const formModel = reactive<DictionaryType>({
   id: '',
   dicTypeId: '',
-  name: '',
+  dicTypeName: '',
 })
 const formItems = reactive<Array<FormItem>>([
   {
@@ -108,9 +115,9 @@ const formItems = reactive<Array<FormItem>>([
   {
     label: '分类名称',
     labelWidth: '80px',
-    vModel: 'name',
+    vModel: 'dicTypeName',
     placeholder: '分类名称',
-    prop: 'name',
+    prop: 'dicTypeName',
     rules: [
       {
         required: true,
@@ -121,8 +128,9 @@ const formItems = reactive<Array<FormItem>>([
   },
 ])
 const handleFormSubmit = (form: DictionaryType, done: any) => {
-  if (form.id) {
-    updateDictionaryType(form).then(() => {
+  const row = { ...form }
+  if (row.id) {
+    updateDictionaryType(row).then(() => {
       ElMessage({
         type: 'success',
         message: '用户修改成功',
@@ -130,7 +138,8 @@ const handleFormSubmit = (form: DictionaryType, done: any) => {
       done()
     })
   } else {
-    addDictionaryType(form).then(() => {
+    row.id = undefined
+    addDictionaryType(row).then(() => {
       ElMessage({
         type: 'success',
         message: '用户创建成功',

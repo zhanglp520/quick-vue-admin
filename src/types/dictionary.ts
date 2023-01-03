@@ -1,6 +1,6 @@
 export interface Dictionary {
-  id: string
+  id: string | undefined
   dicTypeId: string
   dicId: string
-  name: string
+  dicName: string
 }

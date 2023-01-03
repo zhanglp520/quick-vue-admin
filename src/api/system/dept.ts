@@ -1,50 +1,43 @@
-import { Dept } from '../types/dept'
-import request, { QuickResponseData } from '../utils/request'
-
-const Api = {
-  list_pid: '/api/dept/getListByPId',
-  list: '/api/dept/getList',
-  add: '/api/dept/add',
-  update: '/api/dept/update',
-  delete: '/api/dept/delete',
-}
+import { Dept } from '@/types/dept'
+import request, { QuickResponseData } from '@/utils/request'
+import { dept as api } from './index'
+/*
+ *@Description: 部门管理模块api
+ *@Author: 土豆哥
+ *@Date: 2022-11-28 11:55:10
+ */
 export const getDeptListByPId = (
   pId: number
 ): Promise<QuickResponseData<Array<Dept>>> => {
   return request<QuickResponseData<Array<Dept>>>({
-    url: Api.list_pid,
+    url: `${api}/getListByPId/${pId}`,
     method: 'GET',
-    params: {
-      pId,
-    },
   })
 }
 export const getDeptList = (): Promise<QuickResponseData<Array<Dept>>> => {
   return request<QuickResponseData<Array<Dept>>>({
-    url: Api.list,
+    url: api,
     method: 'GET',
   })
 }
 export const addDept = (data: Dept) => {
   return request({
-    url: Api.add,
+    url: api,
     method: 'POST',
     data,
   })
 }
 export const updateDept = (data: Dept) => {
+  const { id } = data
   return request({
-    url: Api.update,
-    method: 'POST',
+    url: `${api}/${id}`,
+    method: 'PUT',
     data,
   })
 }
 export const deleteDept = (id: string) => {
   return request({
-    url: Api.delete,
-    method: 'POST',
-    data: {
-      id,
-    },
+    url: `${api}/${id}`,
+    method: 'DELETE',
   })
 }

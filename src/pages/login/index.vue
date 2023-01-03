@@ -3,33 +3,37 @@ import { UserFilled, Lock } from '@element-plus/icons-vue'
 import { onMounted, onUnmounted, reactive, ref } from 'vue'
 import { router } from '@/router'
 import pinia from '@/store'
-import { LoginParams } from '@/types/login'
-import { useLoginStore } from '@/store/modules/login'
+import { LoginParams } from '@/types/auth'
+import { useAuthStore } from '@/store/modules/auth'
 import { useUserStore } from '@/store/modules/user'
-
 /**
  * 属性
  */
 const title = ref('quick-vue3-admin')
-const loginStore = useLoginStore(pinia)
+const loginStore = useAuthStore(pinia)
 const userStore = useUserStore(pinia)
 const loading = ref(false)
 const form = reactive<LoginParams>({
   tenant: '',
-  userName: '',
-  userPassword: '',
+  username: '',
+  password: '',
 })
 /**
  * 函数
  */
 const handleLogin = async (): Promise<void> => {
   loading.value = true
-  await loginStore.login(form)
-  loading.value = false
-  const user = await userStore.getUserInfo(loginStore.userName)
-  const { id } = user
-  await userStore.getPermission(id.toString())
-  router.push('/')
+  try {
+    await loginStore.login(form)
+    const user = await userStore.getUserInfo(loginStore.userName)
+    const { id } = user
+    await userStore.getPermission(id.toString())
+    router.push('/')
+  } catch (error) {
+    console.log('login error', error)
+  } finally {
+    loading.value = false
+  }
 }
 const keyDown = (e: KeyboardEvent) => {
   if (e.key === 'Enter') {
@@ -54,7 +58,7 @@ onUnmounted(() => {
         </div>
         <div class="item">
           <el-input
-            v-model="form.userName"
+            v-model="form.username"
             placeholder="用户名"
             :prefix-icon="UserFilled"
             size="large"
@@ -62,7 +66,7 @@ onUnmounted(() => {
         </div>
         <div class="item">
           <el-input
-            v-model="form.userPassword"
+            v-model="form.password"
             type="password"
             placeholder="密码"
             show-password
@@ -93,7 +97,9 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   // background-color: green;
-  background: url('/images/login-bg.jpeg') no-repeat center center;
+  // background: url('@/assets/images/login-bg.jpeg') no-repeat center center;
+  background: url('../images/login-bg.jpeg') no-repeat center center;
+
   background-size: 100% 100%;
   border-radius: 5px;
   .form {

@@ -1,5 +1,5 @@
 export interface DictionaryType {
-  id: string
+  id: string | undefined
   dicTypeId: string
-  name: string
+  dicTypeName: string
 }

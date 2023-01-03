@@ -1,5 +1,5 @@
 export interface Menu {
-  id: string
+  id: string | undefined
   menuId: string
   menuName: string
   path: string
@@ -10,8 +10,8 @@ export interface Menu {
   pId: string
   link: number
   linkUrl: string
-  enabled: number
-  status: number
+  enabled: boolean
+  status: boolean
 }
 export interface MenuTree extends Menu {
   children: MenuTree[]

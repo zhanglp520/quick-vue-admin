@@ -12,7 +12,7 @@ import { selectTreeFormat, listToTree } from '@/utils/index'
 import { Menu } from '@/types/menu'
 import '@/assets/iconfont/quickIconFont.js'
 import quickIconFont from '@/config/quickIconFont.json'
-import { getMenuList, addMenu, updateMenu, deleteMenu } from '@/api/menu'
+import { getMenuList, addMenu, updateMenu, deleteMenu } from '@/api/system/menu'
 
 /**
  * 属性
@@ -192,7 +192,7 @@ const formModel = reactive<Menu>({
   menuType: 0,
   icon: '',
   sort: 0,
-  pId: '',
+  pId: '0',
   link: 0,
   linkUrl: '',
   enabled: 1,
@@ -275,9 +275,6 @@ const formItems = reactive<Array<FormItem>>([
     ],
     width: '400px',
     select: (val) => {
-      console.log('111111111112222222222')
-
-      debugger
       formModel.icon = val
     },
   },
@@ -352,12 +349,12 @@ const formItems = reactive<Array<FormItem>>([
   },
 ])
 const handleFormSubmit = (form: Menu, done: any) => {
-  const model = { ...form }
-  if (!model.pId) {
-    model.pId = '0'
+  const row = { ...form }
+  if (!row.pId) {
+    row.pId = '0'
   }
-  if (model.id) {
-    updateMenu(model).then(() => {
+  if (row.id) {
+    updateMenu(row).then(() => {
       ElMessage({
         type: 'success',
         message: '菜单修改成功',
@@ -365,7 +362,8 @@ const handleFormSubmit = (form: Menu, done: any) => {
       done()
     })
   } else {
-    addMenu(model).then(() => {
+    row.id = undefined
+    addMenu(row).then(() => {
       ElMessage({
         type: 'success',
         message: '菜单创建成功',

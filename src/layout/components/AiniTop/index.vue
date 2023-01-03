@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
-import { ElMessageBox } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   Setting,
   Search,
@@ -13,13 +13,16 @@ import { useRouter } from 'vue-router'
 import { useAppStore } from '@/store/modules/app'
 import { useUserStore } from '@/store/modules/user'
 import { useMenuStore } from '@/store/modules/menu'
+import { useTabStore } from '@/store/modules/tab'
 import QuickBreadcrumb from '@/components/QuickBreadcrumb/index.vue'
 import { Menu } from '@/types/menu'
+import { Tab } from '@/types/tab'
 
 const router = useRouter()
 const appStore = useAppStore()
 const userStore = useUserStore()
 const menuStore = useMenuStore()
+const tabStore = useTabStore()
 
 const isCollapse = computed(() => appStore.getCollapse)
 const bredcrumbData = ref<Array<string>>([])
@@ -42,9 +45,37 @@ const loginOut = () => {
   })
 }
 const personalInfo = () => {
+  const tab: Tab = {
+    id: 'PersonalInfo',
+    name: '个人资料',
+    path: '/personalInfo',
+  }
+  const tabList = tabStore.getTabList
+  if (tabList.length >= 15) {
+    ElMessage({
+      type: 'warning',
+      message: '选项卡最多15个，请关闭部分再试',
+    })
+    return
+  }
+  tabStore.addTab(tab)
   router.push('/personalInfo')
 }
 const changePassword = () => {
+  const tab: Tab = {
+    id: 'ChangePassword',
+    name: '修改密码',
+    path: '/changePassword',
+  }
+  const tabList = tabStore.getTabList
+  if (tabList.length >= 15) {
+    ElMessage({
+      type: 'warning',
+      message: '选项卡最多15个，请关闭部分再试',
+    })
+    return
+  }
+  tabStore.addTab(tab)
   router.push('/changePassword')
 }
 const handleCommand = (cmd: string) => {

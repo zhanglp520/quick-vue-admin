@@ -1,5 +1,5 @@
 export interface Role {
-  id: string
+  id: string | undefined
   roleId: string
   roleName: string
 }

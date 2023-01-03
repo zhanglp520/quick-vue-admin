@@ -10,7 +10,7 @@ export default ({ command, mode }) => {
   const env = loadEnv(mode, root)
   const { VITE_APP_TITLE, VITE_PORT, VITE_APP_BASE_URL } = env
   return {
-    base: '/',
+    base: './',
     plugins: [
       vue(),
       DefineOptions(),
@@ -48,9 +48,9 @@ export default ({ command, mode }) => {
       open: false,
       proxy: {
         [VITE_APP_BASE_URL]: {
-          target: 'http://localhost:3102/', // 代理的目标地址-本地
-          // target: 'http://110.42.130.88:3102/', // 代理的目标地址-线上
-          changeOrigin: false, // 开发模式，默认的origin是真实的 origin:localhost:3000 代理服务会把origin修改为目标地址
+          target: 'http://localhost:3103/', // 代理的目标地址-本地
+          // target: 'https://api.quick.ainiteam.com/', // 代理的目标地址-线上
+          changeOrigin: false, // 开发模式，默认的origin是真实的 origin:localhost:3102 代理服务会把origin修改为目标地址
           secure: false, // 是否https接口
           ws: false, // 是否代理websockets
           rewrite: (path) => path.replace(/^\/dev-api/, ''), // 路径重写
@@ -64,8 +64,8 @@ export default ({ command, mode }) => {
       open: false,
       proxy: {
         [VITE_APP_BASE_URL]: {
-          // target: 'http://localhost:3102/', // 代理的目标地址-本地
-          target: 'http://110.42.130.88:3102/', // 代理的目标地址-线上
+          // target: 'http://localhost:3103/', // 代理的目标地址-本地
+          // target: 'https://api.quick.ainiteam.com/', // 代理的目标地址-线上
           changeOrigin: false, // 开发模式，默认的origin是真实的 origin:localhost:3000 代理服务会把origin修改为目标地址
           secure: false, // 是否https接口
           ws: false, // 是否代理websockets

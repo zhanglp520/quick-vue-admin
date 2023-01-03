@@ -1,10 +1,14 @@
-import md5 from 'js-md5'
-import { Options, SelectTreeOptions, TreeOptions } from '../types/options'
-import { SelectTree, Tree } from '../types/tree'
-
-export const quickMd5 = (str: string) => {
-  return md5(str)
-}
+import { SelectTree, Tree } from '@ainiteam/quick-vue3-ui/dist/types/tree'
+import {
+  Options,
+  SelectTreeOptions,
+  TreeOptions,
+} from '@ainiteam/quick-vue3-ui/dist/types/options'
+/*
+ *@Description: 常用其他工具库
+ *@Author: 土豆哥
+ *@Date: 2022-12-02 01:28:55
+ */
 export const dicFormat = (data: any, options: Options = {}) => {
   const arr: Options[] = []
   const defaultOptions = {

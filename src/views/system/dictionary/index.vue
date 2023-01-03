@@ -12,13 +12,13 @@ import {
 } from '@ainiteam/quick-vue3-ui'
 import { dicFormat, treeFormat } from '@/utils'
 import { Dictionary } from '@/types/dictionary'
-import { getDictionaryTypeList } from '@/api/dictionaryType'
+import { getDictionaryTypeList } from '@/api/system/dictionaryType'
 import {
   getDictionaryList,
   addDictionary,
   updateDictionary,
   deleteDictionary,
-} from '@/api/dictionary'
+} from '@/api/system/dictionary'
 
 /**
  * 属性
@@ -50,11 +50,14 @@ const tableToolbar = reactive<Toolbar>({
  * 操作栏
  */
 const handleDelete = (item: Dictionary, done: any) => {
-  ElMessageBox.confirm(`你真的删除【${item.name}】的字典吗？`, '警告', {
+  ElMessageBox.confirm(`你真的删除【${item.dicName}】的字典吗？`, '警告', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
+    if (!item.id) {
+      return
+    }
     deleteDictionary(item.id).then(() => {
       ElMessage({
         type: 'success',
@@ -83,42 +86,9 @@ const tableColumns = reactive<Array<Column>>([
   },
   {
     label: '字典名称',
-    prop: 'name',
+    prop: 'dicName',
   },
 ])
-/**
- * 左树
- */
-const leftTree = reactive<LeftTree>({
-  treeData: [],
-})
-const treeLoad = (done: any) => {
-  getDictionaryTypeList().then((res) => {
-    const { data: dictionaryTypeList } = res
-    const data = treeFormat(dictionaryTypeList, {
-      id: 'dicTypeId',
-      label: 'name',
-      children: 'children',
-    })
-    treeDataList.length = 0
-    treeDataList.push(...data)
-    leftTree.treeData.length = 0
-    leftTree.treeData.push(...treeDataList)
-    const data1 = dicFormat(dictionaryTypeList, {
-      value: 'dicTypeId',
-      label: 'name',
-    })
-    dicTypeList.length = 0
-    dicTypeList.push(...data1)
-
-    currentTreeData.value.id = treeDataList[0].id
-    done(currentTreeData.value.id)
-  })
-}
-const handleTreeClick = (data: Tree, done: any) => {
-  currentTreeData.value = data
-  done()
-}
 /**
  * 加载数据
  */
@@ -133,6 +103,40 @@ const load = () => {
   })
 }
 /**
+ * 左树
+ */
+const leftTree = reactive<LeftTree>({
+  treeData: [],
+})
+const treeLoad = (done: any) => {
+  getDictionaryTypeList().then((res) => {
+    const { data: dictionaryTypeList } = res
+    const data = treeFormat(dictionaryTypeList, {
+      id: 'dicTypeId',
+      label: 'dicTypeName',
+      children: 'children',
+    })
+    treeDataList.length = 0
+    treeDataList.push(...data)
+    leftTree.treeData.length = 0
+    leftTree.treeData.push(...treeDataList)
+    const data1 = dicFormat(dictionaryTypeList, {
+      value: 'dicTypeId',
+      label: 'dicTypeName',
+    })
+    dicTypeList.length = 0
+    dicTypeList.push(...data1)
+
+    currentTreeData.value.id = treeDataList[0].id
+    done(currentTreeData.value.id)
+  })
+}
+const handleTreeClick = (data: Tree, done: any) => {
+  currentTreeData.value = data
+  load()
+  done()
+}
+/**
  * 表单
  */
 const dialogTitle = reactive({
@@ -144,7 +148,7 @@ const formModel = reactive<Dictionary>({
   id: '',
   dicTypeId: '',
   dicId: '',
-  name: '',
+  dicName: '',
 })
 const formItems = reactive<Array<FormItem>>([
   {
@@ -165,9 +169,9 @@ const formItems = reactive<Array<FormItem>>([
   {
     label: '字典名称',
     labelWidth: '80px',
-    vModel: 'name',
+    vModel: 'dicName',
     placeholder: '字典名称',
-    prop: 'name',
+    prop: 'dicName',
     rules: [
       {
         required: true,
@@ -190,8 +194,9 @@ const formItems = reactive<Array<FormItem>>([
   },
 ])
 const handleFormSubmit = (form: Dictionary, done: any) => {
-  if (form.id) {
-    updateDictionary(form).then(() => {
+  const row = { ...form }
+  if (row.id) {
+    updateDictionary(row).then(() => {
       ElMessage({
         type: 'success',
         message: '字典修改成功',
@@ -199,7 +204,8 @@ const handleFormSubmit = (form: Dictionary, done: any) => {
       done()
     })
   } else {
-    addDictionary(form).then(() => {
+    row.id = undefined
+    addDictionary(row).then(() => {
       ElMessage({
         type: 'success',
         message: '字典创建成功',
@@ -221,7 +227,6 @@ const handleFormSubmit = (form: Dictionary, done: any) => {
     dialog-titles="dialogTitles"
     :left-tree="leftTree"
     :loading="loading"
-    @on-load="load"
     @on-tree-load="treeLoad"
     @on-tree-click="handleTreeClick"
     @on-form-submit="handleFormSubmit"

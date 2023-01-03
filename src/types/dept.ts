@@ -1,8 +1,8 @@
 export interface Dept {
-  id: string
+  id: string | undefined
   deptId: string
-  name: string
-  pId: string
+  deptName: string
+  pId: number | string
 }
 export interface DeptTree extends Dept {
   children: DeptTree[]

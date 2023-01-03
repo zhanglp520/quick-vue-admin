@@ -1,7 +1,6 @@
 import { Router, RouteRecordRaw } from 'vue-router'
 import { Menu } from '@/types/menu'
 import pinia from '@/store'
-import { useLoginStore } from '@/store/modules/login'
 import { useUserStore } from '@/store/modules/user'
 
 const modules = import.meta.glob('../views/**/*.vue')

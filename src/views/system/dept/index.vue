@@ -12,8 +12,7 @@ import {
 } from '@ainiteam/quick-vue3-ui'
 import { selectTreeFormat } from '@/utils'
 import { Dept, DeptTree } from '@/types/dept'
-import { getDeptList, addDept, updateDept, deleteDept } from '@/api/dept'
-import { Menu } from '@/types/menu'
+import { getDeptList, addDept, updateDept, deleteDept } from '@/api/system/dept'
 
 /**
  * 属性
@@ -33,8 +32,6 @@ const currentTreeData = ref<Tree>({
 const handleAdd = (item: Dept, done: any) => {
   const form = { ...item }
   form.pId = currentTreeData.value.id
-  console.log('form', form)
-
   done(form)
 }
 const tableToolbar = reactive<Toolbar>({
@@ -52,11 +49,14 @@ const handleEdit = (form: Dept, done: any) => {
   done(model)
 }
 const handleDelete = (item: Dept, done: any) => {
-  ElMessageBox.confirm(`你真的删除【${item.name}】的部门吗？`, '警告', {
+  ElMessageBox.confirm(`你真的删除【${item.deptName}】的部门吗？`, '警告', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
+    if (!item.id) {
+      return
+    }
     deleteDept(item.id).then(() => {
       ElMessage({
         type: 'success',
@@ -85,7 +85,7 @@ const tableColumns = reactive<Array<Column>>([
   },
   {
     label: '部门名称',
-    prop: 'name',
+    prop: 'deptName',
   },
 ])
 const deptTreeFormat = (data: Array<Dept>, pId = '0') => {
@@ -95,27 +95,25 @@ const deptTreeFormat = (data: Array<Dept>, pId = '0') => {
     label: '',
     children: [],
   }
-  const parentData = data.find((x: Dept) => x.pId.toString() === pId)
+  const parentData = data.find((x: Dept) => x.pId === Number(pId))
   if (parentData) {
     obj.id = parentData.id.toString()
-    obj.label = parentData.name
-    const parentId = parentData.id.toString()
-    const companyData = data.filter((x: Dept) => x.pId.toString() === parentId)
+    obj.label = parentData.deptName
+    const parentId = parentData.id
+    const companyData = data.filter((x: Dept) => x.pId === Number(parentId))
     companyData.forEach((item: Dept) => {
       if (companyData) {
         const companyObj: Tree = {
           id: item.id.toString(),
-          label: item.name,
+          label: item.deptName,
           children: [],
         }
-        const companyPid = item.id.toString()
-        const deptData = data.filter(
-          (x: Dept) => x.pId.toString() === companyPid
-        )
+        const companyPid = item.id
+        const deptData = data.filter((x: Dept) => x.pId === Number(companyPid))
         deptData.forEach((deptItem) => {
           companyObj.children.push({
             id: deptItem.id.toString(),
-            label: deptItem.name,
+            label: deptItem.deptName,
             children: [],
           })
         })
@@ -128,10 +126,10 @@ const deptTreeFormat = (data: Array<Dept>, pId = '0') => {
 }
 const listToTableTree = (data: Array<Dept>, pId = '0') => {
   const arr: Array<DeptTree> = []
-  const parentData = data.filter((x: Dept) => x.pId.toString() === pId)
+  const parentData = data.filter((x: Dept) => x.pId === Number(pId))
   parentData.forEach((item: Dept) => {
     const obj: DeptTree = { ...item, children: [] }
-    obj.children = listToTableTree(data, item.id)
+    obj.children = listToTableTree(data, item.id.toString())
     arr.push(obj)
   })
   return arr
@@ -178,6 +176,7 @@ const treeLoad = (done: any) => {
 }
 const handleTreeClick = (data: Tree, done: any) => {
   currentTreeData.value = data
+  load()
   done()
 }
 /**
@@ -191,8 +190,8 @@ const dialogTitle = reactive({
 const formModel = reactive<Dept>({
   id: '',
   deptId: '',
-  name: '',
-  pId: '',
+  deptName: '',
+  pId: '0',
 })
 const formItems = reactive<Array<FormItem>>([
   {
@@ -213,9 +212,9 @@ const formItems = reactive<Array<FormItem>>([
   {
     label: '部门名称',
     labelWidth: '80px',
-    vModel: 'name',
+    vModel: 'deptName',
     placeholder: '部门名称',
-    prop: 'name',
+    prop: 'deptName',
     rules: [
       {
         required: true,
@@ -238,8 +237,9 @@ const formItems = reactive<Array<FormItem>>([
   },
 ])
 const handleFormSubmit = (form: Dept, done: any) => {
-  if (form.id) {
-    updateDept(form).then(() => {
+  const row = { ...form }
+  if (row.id) {
+    updateDept(row).then(() => {
       ElMessage({
         type: 'success',
         message: '部门修改成功',
@@ -247,7 +247,8 @@ const handleFormSubmit = (form: Dept, done: any) => {
       done()
     })
   } else {
-    addDept(form).then(() => {
+    row.id = undefined
+    addDept(row).then(() => {
       ElMessage({
         type: 'success',
         message: '部门创建成功',
@@ -271,7 +272,6 @@ const handleFormSubmit = (form: Dept, done: any) => {
     :left-tree-refresh="true"
     :loading="loading"
     @on-edit="handleEdit"
-    @on-load="load"
     @on-tree-load="treeLoad"
     @on-tree-click="handleTreeClick"
     @on-form-submit="handleFormSubmit"

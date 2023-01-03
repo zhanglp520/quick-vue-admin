@@ -10,6 +10,7 @@ import {
 } from '@ainiteam/quick-vue3-ui'
 import { User, SearchUser } from '@/types/user'
 import {
+  exportUser,
   getUserPageList,
   addUser,
   updateUser,
@@ -18,7 +19,21 @@ import {
   resetUserPassword,
   enableUser,
   disableUser,
-} from '@/api/user'
+} from '@/api/system/user'
+import { downloadExcel } from '@/utils/download'
+
+// 导入
+const dialogVisible = ref(false)
+const action = 'https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15'
+const headers = reactive({
+  // authorization: `Bearer ${this.$store.getters.token}`,
+})
+const upload = () => {
+  dialogVisible.value = true
+}
+const handleClose = () => {
+  dialogVisible.value = false
+}
 
 /**
  * 属性
@@ -32,19 +47,19 @@ const page = reactive<Page>({
   current: 1,
   size: 10,
   sizes: [10, 20, 30, 40, 50],
-  total: 100,
+  total: 0,
 })
 /**
  * 搜索
  */
 const searchForm = reactive<SearchUser>({
-  userName: '',
+  keyword: '',
 })
 const searchFormItems = reactive<Array<FormItem>>([
   {
-    label: '用户名',
-    vModel: 'userName',
-    placeholder: '用户名',
+    label: '',
+    vModel: 'keyword',
+    placeholder: '用户名|手机号',
   },
 ])
 /**
@@ -66,11 +81,15 @@ const handleBatchDelete = (data: any, done: any) => {
     })
   })
 }
+
 const handleImport = (done: any) => {
-  done()
+  upload()
+  // done()
 }
 const handleExport = () => {
-  // window.open(`${window.location.origin}/用户报表.xlsx`)//TODO:导出bug
+  exportUser().then((res) => {
+    downloadExcel(res, '用户列表')
+  })
 }
 const handlePrint = () => {
   window.print()
@@ -87,6 +106,9 @@ const handleDelete = (item: User, done: any) => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
+    if (!item.id) {
+      return
+    }
     deleteUser(item.id).then(() => {
       ElMessage({
         type: 'success',
@@ -102,6 +124,9 @@ const handleResetPassword = (item: User, done: any) => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
+    if (!item.id) {
+      return
+    }
     resetUserPassword(item.id).then(() => {
       ElMessage({
         type: 'success',
@@ -117,6 +142,9 @@ const handleEnable = (item: User, done: any) => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
+    if (!item.id) {
+      return
+    }
     enableUser(item.id).then(() => {
       ElMessage({
         type: 'success',
@@ -132,6 +160,9 @@ const handleDisable = (item: User, done: any) => {
     cancelButtonText: '取消',
     type: 'warning',
   }).then(() => {
+    if (!item.id) {
+      return
+    }
     disableUser(item.id).then(() => {
       ElMessage({
         type: 'success',
@@ -146,26 +177,26 @@ const tableActionbar = reactive<Actionbar>({
   btns: [
     {
       name: '重置密码',
-      click(item: any, done: any) {
+      click(item: User, done: any) {
         handleResetPassword(item, done)
       },
     },
     {
       name: '启用',
-      click(item: any, done: any) {
+      click(item: User, done: any) {
         handleEnable(item, done)
       },
-      render(row: any) {
-        return row.enabled === 1
+      render(row: User) {
+        return row.enabled === 0
       },
     },
     {
       name: '禁用',
-      click(item: any, done: any) {
+      click(item: User, done: any) {
         handleDisable(item, done)
       },
-      render(row: any) {
-        return row.enabled !== 1
+      render(row: User) {
+        return row.enabled !== 0
       },
     },
   ],
@@ -175,9 +206,13 @@ const tableActionbar = reactive<Actionbar>({
  */
 const tableColumns = reactive<Array<Column>>([
   {
-    width: '100',
+    width: '50',
     type: 'selection',
-    align: 'center',
+  },
+  {
+    width: '60',
+    type: 'index',
+    label: '序号',
   },
   {
     label: '用户编号',
@@ -209,7 +244,7 @@ const tableColumns = reactive<Array<Column>>([
     prop: 'enabled',
     width: '200',
     format: (row: User) => {
-      return row.enabled === 1 ? '禁用' : '启用'
+      return row.enabled === 1 ? '启用' : '禁用'
     },
   },
   {
@@ -232,17 +267,19 @@ const tableColumns = reactive<Array<Column>>([
  */
 const load = (parmas: object) => {
   loading.value = true
-  getUserPageList(parmas).then((res) => {
-    loading.value = false
-    const { data: userList, page: pagination } = res
-    if (userList) {
-      dataList.length = 0
-      dataList.push(...userList)
-    }
-    if (pagination) {
-      page.total = pagination.total
-    }
-  })
+  getUserPageList(parmas)
+    .then((res) => {
+      loading.value = false
+      const { data: userList, total } = res
+      if (userList) {
+        dataList.length = 0
+        dataList.push(...userList)
+      }
+      page.total = total
+    })
+    .catch(() => {
+      loading.value = false
+    })
 }
 /**
  * 表单
@@ -403,8 +440,9 @@ const formItems = reactive<Array<FormItem>>([
   },
 ])
 const handleFormSubmit = (form: User, done: any) => {
-  if (form.id) {
-    updateUser(form).then(() => {
+  const row = { ...form }
+  if (row.id) {
+    updateUser(row).then(() => {
       ElMessage({
         type: 'success',
         message: '用户修改成功',
@@ -412,7 +450,8 @@ const handleFormSubmit = (form: User, done: any) => {
       done()
     })
   } else {
-    addUser(form).then(() => {
+    row.id = undefined
+    addUser(row).then(() => {
       ElMessage({
         type: 'success',
         message: '用户创建成功',
@@ -444,4 +483,10 @@ const handleFormSubmit = (form: User, done: any) => {
     @on-export="handleExport"
     @on-print="handlePrint"
   ></quick-crud>
+  <quick-upload
+    :dialog-visible="dialogVisible"
+    :action="action"
+    :headers="headers"
+    @on-close="handleClose"
+  ></quick-upload>
 </template>

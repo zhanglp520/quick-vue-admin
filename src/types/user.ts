@@ -1,5 +1,5 @@
 export interface User {
-  id: string
+  id: string | undefined
   userId: string
   userName: string
   password?: string
@@ -14,10 +14,10 @@ export interface User {
   remark?: string
 }
 export interface SearchUser {
-  userName: string
+  keyword: string
 }
 export interface ChangePassword {
   oldPassword: string
   newPassword: string
-  confirmPassword: string
+  confirmPassword?: string
 }

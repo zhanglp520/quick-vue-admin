@@ -9,7 +9,7 @@ import {
   Page,
 } from '@ainiteam/quick-vue3-ui'
 import { Log, SearchLog } from '@/types/log'
-import { getLogPageList, removeLog, batchRemove } from '@/api/log'
+import { getLogPageList, removeLog, batchRemove } from '@/api/system/log'
 
 /**
  * 属性
@@ -23,7 +23,7 @@ const page = reactive<Page>({
   current: 1,
   size: 10,
   sizes: [10, 20, 30, 40, 50],
-  total: 100,
+  total: 0,
 })
 /**
  * 搜索
@@ -44,57 +44,31 @@ const searchFormItems = reactive<Array<FormItem>>([
 /**
  * 工具栏
  */
-const handleBatchDelete = (data: any, done: any) => {
-  const { ids } = data
-  ElMessageBox.confirm(`你真的删除选择的日志吗？`, '警告', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(() => {
-    batchRemove(ids).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '日志删除成功',
-      })
-      done()
-    })
-  })
-}
 const tableToolbar = reactive<Toolbar>({
   hiddenImportButton: true,
   hiddenExportButton: true,
   hiddenAddButton: true,
   hiddenPrintButton: true,
+  hiddenBatchDeleteButton: true,
 })
 /**
  * 操作栏
  */
-const handleDelete = (item: Log, done: any) => {
-  ElMessageBox.confirm(`你真的删除【${item.id}】的日志吗？`, '警告', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning',
-  }).then(() => {
-    removeLog(item.id.toString()).then(() => {
-      ElMessage({
-        type: 'success',
-        message: '日志删除成功',
-      })
-      done()
-    })
-  })
-}
 const handleDetail = (item: Log, done: any) => {
   const form: Log = { ...item }
-  if (form.requestParams) {
-    const params = JSON.parse(form.requestParams)
-    form.requestParams = JSON.stringify(params, null, 4)
+  if (form.request) {
+    form.request = JSON.stringify(form.request, null, 4)
+    done(form)
+  }
+  if (form.response) {
+    form.response = JSON.stringify(form.response, null, 4)
     done(form)
   }
 }
 const tableActionbar = reactive<Actionbar>({
-  width: 150,
+  width: 60,
   hiddenEditButton: true,
+  hiddenDeleteButton: true,
 })
 /**
  * 表格
@@ -107,7 +81,7 @@ const tableColumns = reactive<Array<Column>>([
   },
   {
     label: '日志时间',
-    prop: 'logTime',
+    prop: 'createTime',
     width: '200',
   },
   {
@@ -116,13 +90,23 @@ const tableColumns = reactive<Array<Column>>([
     width: '120',
   },
   {
-    label: '操作接口',
-    prop: 'operateApi',
-    width: '300',
+    label: '耗时（ms）',
+    prop: 'duration',
+    width: '150',
   },
   {
-    label: '请求参数',
-    prop: 'requestParams',
+    label: '操作人',
+    prop: 'operateId',
+    width: '200',
+  },
+  {
+    label: '请求类型',
+    prop: 'request.method',
+    width: '100',
+  },
+  {
+    label: '请求接口',
+    prop: 'request.url',
   },
 ])
 /**
@@ -134,25 +118,22 @@ const load = (params: any) => {
   if (logTime) {
     obj = {
       ...params,
-      logType: 0,
+      type: 0,
       startTime: logTime[0],
       endTime: logTime[1],
-      logTime: null,
     }
   } else {
-    obj = { ...params, logType: 0, logTime: null }
+    obj = { ...params, type: 0, logTime: null }
   }
   loading.value = true
   getLogPageList(obj).then((res) => {
     loading.value = false
-    const { data: logList, page: pagination } = res
+    const { data: logList, total } = res
     if (logList) {
       dataList.length = 0
       dataList.push(...logList)
     }
-    if (pagination) {
-      page.total = pagination.total
-    }
+    page.total = total
   })
 }
 /**
@@ -162,14 +143,14 @@ const dialogTitle = reactive({
   detail: '日志详情',
 })
 const formModel = reactive<Log>({
-  id: 0,
-  logTime: '',
-  operateApi: '',
-  requestParams: '',
-  errorMessage: '',
-  exceptionMessage: '',
+  id: '',
+  type: 1,
   ip: '',
-  logType: 0,
+  request: '',
+  response: '',
+  duration: 0,
+  operateId: '',
+  createTime: '',
 })
 const formItems = reactive<Array<FormItem>>([
   {
@@ -180,7 +161,7 @@ const formItems = reactive<Array<FormItem>>([
   {
     label: '日志时间',
     labelWidth: '80px',
-    vModel: 'logTime',
+    vModel: 'createTime',
   },
   {
     label: 'IP',
@@ -188,14 +169,30 @@ const formItems = reactive<Array<FormItem>>([
     vModel: 'ip',
   },
   {
-    label: '操作接口',
+    label: '耗时',
     labelWidth: '80px',
-    vModel: 'operateApi',
+    vModel: 'duration',
+  },
+  {
+    label: '操作人ID',
+    labelWidth: '80px',
+    vModel: 'operateId',
+  },
+  {
+    label: '操作人',
+    labelWidth: '80px',
+    vModel: 'operator',
   },
   {
     label: '请求参数',
     labelWidth: '80px',
-    vModel: 'requestParams',
+    vModel: 'request',
+    type: 'textarea',
+  },
+  {
+    label: '响应',
+    labelWidth: '80px',
+    vModel: 'response',
     type: 'textarea',
   },
 ])
@@ -213,6 +210,7 @@ const formItems = reactive<Array<FormItem>>([
     :search-form-model="searchForm"
     dialog-titles="dialogTitles"
     :page="page"
+    :form-inline="true"
     :loading="loading"
     @on-load="load"
     @on-detail="handleDetail"
