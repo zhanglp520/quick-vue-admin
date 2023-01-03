@@ -118,7 +118,8 @@ pnpm run preview
 
 ## 后端接口
 
-官方提供后端接口项目：https://gitee.com/zhanglp520/quick-node-express.git
+官方提供后端接口项目express版本：https://gitee.com/zhanglp520/quick-node-express.git 接口v1版本
+官方提供后端接口项目nestjs版本：https://gitee.com/zhanglp520/quick-node-Nestjs.git  接口v2版本
 
 ## 寻求帮助
 
