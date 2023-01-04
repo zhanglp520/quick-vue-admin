@@ -154,9 +154,14 @@ onMounted(() => {
       <span class="test">
         <el-dropdown @command="handleCommand">
           <span class="el-dropdown-link">
-            <el-avatar :size="30">
-              {{ userInfo.userName.charAt(0).toUpperCase() }}
-            </el-avatar>
+            <template v-if="userInfo.avatar">
+              <el-avatar :size="30" :src="userInfo.avatar"> </el-avatar>
+            </template>
+            <template v-else>
+              <el-avatar :size="30">
+                {{ userInfo.userName.charAt(0).toUpperCase() }}
+              </el-avatar>
+            </template>
           </span>
           <template #dropdown>
             <el-dropdown-menu>
