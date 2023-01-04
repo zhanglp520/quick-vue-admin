@@ -52,7 +52,7 @@ const formItems = reactive<Array<FormItem>>([
     placeholder: '头像',
     type: 'avatar',
     // actionUrl: '/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15',
-    actionUrl: '/dev-api/api/v2/uploads/uploadFile',
+    actionUrl: `${import.meta.env.VITE_APP_BASE_URL}/api/v2/uploads/uploadFile`,
     headers: {
       authorization: `Bearer ${loginStore.getAccessToken}`,
     },
