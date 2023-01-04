@@ -21,19 +21,9 @@ import {
   disableUser,
 } from '@/api/system/user'
 import { downloadExcel } from '@/utils/download'
+import { useAuthStore } from '@/store/modules/auth'
 
-// 导入
-const dialogVisible = ref(false)
-const action = 'https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15'
-const headers = reactive({
-  // authorization: `Bearer ${this.$store.getters.token}`,
-})
-const upload = () => {
-  dialogVisible.value = true
-}
-const handleClose = () => {
-  dialogVisible.value = false
-}
+const loginStore = useAuthStore()
 
 /**
  * 属性
@@ -80,11 +70,6 @@ const handleBatchDelete = (data: any, done: any) => {
       done()
     })
   })
-}
-
-const handleImport = (done: any) => {
-  upload()
-  // done()
 }
 const handleExport = () => {
   exportUser().then((res) => {
@@ -460,6 +445,44 @@ const handleFormSubmit = (form: User, done: any) => {
     })
   }
 }
+/**
+ * 导入
+ */
+const dialogVisible = ref(false)
+const action = '/dev-api/api/v2/system/users/importUser'
+const headers = reactive({
+  authorization: `Bearer ${loginStore.getAccessToken}`,
+})
+const handleImport = (done: any) => {
+  dialogVisible.value = true
+}
+const handleSuccess = (data: any) => {
+  // const {
+  //   response,
+  //   uploadFile,
+  //   uploadFiles
+  // }=data
+  ElMessage({
+    type: 'success',
+    message: '导入用户成功.',
+  })
+  dialogVisible.value = false
+  load({
+    keyword: '',
+    current: 1,
+    size: 10,
+  })
+}
+const handleError = () => {
+  ElMessage({
+    type: 'success',
+    message: '导入用户失败.',
+  })
+  dialogVisible.value = false
+}
+const handleClose = () => {
+  dialogVisible.value = false
+}
 </script>
 <template>
   <quick-crud
@@ -487,6 +510,8 @@ const handleFormSubmit = (form: User, done: any) => {
     :dialog-visible="dialogVisible"
     :action="action"
     :headers="headers"
+    @on-success="handleSuccess"
+    @on-error="handleError"
     @on-close="handleClose"
   ></quick-upload>
 </template>
