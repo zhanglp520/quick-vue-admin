@@ -4,6 +4,7 @@ module.exports = {
     browser: true, // browser global variables
     node: true,
     es2021: true, // adds all ECMAScript 2021 globals and automatically sets the ecmaVersion parser option to 12.
+    'vue/setup-compiler-macros': true
   },
   parserOptions: {
     ecmaVersion: 2020,

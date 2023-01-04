@@ -1,5 +1,5 @@
 <script lang="ts" setup>
- import { Ref, defineProps, toRefs } from 'vue'
+ import { Ref, toRefs } from 'vue'
  import { ElMessage } from 'element-plus'
 import { useTabStore } from '@/store/modules/tab'
 import { Menubar } from '@/types/menu'
