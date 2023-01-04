@@ -3,17 +3,35 @@ import { onMounted, reactive, ref } from 'vue'
 import { ElMessage, UploadProps } from 'element-plus'
 import { FormItem } from '@ainiteam/quick-vue3-ui'
 import { User } from '@/types/user'
+import { useAuthStore } from '@/store/modules/auth'
 import { useUserStore } from '@/store/modules/user'
 import { updateUser } from '@/api/system/user'
+
+/**
+ * 属性
+ */
+const loginStore = useAuthStore()
+const userStore = useUserStore()
+const form = reactive<User>({
+  id: '',
+  userId: '',
+  avatar: '',
+  fullName: '',
+  userName: '',
+  phone: '',
+  email: '',
+  address: '',
+})
 /**
  * 上传
  */
-const imageUrl = ref('')
+// const imageUrl = ref('')
 const handleAvatarSuccess: UploadProps['onSuccess'] = (
   response,
   uploadFile
 ) => {
-  imageUrl.value = URL.createObjectURL(uploadFile.raw!)
+  // imageUrl.value = URL.createObjectURL(uploadFile.raw!)
+  form.avatar = `${import.meta.env.VITE_UPLOAD_PATH}${response.data.path}`
 }
 const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
   if (rawFile.type !== 'image/jpeg') {
@@ -26,20 +44,6 @@ const beforeAvatarUpload: UploadProps['beforeUpload'] = (rawFile) => {
   }
   return true
 }
-/**
- * 属性
- */
-const userStore = useUserStore()
-const form = reactive<User>({
-  id: '',
-  userId: '',
-  avatar: '',
-  fullName: '',
-  userName: '',
-  phone: '',
-  email: '',
-  address: '',
-})
 const formItems = reactive<Array<FormItem>>([
   {
     label: '头像',
@@ -47,8 +51,11 @@ const formItems = reactive<Array<FormItem>>([
     vModel: 'avatar',
     placeholder: '头像',
     type: 'avatar',
-    actionUrl: 'https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15',
-    imgUrl: '',
+    // actionUrl: '/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15',
+    actionUrl: '/dev-api/api/v2/uploads/uploadFile',
+    headers: {
+      authorization: `Bearer ${loginStore.getAccessToken}`,
+    },
     success: handleAvatarSuccess,
     beforeUpload: beforeAvatarUpload,
   },
@@ -88,12 +95,29 @@ const formItems = reactive<Array<FormItem>>([
 /**
  * 函数
  */
+const getInfo = () => {
+  const { user } = userStore.$state
+  const { id, userName } = user
+  userStore.getUserInfo(userName).then((res) => {
+    const info = { ...res }
+    const { userId, avatar, fullName, phone, email, address } = info
+    form.id = id
+    form.userId = userId
+    form.userName = userName
+    form.avatar = avatar
+    form.fullName = fullName
+    form.phone = phone
+    form.email = email
+    form.address = address
+  })
+}
 const handleSubmit = () => {
   updateUser(form).then(() => {
     ElMessage({
       type: 'success',
       message: '修改个人资料成功.',
     })
+    getInfo()
   })
 }
 const handleClear = () => {
@@ -101,18 +125,8 @@ const handleClear = () => {
     form[key] = ''
   })
 }
-
 onMounted(() => {
-  const { user } = userStore.$state
-  const { id, userName, userId, avatar, fullName, phone, email, address } = user
-  form.id = id
-  form.userId = userId
-  form.userName = userName
-  form.avatar = avatar
-  form.fullName = fullName
-  form.phone = phone
-  form.email = email
-  form.address = address
+  getInfo()
 })
 </script>
 
