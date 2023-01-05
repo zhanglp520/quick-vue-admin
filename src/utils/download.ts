@@ -1,3 +1,5 @@
+import * as XLSX from 'xlsx'
+
 /*
  *@Description: 导出文件，请求参数增参数responseType: blob或arraybuffer
  *@Author: 土豆哥
@@ -19,4 +21,26 @@ export const downloadExcel = (file: any, fileName: string) => {
 }
 export const downloadWord = (file: any, fileName: string) => {
   exportFile(file, `${fileName}.docx`, 'application/msword')
+}
+export const exportExcel = (dataList: any, fileName: string, columns: any) => {
+  const list: any = []
+  if (columns) {
+    dataList.forEach((element: any) => {
+      const item: any = {}
+      for (const key in element) {
+        const obj = columns.filter((x) => x.value === key)
+        if (obj && obj[0]) {
+          const test = obj[0]
+          item[test.label] = element[key]
+        }
+      }
+      list.push(item)
+    })
+  } else {
+    list.push(...dataList)
+  }
+  const data = XLSX.utils.json_to_sheet(list)
+  const wb = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(wb, data, 'Sheet1')
+  XLSX.writeFile(wb, `${fileName}.xlsx`)
 }

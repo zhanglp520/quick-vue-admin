@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import * as XLSX from 'xlsx'
 import { ref, reactive } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
@@ -20,8 +21,9 @@ import {
   enableUser,
   disableUser,
 } from '@/api/system/user'
-import { downloadExcel } from '@/utils/download'
+import { downloadExcel, exportExcel } from '@/utils/download'
 import { useAuthStore } from '@/store/modules/auth'
+import { downloadFileStream } from '@/api/common'
 
 const loginStore = useAuthStore()
 
@@ -30,6 +32,7 @@ const loginStore = useAuthStore()
  */
 const loading = ref(false)
 const dataList = reactive<Array<User>>([])
+const uploadRef = ref<HTMLElement | null>(null)
 /**
  * 分页
  */
@@ -79,8 +82,91 @@ const handleExport = () => {
 const handlePrint = () => {
   window.print()
 }
+const changeFile = (e) => {
+  const file = e.target.files[0]
+  const reader = new FileReader()
+  reader.readAsArrayBuffer(file)
+  reader.onload = (e) => {
+    const data = e.target.result
+    const workbook = XLSX.read(data, { type: 'binary', cellDates: true })
+    const wsname = workbook.SheetNames[0]
+    const outdata = XLSX.utils.sheet_to_json(workbook.Sheets[wsname])
+    console.log(outdata, 'outdata')
+  }
+}
 const tableToolbar = reactive<Toolbar>({
-  hiddenBatchDeleteButton: false,
+  importButtonName: '导入（默认后端方式）',
+  exportButtonName: '导出（默认后端方式）',
+  btns: [
+    {
+      name: '下载模板(浏览器下载方式)',
+      position: 'left',
+      type: 'warning',
+      click() {
+        window.location.href = `${
+          import.meta.env.VITE_APP_BASE_URL
+        }/api/v2/downloads?filePath=templates/用户模板.xlsx`
+      },
+    },
+    {
+      name: '下载模板(流文件方式)',
+      position: 'left',
+      type: 'success',
+      click() {
+        downloadFileStream('templates/用户模板.xlsx').then((res) => {
+          downloadExcel(res, '用户导入模板')
+        })
+      },
+    },
+    {
+      name: '导入(前端方式)',
+      position: 'left',
+      type: 'warning',
+      click() {
+        const fileBtn = uploadRef.value as HTMLInputElement
+        fileBtn.click()
+      },
+    },
+    {
+      name: '导出(前端方式)',
+      position: 'left',
+      type: 'danger',
+      click() {
+        // 导出的字段映射
+        const columns = [
+          {
+            label: '编号',
+            value: 'id',
+          },
+          {
+            label: '用户编号',
+            value: 'userId',
+          },
+          {
+            label: '用户名',
+            value: 'userName',
+          },
+          {
+            label: '姓名',
+            value: 'fullName',
+          },
+          {
+            label: '手机号',
+            value: 'phone',
+          },
+          {
+            label: '邮箱',
+            value: 'email',
+          },
+          {
+            label: '地址',
+            value: 'address',
+          },
+        ]
+        exportExcel(dataList, '用户列表', columns)
+      },
+    },
+  ],
 })
 /**
  * 操作栏
@@ -516,4 +602,12 @@ const handleClose = () => {
     @on-error="handleError"
     @on-close="handleClose"
   ></quick-upload>
+  <input
+    ref="uploadRef"
+    style="display: none"
+    type="file"
+    accept=".xls,.xlsx"
+    class="upload-file"
+    @change="changeFile($event)"
+  />
 </template>
