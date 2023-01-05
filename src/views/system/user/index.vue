@@ -82,11 +82,11 @@ const handleExport = () => {
 const handlePrint = () => {
   window.print()
 }
-const changeFile = (e) => {
-  const file = e.target.files[0]
+const changeFile = (event: any) => {
+  const file = event.target.files[0]
   const reader = new FileReader()
   reader.readAsArrayBuffer(file)
-  reader.onload = (e) => {
+  reader.onload = (e: any) => {
     const data = e.target.result
     const workbook = XLSX.read(data, { type: 'binary', cellDates: true })
     const wsname = workbook.SheetNames[0]

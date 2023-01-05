@@ -27,13 +27,13 @@ export const exportExcel = (dataList: any, fileName: string, columns: any) => {
   if (columns) {
     dataList.forEach((element: any) => {
       const item: any = {}
-      for (const key in element) {
-        const obj = columns.filter((x) => x.value === key)
+      Object.keys(element).forEach((key) => {
+        const obj = columns.filter((x: any) => x.value === key)
         if (obj && obj[0]) {
           const test = obj[0]
           item[test.label] = element[key]
         }
-      }
+      })
       list.push(item)
     })
   } else {
