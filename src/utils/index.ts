@@ -184,3 +184,9 @@ export const listToTree = (data, pId, options) => {
   })
   return arr
 }
+export const validatePermission = (val: boolean | undefined) => {
+  if (val === undefined) {
+    return true
+  }
+  return false
+}

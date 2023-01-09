@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
-import { ComputedGetter } from 'vue'
 import { listToTree } from '@/utils/index'
-import { PermissionButton, User } from '@/types/user'
+import { User } from '@/types/user'
 import { QuickResponseData } from '@/utils/request'
 import { Menu, Menubar } from '@/types/menu'
 import { getUserByUserName } from '@/api/system/user'

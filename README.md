@@ -68,6 +68,7 @@ npm config set registry https://registry.npm.taobao.org
 
 ```bash
 npm config set registry https://registry.npmjs.org
+
 ```
 
 - 切换是否成功验证

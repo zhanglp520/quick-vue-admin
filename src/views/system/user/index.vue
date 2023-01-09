@@ -1,13 +1,6 @@
 <script lang="ts" setup>
 import * as XLSX from 'xlsx'
-import {
-  ref,
-  reactive,
-  computed,
-  onMounted,
-  onUpdated,
-  onBeforeMount,
-} from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   Column,
@@ -16,12 +9,12 @@ import {
   Actionbar,
   Toolbar,
 } from '@ainiteam/quick-vue3-ui'
-import {
-  User,
-  SearchUser,
-  PermissionButton,
-  UserPermissionButton,
-} from '@/types/user'
+import { validatePermission } from '@/utils'
+import { downloadExcel, exportExcel } from '@/utils/download'
+import { User, SearchUser, UserPermissionButton } from '@/types/user'
+import { useAuthStore } from '@/store/modules/auth'
+import { useUserStore } from '@/store/modules/user'
+import { downloadFileStream } from '@/api/common'
 import {
   exportUser,
   getUserPageList,
@@ -33,21 +26,15 @@ import {
   enableUser,
   disableUser,
 } from '@/api/system/user'
-import { downloadExcel, exportExcel } from '@/utils/download'
-import { useAuthStore } from '@/store/modules/auth'
-import { useUserStore } from '@/store/modules/user'
-import { downloadFileStream } from '@/api/common'
-
-const loginStore = useAuthStore()
-const userStore = useUserStore()
 
 /**
  * 属性
  */
+const loginStore = useAuthStore()
+const userStore = useUserStore()
 const loading = ref(false)
 const dataList = reactive<Array<User>>([])
 const uploadRef = ref<HTMLElement | null>(null)
-
 const permissionBtn = computed<UserPermissionButton>(() => {
   return userStore.getPermissionBtns as UserPermissionButton
 })
@@ -115,14 +102,19 @@ const changeFile = (event: any) => {
 }
 
 const tableToolbar = reactive<Toolbar>({
-  hiddenAddButton: !permissionBtn.value?.add,
   importButtonName: '导入（默认后端方式）',
   exportButtonName: '导出（默认后端方式）',
+  hiddenBatchDeleteButton: validatePermission(permissionBtn.value?.batchDelete),
+  hiddenImportButton: validatePermission(permissionBtn.value?.import),
+  hiddenExportButton: validatePermission(permissionBtn.value?.export),
+  hiddenAddButton: validatePermission(permissionBtn.value?.add),
+  hiddenPrintButton: validatePermission(permissionBtn.value?.print),
   btns: [
     {
       name: '下载模板(浏览器下载方式)',
       position: 'left',
       type: 'warning',
+      hidden: validatePermission(permissionBtn.value?.download),
       click() {
         window.location.href = `${
           import.meta.env.VITE_APP_BASE_URL
@@ -133,6 +125,7 @@ const tableToolbar = reactive<Toolbar>({
       name: '下载模板(流文件方式)',
       position: 'left',
       type: 'success',
+      hidden: validatePermission(permissionBtn.value?.download),
       click() {
         downloadFileStream('templates/用户模板.xlsx').then((res) => {
           downloadExcel(res, '用户导入模板')
@@ -143,6 +136,7 @@ const tableToolbar = reactive<Toolbar>({
       name: '导入(前端方式)',
       position: 'left',
       type: 'warning',
+      hidden: validatePermission(permissionBtn.value?.import),
       click() {
         const fileBtn = uploadRef.value as HTMLInputElement
         fileBtn.click()
@@ -152,6 +146,7 @@ const tableToolbar = reactive<Toolbar>({
       name: '导出(前端方式)',
       position: 'left',
       type: 'danger',
+      hidden: validatePermission(permissionBtn.value?.export),
       click() {
         // 导出的字段映射
         const columns = [
@@ -266,18 +261,20 @@ const handleDisable = (item: User, done: any) => {
 }
 const tableActionbar = reactive<Actionbar>({
   width: 300,
-  hiddenEditButton: !permissionBtn.value?.edit,
-  hiddenDeleteButton: !permissionBtn.value?.delete,
-  hiddenDetailButton: !permissionBtn.value?.detail,
+  hiddenEditButton: validatePermission(permissionBtn.value?.edit),
+  hiddenDeleteButton: validatePermission(permissionBtn.value?.delete),
+  hiddenDetailButton: validatePermission(permissionBtn.value?.detail),
   btns: [
     {
       name: '重置密码',
+      hidden: validatePermission(permissionBtn.value?.resetPassword),
       click(item: User, done: any) {
         handleResetPassword(item, done)
       },
     },
     {
       name: '启用',
+      hidden: validatePermission(permissionBtn.value?.enabled),
       click(item: User, done: any) {
         handleEnable(item, done)
       },
@@ -287,6 +284,7 @@ const tableActionbar = reactive<Actionbar>({
     },
     {
       name: '禁用',
+      hidden: validatePermission(permissionBtn.value?.disabled),
       click(item: User, done: any) {
         handleDisable(item, done)
       },

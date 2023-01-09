@@ -1,9 +1,11 @@
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox, ElTable } from 'element-plus'
 import { Column, Toolbar, Tree, LeftTree } from '@ainiteam/quick-vue3-ui'
-import { treeFormat } from '@/utils'
+import { treeFormat, validatePermission } from '@/utils'
 import { User } from '@/types/user'
+import { AssignUserButton } from '@/types/permission'
+import { useUserStore } from '@/store/modules/user'
 import { getUserPermission, assignUser } from '@/api/auth'
 import { getRoleList } from '@/api/system/role'
 import { getUserList } from '@/api/system/user'
@@ -11,6 +13,7 @@ import { getUserList } from '@/api/system/user'
 /**
  * 属性
  */
+const userStore = useUserStore()
 const loading = ref(false)
 const dataList = reactive<Array<User>>([])
 const userList = reactive<Array<User>>([])
@@ -20,6 +23,10 @@ const currentTreeData = ref<Tree>({
   label: '',
   children: [],
 })
+const permissionBtn = computed<AssignUserButton>(() => {
+  return userStore.getPermissionBtns as AssignUserButton
+})
+
 /**
  * 工具栏
  */
@@ -72,6 +79,7 @@ const tableToolbar = reactive<Toolbar>({
       name: '分配用户',
       position: 'left',
       type: 'primary',
+      hidden: validatePermission(permissionBtn.value?.assignUser),
       click() {
         handleAssign()
       },
