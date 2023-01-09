@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   Column,
@@ -9,9 +9,11 @@ import {
   Options,
   Tree,
   LeftTree,
+  PermissionButton,
 } from '@ainiteam/quick-vue3-ui'
-import { dicFormat, treeFormat } from '@/utils'
+import { dicFormat, treeFormat, validatePermission } from '@/utils'
 import { Dictionary } from '@/types/dictionary'
+import { useUserStore } from '@/store/modules/user'
 import { getDictionaryTypeList } from '@/api/system/dictionaryType'
 import {
   getDictionaryList,
@@ -23,6 +25,7 @@ import {
 /**
  * 属性
  */
+const userStore = useUserStore()
 const loading = ref(false)
 const dicTypeList = reactive<Array<Options>>([])
 const treeDataList = reactive<Array<Tree>>([])
@@ -31,6 +34,9 @@ const currentTreeData = ref<Tree>({
   id: '',
   label: '',
   children: [],
+})
+const permissionBtn = computed<PermissionButton>(() => {
+  return userStore.getPermissionBtns as PermissionButton
 })
 /**
  * 工具栏
@@ -45,6 +51,7 @@ const tableToolbar = reactive<Toolbar>({
   hiddenImportButton: true,
   hiddenExportButton: true,
   hiddenPrintButton: true,
+  hiddenAddButton: validatePermission(permissionBtn.value?.add),
 })
 /**
  * 操作栏
@@ -70,6 +77,8 @@ const handleDelete = (item: Dictionary, done: any) => {
 const tableActionbar = reactive<Actionbar>({
   width: 300,
   hiddenDetailButton: true,
+  hiddenEditButton: validatePermission(permissionBtn.value?.edit),
+  hiddenDeleteButton: validatePermission(permissionBtn.value?.delete),
 })
 /**
  * 表格

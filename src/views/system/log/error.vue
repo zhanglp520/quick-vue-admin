@@ -1,21 +1,27 @@
 <script lang="ts" setup>
-import { ref, reactive, toRef } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ref, reactive, computed } from 'vue'
 import {
   Column,
   Actionbar,
   Toolbar,
   FormItem,
   Page,
+  PermissionButton,
 } from '@ainiteam/quick-vue3-ui'
+import { validatePermission } from '@/utils'
 import { Log, SearchLog } from '@/types/log'
-import { getLogPageList, removeLog, batchRemove } from '@/api/system/log'
+import { useUserStore } from '@/store/modules/user'
+import { getLogPageList } from '@/api/system/log'
 
 /**
  * 属性
  */
+const userStore = useUserStore()
 const loading = ref(false)
 const dataList = reactive<Array<Log>>([])
+const permissionBtn = computed<PermissionButton>(() => {
+  return userStore.getPermissionBtns as PermissionButton
+})
 /**
  * 分页
  */
@@ -69,6 +75,7 @@ const tableActionbar = reactive<Actionbar>({
   width: 60,
   hiddenEditButton: true,
   hiddenDeleteButton: true,
+  hiddenDetailButton: validatePermission(permissionBtn.value?.detail),
 })
 /**
  * 表格

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   Column,
@@ -7,19 +7,25 @@ import {
   Toolbar,
   FormItem,
   Options,
+  PermissionButton,
 } from '@ainiteam/quick-vue3-ui'
-import { selectTreeFormat, listToTree } from '@/utils/index'
+import { selectTreeFormat, listToTree, validatePermission } from '@/utils/index'
 import { Menu } from '@/types/menu'
 import '@/assets/iconfont/quickIconFont.js'
 import quickIconFont from '@/config/quickIconFont.json'
+import { useUserStore } from '@/store/modules/user'
 import { getMenuList, addMenu, updateMenu, deleteMenu } from '@/api/system/menu'
 
 /**
  * 属性
  */
+const userStore = useUserStore()
 const loading = ref(false)
 const dataList = reactive<Array<Menu>>([])
 const parentTreeList = reactive<Array<Options>>([])
+const permissionBtn = computed<PermissionButton>(() => {
+  return userStore.getPermissionBtns as PermissionButton
+})
 /**
  * 工具栏
  */
@@ -28,6 +34,7 @@ const tableToolbar = reactive<Toolbar>({
   hiddenImportButton: true,
   hiddenExportButton: true,
   hiddenPrintButton: true,
+  hiddenAddButton: validatePermission(permissionBtn.value?.add),
 })
 /**
  * 操作栏
@@ -67,6 +74,9 @@ const handleDelete = (item: Menu, done: any) => {
 }
 const tableActionbar = reactive<Actionbar>({
   width: 150,
+  hiddenEditButton: validatePermission(permissionBtn.value?.edit),
+  hiddenDeleteButton: validatePermission(permissionBtn.value?.delete),
+  hiddenDetailButton: validatePermission(permissionBtn.value?.detail),
 })
 /**
  * 表格

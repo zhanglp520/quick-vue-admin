@@ -1,15 +1,28 @@
 <script lang="ts" setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Column, Actionbar, Toolbar, FormItem } from '@ainiteam/quick-vue3-ui'
+import {
+  Column,
+  Actionbar,
+  Toolbar,
+  FormItem,
+  PermissionButton,
+} from '@ainiteam/quick-vue3-ui'
+import { validatePermission } from '@/utils'
 import { Role } from '@/types/role'
+import { useUserStore } from '@/store/modules/user'
 import { getRoleList, addRole, updateRole, deleteRole } from '@/api/system/role'
 
 /**
  * 属性
  */
+const userStore = useUserStore()
 const loading = ref(false)
 const dataList = reactive<Array<Role>>([])
+const permissionBtn = computed<PermissionButton>(() => {
+  return userStore.getPermissionBtns as PermissionButton
+})
+
 /**
  * 工具栏
  */
@@ -18,12 +31,16 @@ const tableToolbar = reactive<Toolbar>({
   hiddenImportButton: true,
   hiddenExportButton: true,
   hiddenPrintButton: true,
+  hiddenAddButton: validatePermission(permissionBtn.value?.add),
 })
 /**
  * 操作栏
  */
 const tableActionbar = reactive<Actionbar>({
   width: 150,
+  hiddenEditButton: validatePermission(permissionBtn.value?.edit),
+  hiddenDeleteButton: validatePermission(permissionBtn.value?.delete),
+  hiddenDetailButton: validatePermission(permissionBtn.value?.detail),
 })
 /**
  * 表格

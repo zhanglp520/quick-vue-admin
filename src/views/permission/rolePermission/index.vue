@@ -1,9 +1,11 @@
 <script lang="ts" setup>
-import { nextTick, onMounted, reactive, ref } from 'vue'
+import { computed, nextTick, onMounted, reactive, ref } from 'vue'
 import { ElTree, ElMessage, ElMessageBox } from 'element-plus'
 import { Toolbar, Tree } from '@ainiteam/quick-vue3-ui'
-import { listToTree, treeFormat } from '@/utils'
+import { listToTree, treeFormat, validatePermission } from '@/utils'
 import { MenuTree } from '@/types/menu'
+import { RolePermissionButton } from '@/types/permission'
+import { useUserStore } from '@/store/modules/user'
 import { getMenuPermission, assignPermission } from '@/api/auth'
 import { getRoleList } from '@/api/system/role'
 import { getMenuList } from '@/api/system/menu'
@@ -11,6 +13,7 @@ import { getMenuList } from '@/api/system/menu'
 /**
  * 属性
  */
+const userStore = useUserStore()
 const menuTreeRef = ref<InstanceType<typeof ElTree>>()
 const menuProps = reactive({
   id: 'menuId',
@@ -31,6 +34,10 @@ const currentTreeData = ref<Tree>({
   label: '',
   children: [],
 })
+const permissionBtn = computed<RolePermissionButton>(() => {
+  return userStore.getPermissionBtns as RolePermissionButton
+})
+
 /**
  * 工具栏
  */
@@ -81,6 +88,7 @@ const tableToolbar = reactive<Toolbar>({
       position: 'left',
       type: 'primary',
       size: 'small',
+      hidden: validatePermission(permissionBtn.value?.assignPermission),
       click() {
         handleGrant()
       },

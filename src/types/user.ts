@@ -1,3 +1,5 @@
+import { PermissionButton } from '@ainiteam/quick-vue3-ui'
+
 export interface User {
   id: string | undefined
   userId: string
@@ -21,19 +23,7 @@ export interface ChangePassword {
   newPassword: string
   confirmPassword?: string
 }
-export interface PermissionButton {
-  add?: boolean
-  edit?: boolean
-  delete?: boolean
-  detail?: boolean
-  batchDelete?: boolean
-  import?: boolean
-  export?: boolean
-  download?: boolean
-  print?: boolean
-  enabled?: boolean
-  disabled?: boolean
-}
+
 export interface UserPermissionButton extends PermissionButton {
   resetPassword?: boolean
 }

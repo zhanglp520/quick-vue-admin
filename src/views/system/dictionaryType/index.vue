@@ -1,8 +1,16 @@
 <script lang="ts" setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Column, Actionbar, Toolbar, FormItem } from '@ainiteam/quick-vue3-ui'
+import {
+  Column,
+  Actionbar,
+  Toolbar,
+  FormItem,
+  PermissionButton,
+} from '@ainiteam/quick-vue3-ui'
+import { validatePermission } from '@/utils'
 import { DictionaryType } from '@/types/dictionaryType'
+import { useUserStore } from '@/store/modules/user'
 import {
   getDictionaryTypeList,
   addDictionaryType,
@@ -13,8 +21,12 @@ import {
 /**
  * 属性
  */
+const userStore = useUserStore()
 const loading = ref(false)
 const dataList = reactive<Array<DictionaryType>>([])
+const permissionBtn = computed<PermissionButton>(() => {
+  return userStore.getPermissionBtns as PermissionButton
+})
 /**
  * 工具栏
  */
@@ -23,6 +35,7 @@ const tableToolbar = reactive<Toolbar>({
   hiddenImportButton: true,
   hiddenExportButton: true,
   hiddenPrintButton: true,
+  hiddenAddButton: validatePermission(permissionBtn.value?.add),
 })
 /**
  * 操作栏
@@ -52,6 +65,8 @@ const handleDelete = (item: DictionaryType, done: any) => {
 const tableActionbar = reactive<Actionbar>({
   width: 100,
   hiddenDetailButton: true,
+  hiddenEditButton: validatePermission(permissionBtn.value?.edit),
+  hiddenDeleteButton: validatePermission(permissionBtn.value?.delete),
 })
 /**
  * 表格
