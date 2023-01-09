@@ -1,15 +1,18 @@
 import { defineStore } from 'pinia'
+import { ComputedGetter } from 'vue'
 import { listToTree } from '@/utils/index'
-import { User } from '@/types/user'
+import { PermissionButton, User } from '@/types/user'
 import { QuickResponseData } from '@/utils/request'
 import { Menu, Menubar } from '@/types/menu'
 import { getUserByUserName } from '@/api/system/user'
 import { getPermission } from '@/api/auth'
+import { useTabStore } from '@/store/modules/tab'
 
 interface UserState {
   user: User
   permissionMenuList: Array<Menu>
   menuList: Array<Menubar>
+  permissionBtns: Array<Menu>
 }
 export const useUserStore = defineStore('userStore', {
   state: (): UserState => {
@@ -27,9 +30,28 @@ export const useUserStore = defineStore('userStore', {
       },
       permissionMenuList: [],
       menuList: [],
+      permissionBtns: [],
     }
   },
   getters: {
+    getPermissionBtns<T>() {
+      const tabStore = useTabStore()
+      const activeTab = tabStore.getActiveTab
+      const menuPermission = this.permissionMenuList.filter(
+        (x) => x.id?.toString() === activeTab.id
+      )
+      if (menuPermission && menuPermission[0]) {
+        const btns = this.permissionMenuList.filter(
+          (x) => x.pId === menuPermission[0].id
+        )
+        const permission = {}
+        btns.forEach((element) => {
+          permission[element.menuId] = true
+        })
+        return permission as T
+      }
+      return null
+    },
     getMenuList(): Array<Menubar> {
       return this.menuList
     },

@@ -1,6 +1,13 @@
 <script lang="ts" setup>
 import * as XLSX from 'xlsx'
-import { ref, reactive } from 'vue'
+import {
+  ref,
+  reactive,
+  computed,
+  onMounted,
+  onUpdated,
+  onBeforeMount,
+} from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   Column,
@@ -9,7 +16,12 @@ import {
   Actionbar,
   Toolbar,
 } from '@ainiteam/quick-vue3-ui'
-import { User, SearchUser } from '@/types/user'
+import {
+  User,
+  SearchUser,
+  PermissionButton,
+  UserPermissionButton,
+} from '@/types/user'
 import {
   exportUser,
   getUserPageList,
@@ -23,9 +35,11 @@ import {
 } from '@/api/system/user'
 import { downloadExcel, exportExcel } from '@/utils/download'
 import { useAuthStore } from '@/store/modules/auth'
+import { useUserStore } from '@/store/modules/user'
 import { downloadFileStream } from '@/api/common'
 
 const loginStore = useAuthStore()
+const userStore = useUserStore()
 
 /**
  * 属性
@@ -33,6 +47,11 @@ const loginStore = useAuthStore()
 const loading = ref(false)
 const dataList = reactive<Array<User>>([])
 const uploadRef = ref<HTMLElement | null>(null)
+
+const permissionBtn = computed<UserPermissionButton>(() => {
+  return userStore.getPermissionBtns as UserPermissionButton
+})
+
 /**
  * 分页
  */
@@ -94,7 +113,9 @@ const changeFile = (event: any) => {
     console.log(outdata, 'outdata')
   }
 }
+
 const tableToolbar = reactive<Toolbar>({
+  hiddenAddButton: !permissionBtn.value?.add,
   importButtonName: '导入（默认后端方式）',
   exportButtonName: '导出（默认后端方式）',
   btns: [
@@ -245,6 +266,9 @@ const handleDisable = (item: User, done: any) => {
 }
 const tableActionbar = reactive<Actionbar>({
   width: 300,
+  hiddenEditButton: !permissionBtn.value?.edit,
+  hiddenDeleteButton: !permissionBtn.value?.delete,
+  hiddenDetailButton: !permissionBtn.value?.detail,
   btns: [
     {
       name: '重置密码',
@@ -586,6 +610,7 @@ const handleClose = () => {
     dialog-titles="dialogTitles"
     :page="page"
     :loading="loading"
+    :permission="permission"
     @on-load="load"
     @on-form-submit="handleFormSubmit"
     @on-delete="handleDelete"
