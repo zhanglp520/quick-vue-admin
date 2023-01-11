@@ -1,4 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import '@grapecity/spread-sheets/styles/gc.spread.sheets.excel2016colorful.css'
+import GC from '@grapecity/spread-sheets'
+import '@grapecity/spread-sheets-resources-zh'
+
+GC.Spread.Common.CultureManager.culture('zh-cn')
+</script>
 
 <template>
   <router-view></router-view>

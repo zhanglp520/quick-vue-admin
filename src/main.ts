@@ -8,6 +8,11 @@ import quickUI from '@ainiteam/quick-vue3-ui'
 import '@ainiteam/quick-vue3-ui/dist/style.css'
 import * as echarts from 'echarts'
 import { io } from 'socket.io-client'
+import {
+  GcSpreadSheets,
+  GcWorksheet,
+  GcColumn,
+} from '@grapecity/spread-sheets-vue'
 import App from './App.vue'
 import { router } from './router'
 import pinia from './store'
@@ -33,6 +38,9 @@ import { useAppStore } from './store/modules/app'
 // console.log('quickUI', quickUI)
 
 const app = createApp(App)
+app.component('GcSpreadSheets', GcSpreadSheets)
+app.component('GcWorksheet', GcWorksheet)
+app.component('GcColumn', GcColumn)
 const appStore = useAppStore(pinia)
 
 app.config.globalProperties.$echarts = echarts
