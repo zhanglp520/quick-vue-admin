@@ -32,31 +32,6 @@ export default ({ command, mode }) => {
           find: 'vue-i18n',
           replacement: 'vue-i18n/dist/vue-i18n.cjs.js',
         },
-        {
-          find: /^moment$/,
-          replacement: resolve(__dirname, './alias.js'),
-        },
-        {
-          find: /^gc-dv$/,
-          replacement: resolve(
-            __dirname,
-            './node_modules/@grapecity/activereports/lib/node_modules/gc-dv.js'
-          ),
-        },
-        {
-          find: /^\@grapecity\/ar-js-pagereport$/,
-          replacement: resolve(
-            __dirname,
-            './node_modules/@grapecity/activereports/lib/node_modules/@grapecity/ar-js-pagereport.js'
-          ),
-        },
-        {
-          find: /^barcodejs$/,
-          replacement: resolve(
-            __dirname,
-            './node_modules/@grapecity/activereports/lib/node_modules/barcodejs.js'
-          ),
-        },
       ],
     },
     css: {

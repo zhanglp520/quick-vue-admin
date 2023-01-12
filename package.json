@@ -12,7 +12,6 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@grapecity/activereports-vue": "^2.0.0",
     "@ainiteam/quick-vue3-ui": "1.0.9",
     "@element-plus/icons-vue": "^2.0.6",
     "@grapecity/spread-excelio": "15.1.0",
@@ -35,6 +34,7 @@
     "echarts": "5.3.2",
     "element-plus": "^2.1.11",
     "js-cookie": "^3.0.1",
+    "moment": "^2.29.4",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.17",
     "pinia-plugin-persist": "^1.0.0",
