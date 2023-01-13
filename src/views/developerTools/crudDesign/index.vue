@@ -138,119 +138,60 @@ const handleJsonCopy = () => {
     <el-row>
       <el-col :span="4">
         <div class="basic-field">
-          <div class="field-title">基础字段</div>
+          <div class="field-title">基础组件</div>
           <div class="control-wrap">
             <div class="control" :draggable="true" @dragstart="dragstart">
               <el-icon style="vertical-align: middle" :size="20"
                 ><Checked
               /></el-icon>
-              <span>单行文本</span>
+              <span>搜索栏</span>
             </div>
             <div class="control" :draggable="true" @dragstart="dragstart">
               <el-icon style="vertical-align: middle" :size="20"
                 ><Checked
               /></el-icon>
-              <span>密码框</span>
+              <span>工具栏</span>
             </div>
             <div class="control" :draggable="true" @dragstart="dragstart">
               <el-icon style="vertical-align: middle" :size="20"
                 ><Checked
               /></el-icon>
-              <span>计数器</span>
+              <span>表格</span>
             </div>
             <div class="control" :draggable="true" @dragstart="dragstart">
               <el-icon style="vertical-align: middle" :size="20"
                 ><Checked
               /></el-icon>
-              <span>多行文本</span>
+              <span>分页条</span>
             </div>
             <div class="control" :draggable="true" @dragstart="dragstart">
               <el-icon style="vertical-align: middle" :size="20"
                 ><Checked
               /></el-icon>
-              <span>单选组</span>
-            </div>
-            <div class="control" :draggable="true" @dragstart="dragstart">
-              <el-icon style="vertical-align: middle" :size="20"
-                ><Checked
-              /></el-icon>
-              <span>多选组</span>
-            </div>
-            <div class="control" :draggable="true" @dragstart="dragstart">
-              <el-icon style="vertical-align: middle" :size="20"
-                ><Checked
-              /></el-icon>
-              <span>时间选择器</span>
-            </div>
-            <div class="control" :draggable="true" @dragstart="dragstart">
-              <el-icon style="vertical-align: middle" :size="20"
-                ><Checked
-              /></el-icon>
-              <span>日期选择器</span>
-            </div>
-            <div class="control" :draggable="true" @dragstart="dragstart">
-              <el-icon style="vertical-align: middle" :size="20"
-                ><Checked
-              /></el-icon>
-              <span>评分</span>
-            </div>
-            <div class="control" :draggable="true" @dragstart="dragstart">
-              <el-icon style="vertical-align: middle" :size="20"
-                ><Checked
-              /></el-icon>
-              <span>下拉选择框</span>
-            </div>
-            <div class="control" :draggable="true" @dragstart="dragstart">
-              <el-icon style="vertical-align: middle" :size="20"
-                ><Checked
-              /></el-icon>
-              <span>开关</span>
-            </div>
-            <div class="control" :draggable="true" @dragstart="dragstart">
-              <el-icon style="vertical-align: middle" :size="20"
-                ><Checked
-              /></el-icon>
-              <span>文字</span>
-            </div>
-            <div class="control" :draggable="true" @dragstart="dragstart">
-              <el-icon style="vertical-align: middle" :size="20"
-                ><Checked
-              /></el-icon>
-              <span>滑块</span>
+              <span>合计栏</span>
             </div>
           </div>
         </div>
         <div class="basic-field">
-          <div class="field-title">高级字段</div>
+          <div class="field-title">布局组件</div>
           <div class="control-wrap">
             <div class="control" :draggable="true" @dragstart="dragstart">
               <el-icon style="vertical-align: middle" :size="20"
                 ><Checked
               /></el-icon>
-              <span>图片</span>
+              <span>普通</span>
             </div>
             <div class="control" :draggable="true" @dragstart="dragstart">
               <el-icon style="vertical-align: middle" :size="20"
                 ><Checked
               /></el-icon>
-              <span>富文本编辑器</span>
+              <span>左树右表</span>
             </div>
             <div class="control" :draggable="true" @dragstart="dragstart">
               <el-icon style="vertical-align: middle" :size="20"
                 ><Checked
               /></el-icon>
-              <span>级联选择器</span>
-            </div>
-          </div>
-        </div>
-        <div class="basic-field">
-          <div class="field-title">布局字段</div>
-          <div class="control-wrap">
-            <div class="control" :draggable="true" @dragstart="dragstart">
-              <el-icon style="vertical-align: middle" :size="20"
-                ><Checked
-              /></el-icon>
-              <span>栅格布局</span>
+              <span>上主下子</span>
             </div>
           </div>
         </div>
@@ -275,7 +216,7 @@ const handleJsonCopy = () => {
       <el-col :span="4">
         <div class="attribute">
           <el-tabs v-model="activeName" class="demo-tabs">
-            <el-tab-pane label="表单属性" name="first">
+            <el-tab-pane label="crud属性" name="first">
               <div class="wrap">
                 <div class="item">
                   <div class="title">表单布局</div>
@@ -304,7 +245,7 @@ const handleJsonCopy = () => {
                 </div>
               </div>
             </el-tab-pane>
-            <el-tab-pane label="字段属性" name="second">
+            <el-tab-pane label="组件属性" name="second">
               <div class="wrap">
                 <div class="item">
                   <div class="title">标识</div>
@@ -392,7 +333,7 @@ const handleJsonCopy = () => {
         </span>
       </template>
     </el-dialog>
-    <el-dialog v-model="previewDialogVisible" title="预览" width="60%">
+    <el-dialog v-model="previewDialogVisible" title="预览" width="50%">
       <quick-form
         :model="formDesignConfig.form"
         :form-items="formDesignConfig.formItems"

@@ -392,7 +392,7 @@ const handleJsonCopy = () => {
         </span>
       </template>
     </el-dialog>
-    <el-dialog v-model="previewDialogVisible" title="预览" width="60%">
+    <el-dialog v-model="previewDialogVisible" title="预览" width="50%">
       <quick-form
         :model="formDesignConfig.form"
         :form-items="formDesignConfig.formItems"
