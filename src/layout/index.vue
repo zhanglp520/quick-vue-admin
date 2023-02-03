@@ -113,14 +113,14 @@ watch(tabList, (val) => {
                 :label="item.name"
                 :name="item.id"
               >
-                <router-view v-if="cache" v-slot="{ Component }">
-                  <keep-alive>
-                    <component :is="Component" />
-                  </keep-alive>
-                </router-view>
-                <router-view v-else></router-view>
               </el-tab-pane>
             </el-tabs>
+            <router-view v-if="cache" v-slot="{ Component }">
+              <keep-alive>
+                <component :is="Component" />
+              </keep-alive>
+            </router-view>
+            <router-view v-else></router-view>
           </el-card>
         </el-main>
         <!-- <el-footer>

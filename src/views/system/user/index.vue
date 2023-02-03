@@ -608,7 +608,6 @@ const handleClose = () => {
     dialog-titles="dialogTitles"
     :page="page"
     :loading="loading"
-    :permission="permission"
     @on-load="load"
     @on-form-submit="handleFormSubmit"
     @on-delete="handleDelete"
