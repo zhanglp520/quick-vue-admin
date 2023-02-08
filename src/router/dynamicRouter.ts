@@ -40,6 +40,32 @@ const formatRouter = (data: Menu[]) => {
       secondMenuArr.push(element)
     }
   })
+  console.log('secondMenuArr', secondMenuArr)
+  const childMenus = secondMenuArr.filter((x) => Number(x.pId) === 0)
+  console.log('childMenus', childMenus)
+
+  childMenus.forEach((element) => {
+    const component = getComponent(element)
+    const routerObj: RouteRecordRaw = {
+      name: element.menuId,
+      path: element.path,
+      component: layout['../layout/index.vue'],
+      redirect: `${element.path}/index`,
+      children: [
+        {
+          name: `${element.menuId}/index`,
+          path: `${element.path}/index`,
+          component,
+        },
+      ],
+      meta: {
+        title: element.menuName,
+        icon: element.icon,
+        link: element.link,
+      },
+    }
+    arr.push(routerObj)
+  })
   firstMenuArr.forEach((element) => {
     const routerObj: RouteRecordRaw = {
       name: element.menuId,
@@ -87,4 +113,5 @@ export const addRoutes = (router: Router) => {
   routerData.forEach((element) => {
     router.addRoute(element)
   })
+  console.log('routerData', routerData)
 }
