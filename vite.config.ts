@@ -42,16 +42,16 @@ export default ({ command, mode }) => {
       },
     },
     server: {
-      https: false, // 运行服务是否以https方式
+      https: true, // 运行服务是否以https方式
       host: true,
       port: VITE_PORT,
-      open: false,
+      open: true,
       proxy: {
         [VITE_APP_BASE_URL]: {
-          target: 'http://localhost:3103/', // 代理的目标地址-本地
-          // target: 'https://api.quick.ainiteam.com/', // 代理的目标地址-线上
-          changeOrigin: false, // 开发模式，默认的origin是真实的 origin:localhost:3102 代理服务会把origin修改为目标地址
-          secure: false, // 是否https接口
+          //target: 'http://localhost:3103/', // 代理的目标地址-本地
+          target: 'https://api.quick.ainiteam.com/', // 代理的目标地址-线上
+          changeOrigin: true, // 开发模式，默认的origin是真实的 origin:localhost:3102 代理服务会把origin修改为目标地址
+          secure: true, // 是否https接口
           ws: false, // 是否代理websockets
           rewrite: (path) => path.replace(/^\/dev-api/, ''), // 路径重写
         },
