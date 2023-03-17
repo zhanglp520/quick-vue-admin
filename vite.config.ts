@@ -42,7 +42,7 @@ export default ({ command, mode }) => {
       },
     },
     server: {
-      https: true, // 运行服务是否以https方式
+      https: false, // 运行服务是否以https方式
       host: true,
       port: VITE_PORT,
       open: true,
