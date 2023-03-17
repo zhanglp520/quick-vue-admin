@@ -109,7 +109,7 @@ const tableToolbar = reactive<Toolbar>({
   hiddenExportButton: validatePermission(permissionBtn.value?.export),
   hiddenAddButton: validatePermission(permissionBtn.value?.add),
   hiddenPrintButton: validatePermission(permissionBtn.value?.print),
-  position:'right',
+  position: 'right',
   btns: [
     {
       name: '下载模板(浏览器下载方式)',
