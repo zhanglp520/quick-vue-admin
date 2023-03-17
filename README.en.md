@@ -7,7 +7,7 @@
 
 
 
-Quick-vue3-admin is a free and open-source framework for quickly building middle and background systems. This framework is based on the latest mainstream technologies such as vite2, vue3, element plus and Pinia, and encapsulates common components to facilitate developers to improve work efficiency. In the later stage, it will also be maintained and updated through version upgrade, so that developers can have a long-term and stable scaffold. The team also provides various business projects developed based on the quick framework. If you have relevant needs, please contact the administrator.
+Quick-vue3-admin is a free and open-source framework for quickly building middle and background systems. This framework is based on the latest mainstream technologies such as vite4, vue3, element plus and Pinia, and encapsulates common components to facilitate developers to improve work efficiency. In the later stage, it will also be maintained and updated through version upgrade, so that developers can have a long-term and stable scaffold. The team also provides various business projects developed based on the quick framework. If you have relevant needs, please contact the administrator.
 
 
 
@@ -15,7 +15,7 @@ Quick-vue3-admin is a free and open-source framework for quickly building middle
 
 
 
-1. Use foreword technologies such as vite2, vue3, element plus, Pinia and typescript
+1. Use foreword technologies such as vite4, vue3, element plus, Pinia and typescript
 
 2. General components are encapsulated
 
