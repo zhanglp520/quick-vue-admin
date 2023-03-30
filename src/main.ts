@@ -1,50 +1,50 @@
-import { createApp } from 'vue'
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
-import zhCn from 'element-plus/es/locale/lang/zh-cn'
-import en from 'element-plus/es/locale/lang/en'
-import * as Elicons from '@element-plus/icons-vue'
-import quickUI from '@ainiteam/quick-vue3-ui'
-import '@ainiteam/quick-vue3-ui/dist/style.css'
-import * as echarts from 'echarts'
-import { io } from 'socket.io-client'
+import { createApp, App as AppInstance } from 'vue'
+import { RouterHistory, Router } from 'vue-router'
+// import './style.css'
 import App from './App.vue'
-import { router } from './router'
-import pinia from './store'
-import i18n from './i18n'
-import { useAppStore } from './store/modules/app'
+import { history, router } from '@/router/index'
 
-// const client = io('http://localhost:3000')
+declare const window: any;
+const handleMicroData = (router: Router) => {
+  if (window.eventCenterForApp_Demo) {
+    console.log('微应用【app-demo】 getData:', window.eventCenterForApp_Demo.getData())
+    window.eventCenterForApp_Demo.addDataListener((data: Record<string, unknown>) => {
+      console.log('微应用【app-demo】addDataListener:', data)
+      if (data.path && typeof data.path === 'string') {
+        data.path = data.path.replace(/^#/, '')
+        if (data.path && data.path !== router.currentRoute.value.path) {
+          router.push(data.path as string)
+        }
+      }
+    })
+    setTimeout(() => {
+      window.eventCenterForApp_Demo.dispatch({ myname: 'app-demo' })
+    }, 3000)
+  }
+}
+let app: AppInstance | null = null
+let quickRouter: Router | null = router
+let qucikHistory: RouterHistory | null = history
+const mount = () => {
+  app = createApp(App)
+  app.use(router)
+  app.mount('#app-demo')
+  console.log('微应用【app-demo】渲染了')
+  handleMicroData(router)
+}
+const unmount = () => {
+  app?.unmount()
+  history?.destroy()
+  window.eventCenterForApp_Demo?.clearDataListener()
+  app = null
+  quickRouter = null
+  qucikHistory = null
+  console.log('微应用【app-demo】卸载了')
+}
+if (window.__MICRO_APP_BASE_APPLICATION__) {
+  // @ts-ignore
+  window['micro-app-app-demo'] = { mount, unmount }
+} else {
+  mount()
+}
 
-// client.on('connect', () => {
-//   console.log('socket connect success')
-//   const content = {
-//     username: 'admin',
-//     password: '123456',
-//   }
-//   console.log('开始登录', content)
-//   client.emit('events', content)
-// })
-
-// client.on('message', (data) => {
-//   console.log('message', data)
-// })
-// console.log('ElementPlus', ElementPlus)
-// console.log('quickUI', quickUI)
-
-const app = createApp(App)
-const appStore = useAppStore(pinia)
-
-app.config.globalProperties.$echarts = echarts
-Object.keys(Elicons).forEach((key) => {
-  app.component(key, Elicons[key])
-})
-app
-  .use(ElementPlus, {
-    locale: appStore.getLanguage === 'zh' ? zhCn : en,
-  })
-  .use(quickUI)
-  .use(pinia)
-  .use(router)
-  .use(i18n)
-  .mount('#app')
