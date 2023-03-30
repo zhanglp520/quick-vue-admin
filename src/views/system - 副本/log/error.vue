@@ -123,24 +123,21 @@ const load = (params: any) => {
   let obj = {}
   const { logTime } = params
   if (logTime) {
-    obj = {
-      ...params,
-      type: 0,
-      startTime: logTime[0],
-      endTime: logTime[1],
-    }
+    obj = { ...params, type: 1, startTime: logTime[0], endTime: logTime[1] }
   } else {
-    obj = { ...params, type: 0, logTime: null }
+    obj = { ...params, type: 1 }
   }
   loading.value = true
-  getLogPageList(obj).then((res) => {
+  getLogPageList(obj).then((res: any) => {
     loading.value = false
-    const { data: logList, total } = res
+    const { data: logList, page: pagination } = res
     if (logList) {
       dataList.length = 0
       dataList.push(...logList)
     }
-    page.total = total
+    if (pagination) {
+      page.total = pagination.total
+    }
   })
 }
 /**
@@ -151,10 +148,11 @@ const dialogTitle = reactive({
 })
 const formModel = reactive<Log>({
   id: '',
-  type: 1,
+  type: 0,
   ip: '',
   request: '',
   response: '',
+  execution: '',
   duration: 0,
   operateId: '',
   createTime: '',
@@ -200,6 +198,12 @@ const formItems = reactive<Array<FormItem>>([
     label: '响应',
     labelWidth: '80px',
     vModel: 'response',
+    type: 'textarea',
+  },
+  {
+    label: '异常信息',
+    labelWidth: '80px',
+    vModel: 'exception',
     type: 'textarea',
   },
 ])

@@ -1,4 +1,4 @@
-import { SelectTree, Tree } from '@ainiteam/quick-vue3-ui/dist/types/tree'
+import { SelectTree, Tree } from '@ainiteam/quick-vue3-ui'
 import {
   Options,
   SelectTreeOptions,
@@ -74,10 +74,10 @@ export const treeFormat = (data: any, options: TreeOptions) => {
   return arr
 }
 export const tableTreeFormat = (data: any) => {
-  const forderArr = []
-  const menuArr = []
-  const btnArr = []
-  data.forEach((element) => {
+  const forderArr:any = []
+  const menuArr:any = []
+  const btnArr:any = []
+  data.forEach((element:any) => {
     if (element.menuType === 0) {
       forderArr.push(element)
     }
@@ -88,22 +88,22 @@ export const tableTreeFormat = (data: any) => {
       btnArr.push(element)
     }
   })
-  menuArr.forEach((element, index) => {
-    const children = btnArr.filter((x) => x.pId === element.id)
+  menuArr.forEach((element:any, index:number) => {
+    const children = btnArr.filter((x:any) => x.pId === element.id)
     menuArr[index].children = children
   })
-  forderArr.forEach((element, index) => {
-    const children = menuArr.filter((x) => x.pId === element.id)
+  forderArr.forEach((element:any, index:number) => {
+    const children = menuArr.filter((x:any) => x.pId === element.id)
     forderArr[index].children = children
   })
   return forderArr
 }
 
 export const menuTreeFormat = (data: any) => {
-  const forderArr = []
-  const menuArr = []
-  const btnArr = []
-  data.forEach((element) => {
+  const forderArr:any = []
+  const menuArr:any = []
+  const btnArr:any = []
+  data.forEach((element:any) => {
     if (element.menuType === 0) {
       forderArr.push(element)
     }
@@ -114,21 +114,21 @@ export const menuTreeFormat = (data: any) => {
       btnArr.push(element)
     }
   })
-  menuArr.forEach((element, index) => {
-    const children = btnArr.filter((x) => x.pId === element.id)
+  menuArr.forEach((element:any, index:number) => {
+    const children = btnArr.filter((x:any) => x.pId === element.id)
     menuArr[index].children = children
   })
-  forderArr.forEach((element, index) => {
-    const children = menuArr.filter((x) => x.pId === element.id)
+  forderArr.forEach((element:any, index:number) => {
+    const children = menuArr.filter((x:any) => x.pId === element.id)
     forderArr[index].children = children
   })
   return forderArr
 }
 
 export const menuFormat = (data: any) => {
-  const forderArr = []
-  const menuArr = []
-  data.forEach((element) => {
+  const forderArr:any = []
+  const menuArr:any = []
+  data.forEach((element:any) => {
     if (element.menuType === 0) {
       forderArr.push(element)
     }
@@ -136,8 +136,8 @@ export const menuFormat = (data: any) => {
       menuArr.push(element)
     }
   })
-  forderArr.forEach((element, index) => {
-    const children = menuArr.filter((x) => x.pId === element.id)
+  forderArr.forEach((element:any, index:number) => {
+    const children = menuArr.filter((x:any) => x.pId === element.id)
     forderArr[index].children = children
   })
   return forderArr
@@ -163,7 +163,7 @@ export const toTuofeng = (str: string) => {
     return str1
   })
 }
-export const listToTree = (data, pId, options) => {
+export const listToTree = (data:any, pId:any, options:any) => {
   const defaultOptions = {
     id: 'id',
     pId: 'pId',
@@ -172,13 +172,13 @@ export const listToTree = (data, pId, options) => {
   const value = options && options.id ? options.id : defaultOptions.id
   const parentId = options && options.pId ? options.pId : defaultOptions.pId
   const sort = options && options.sort ? options.sort : defaultOptions.sort
-  const arr = []
+  const arr:any = []
   let children = []
-  const nodeData = data.filter((x) => x[parentId] === pId)
-  const nodeSort = nodeData.sort((a, b) => {
+  const nodeData = data.filter((x:any) => x[parentId] === pId)
+  const nodeSort = nodeData.sort((a:any, b:any) => {
     return a[sort] - b[sort]
   })
-  nodeSort.forEach((element) => {
+  nodeSort.forEach((element:any) => {
     children = listToTree(data, element[value], options)
     arr.push({ ...element, children })
   })

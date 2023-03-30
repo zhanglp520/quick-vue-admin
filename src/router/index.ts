@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import pinia from '@/store'
@@ -7,7 +7,7 @@ import staticRouter from './staticRouter'
 import { addRoutes } from './dynamicRouter'
 
 export const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes: [...staticRouter],
 })
 router.beforeEach((to, from, next) => {

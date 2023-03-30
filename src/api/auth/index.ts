@@ -1,4 +1,5 @@
 import { LoginData, LoginParams, Token } from '@/types/auth'
+import { Menu } from '@/types/menu'
 import request, { QuickResponseData } from '@/utils/request'
 import { defaultVersion } from '../index'
 /*

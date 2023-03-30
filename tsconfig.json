@@ -13,11 +13,12 @@
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
     "noEmit": true,
-      "types": [
+    "types": [
       "element-plus/global",
       "@ainiteam/quick-vue3-ui",
       "pinia-plugin-persist"
     ],
+    "ignoreDeprecations": "5.0",
     "suppressImplicitAnyIndexErrors": true,
     "baseUrl": "./",
     "paths": {
@@ -32,5 +33,7 @@
     "strictPropertyInitialization": true
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{
+    "path": "./tsconfig.node.json"
+  }]
 }

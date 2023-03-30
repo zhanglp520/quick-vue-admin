@@ -68,9 +68,9 @@ export const useUserStore = defineStore('userStore', {
         getPermission(userId).then((res) => {
           const { data: userPermissionMenuList } = res
           this.permissionMenuList = userPermissionMenuList
-          const dt = JSON.parse(JSON.stringify(userPermissionMenuList))
+          const dt:Menu[] = JSON.parse(JSON.stringify(userPermissionMenuList))
           // const userMenuList = menuFormat(dt)
-          const dtNew = dt.filter((x) => x.menuType !== 2)
+          const dtNew = dt.filter((x:Menu) => x.menuType !== 2)
           const userMenuList = listToTree(dtNew, 0, {
             pId: 'pId',
           })

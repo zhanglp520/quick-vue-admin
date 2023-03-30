@@ -27,7 +27,7 @@ const handleLogin = async (): Promise<void> => {
     await loginStore.login(form)
     const user = await userStore.getUserInfo(loginStore.userName)
     const { id } = user
-    await userStore.getPermission(id.toString())
+    await userStore.getPermission(id!.toString())
     router.push('/')
   } catch (error) {
     console.log('login error', error)

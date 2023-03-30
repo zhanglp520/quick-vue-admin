@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script lang="ts" setup name="AiniMenuItem">
  import { Ref, toRefs } from 'vue'
  import { ElMessage } from 'element-plus'
 import { useTabStore } from '@/store/modules/tab'
@@ -35,7 +35,7 @@ const menuClick = (item:Menubar) => {
   } else {
     const routerPath = path
     const tab: Tab = {
-      id: id.toString(),
+      id: id?.toString(),
       name: menuName,
       path: routerPath,
     }
@@ -54,7 +54,7 @@ const menuClick = (item:Menubar) => {
 <template>
   <template v-for="(item, index) in menuList" :key="index">
     <template v-if="item.children && item.children.length > 0">
-      <el-sub-menu :index="item.id.toString()">
+      <el-sub-menu :index="item.id!">
         <template #title>
           <el-icon>
             <component :is="item.icon" />
@@ -65,7 +65,7 @@ const menuClick = (item:Menubar) => {
       </el-sub-menu>
     </template>
     <template v-else>
-      <el-menu-item :index="item.id.toString()" @click="menuClick(item)">
+      <el-menu-item :index="item.id!" @click="menuClick(item)">
         <template #title>
           <el-icon>
             <component :is="item.icon" />

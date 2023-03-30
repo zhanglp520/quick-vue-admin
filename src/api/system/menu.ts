@@ -27,7 +27,7 @@ export const updateMenu = (data: Menu) => {
     data,
   })
 }
-export const deleteMenu = (id: number) => {
+export const deleteMenu = (id: string) => {
   return request({
     url: `${api}/${id}`,
     method: 'DELETE',
