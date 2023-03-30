@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import { createRouter, createWebHashHistory, RouterHistory, Router, RouteRecordRaw } from 'vue-router'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import pinia from '@/store'
@@ -6,8 +6,12 @@ import { useAuthStore } from '@/store/modules/auth'
 import staticRouter from './staticRouter'
 import { addRoutes } from './dynamicRouter'
 
+export interface QuickRouter extends Router {
+
+}
+export const history = createWebHashHistory()
 export const router = createRouter({
-  history: createWebHashHistory(),
+  history,
   routes: [...staticRouter],
 })
 router.beforeEach((to, from, next) => {

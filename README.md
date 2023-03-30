@@ -5,11 +5,11 @@
 
 ## 简介
 
-quick-vue3-admin 是一款免费开源快速搭建中后台系统框架。本框架基于 vite2、vue3.2 语法糖模式、element-plus、pinia 等最新主流技术并封装了通用的组件方便开发者提高工作效率。后期也会通过版本升级的方式来维护并更新，使开发者拥有一款长期并且稳定的脚手架。本团队还提供了基于 quick 框架开发的各类业务项目，比如： 订单管理系统、调度管理系统、聊天系统、音视系统 、监控系统、商城系统、物联网平台、外卖系统、ERP系统、CMR系统、OA系统、物流管理系统、CRM管理系统等等常用的业务系统，如有相关需求联系管理员。
+quick-vue3-admin 是一款免费开源快速搭建中后台系统框架。本框架基于 vite4、vue3.2 语法糖模式、element-plus、pinia 等最新主流技术并封装了通用的组件方便开发者提高工作效率。后期也会通过版本升级的方式来维护并更新，使开发者拥有一款长期并且稳定的脚手架。本团队还提供了基于 quick 框架开发的各类业务项目，比如： 订单管理系统、调度管理系统、聊天系统、音视系统 、监控系统、商城系统、物联网平台、外卖系统、ERP系统、CMR系统、OA系统、物流管理系统、CRM管理系统等等常用的业务系统，如有相关需求联系管理员。
 
 ## 软件特色
 
-1. 使用 vite2、vue3.2语法糖、VUex、vue-router4.x、element-plus、pinia 和 typescript 等前言技术
+1. 使用 vite4、vue3.2语法糖、VUex、vue-router4.x、element-plus、pinia 和 typescript 等前言技术
 2. 封装了通用的组件
 3. 提供了系统管理常用功能模块
 4. 提供权限管理模块
@@ -88,6 +88,8 @@ npm install -g pnpm
 ```bash
 pnpm install
 ```
+
+如果install失败，删除pnpm-lock.yaml和node_modules以及D盘的.pnpm-store目录，并且重新install
 
 - 运行
 

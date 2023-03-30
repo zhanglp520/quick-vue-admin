@@ -10,6 +10,7 @@ import { Tab } from '@/types/tab'
 import config from '@/config/index'
 import AiniTop from './components/AiniTop/index.vue'
 import AiniSidebar from './components/AiniSidebar/index.vue'
+import { TabPaneName } from "element-plus";
 
 const route = useRoute()
 const router = useRouter()
@@ -32,12 +33,16 @@ const editableTabsValue = ref('home')
 const editableTabs = ref<Array<Tab>>([])
 const activeTab = computed(() => tabStore.getActiveTab)
 const tabList = computed(() => tabStore.getTabList)
-const handleTabsEdit = (targetName: string, action: 'remove' | 'add'): void => {
-  if (action === 'remove') {
-    tabStore.deleteTab(targetName)
+const handleTabsEdit = (paneName: TabPaneName|undefined, action: 'remove' | 'add'): void => {
+  const targetName=paneName?.toString()
+  if(action==='remove'){
+    if(targetName){
+      tabStore.deleteTab(targetName)
+    }
   }
 }
-const handleClick = (activeName: string) => {
+const handleClick = (name:TabPaneName) => {
+  const activeName=name.toString()
   const index = tabList.value.findIndex((x) => x.id === activeName)
   if (index !== -1) {
     tabStore.setActiveTab(tabList.value[index])
@@ -113,14 +118,14 @@ watch(tabList, (val) => {
                 :label="item.name"
                 :name="item.id"
               >
-                <router-view v-if="cache" v-slot="{ Component }">
-                  <keep-alive>
-                    <component :is="Component" />
-                  </keep-alive>
-                </router-view>
-                <router-view v-else></router-view>
               </el-tab-pane>
             </el-tabs>
+            <router-view v-if="cache" v-slot="{ Component }">
+              <keep-alive>
+                <component :is="Component" />
+              </keep-alive>
+            </router-view>
+            <router-view v-else></router-view>
           </el-card>
         </el-main>
         <!-- <el-footer>

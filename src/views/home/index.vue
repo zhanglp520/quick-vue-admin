@@ -134,7 +134,7 @@ const radarOption = {
 onMounted(() => {
   const arr = ['myChart1', 'myChart2', 'myChart3', 'myChart4']
   arr.forEach((element) => {
-    let options
+    let options:any
     if (element === 'myChart1') {
       options = barOption
     } else if (element === 'myChart2') {

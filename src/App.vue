@@ -1,4 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const onRouteChange = () => {
+  if (window.eventCenterForApp_Demo) {
+    window.eventCenterForApp_Demo.setGlobalData({ name: 'app-tools' })
+  }
+}
+</script>
 
 <template>
   <router-view></router-view>
@@ -14,7 +20,8 @@ body {
   margin: 0;
   padding: 0;
 }
-#app {
+
+#app-tools {
   width: 100%;
   height: 100%;
   background: #f0f2f5;
