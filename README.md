@@ -144,4 +144,4 @@ pnpm run preview
 5.  点个 star 把
 6.  如需加入开源，请联系管理员
 7.  如果你觉得这个项目对你有帮助，你可以帮作者买一杯咖啡表示支持!
-    ![donate](./public/payImages/alipay.jpg)
+    ![donate](https://raw.githubusercontent.com/wiki/zhanglp520/quick-micro-app-core/20230517164858.png)
