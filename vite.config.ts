@@ -1,77 +1,99 @@
-import { defineConfig, loadEnv } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import DefineOptions from 'unplugin-vue-define-options/vite'
-import { createHtmlPlugin } from 'vite-plugin-html'
-import { resolve } from 'path'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import eslintPlugin from "vite-plugin-eslint";
+import { createHtmlPlugin } from "vite-plugin-html";
+import { resolve } from "path";
+// import vueSetupExtend from "@ainiteam/vite-plugin-vue3-extend";
+import vueSetupExtend from "vite-plugin-vue-setup-extend";
 
 // https://vitejs.dev/config/
-export default ({ command, mode }) => {
-  const root = process.cwd()
-  const env = loadEnv(mode, root)
-  const { VITE_APP_TITLE, VITE_PORT, VITE_APP_BASE_URL } = env
-  return {
-    base: './',
+export default defineConfig({
+    base: "./",
     plugins: [
-      vue(),
-      DefineOptions(),
-      createHtmlPlugin({
-        inject: {
-          data: {
-            title: VITE_APP_TITLE,
-          },
-        },
-      }),
+        // vue({
+        //     template: {
+        //         compilerOptions: {
+        //             isCustomElement: (tag) => tag.includes("quick-")
+        //         }
+        //     }
+        // }),
+        vue(),
+        vueSetupExtend(),
+        createHtmlPlugin({
+            inject: {
+                data: {
+                    title: "quick-vue3-admin"
+                }
+            }
+        }),
+        eslintPlugin({
+            include: [
+                "src/**/*.ts",
+                "src/**/*.js",
+                "src/**/*.vue",
+                "src/*.ts",
+                "src/*.js",
+                "src/*.vue"
+            ]
+        })
     ],
     resolve: {
-      alias: [
-        {
-          find: '@',
-          replacement: resolve(__dirname, 'src'),
-        },
-        {
-          find: 'vue-i18n',
-          replacement: 'vue-i18n/dist/vue-i18n.cjs.js',
-        },
-      ],
+        alias: [
+            {
+                find: "@",
+                replacement: resolve(__dirname, "src")
+            },
+            {
+                find: "vue-i18n",
+                replacement: "vue-i18n/dist/vue-i18n.cjs.js"
+            }
+        ]
     },
     css: {
-      preprocessorOptions: {
-        scss: {
-          additionalData: '@import "@/assets/scss/globalVariable.scss";',
-        },
-      },
+        preprocessorOptions: {
+            scss: {
+                additionalData: '@use "@/assets/scss/globalVariable.scss" as *;'
+            }
+        }
     },
     server: {
-      https: false, // 运行服务是否以https方式
-      host: true,
-      port: VITE_PORT,
-      open: true,
-      proxy: {
-        [VITE_APP_BASE_URL]: {
-          //target: 'http://localhost:3103/', // 代理的目标地址-本地
-          target: 'https://api.quick.ainiteam.com/', // 代理的目标地址-线上
-          changeOrigin: true, // 开发模式，默认的origin是真实的 origin:localhost:3102 代理服务会把origin修改为目标地址
-          secure: true, // 是否https接口
-          ws: false, // 是否代理websockets
-          rewrite: (path) => path.replace(/^\/dev-api/, ''), // 路径重写
-        },
-      },
+        https: false, // 运行服务是否以https方式
+        host: true,
+        port: 3100,
+        open: false,
+        proxy: {
+            "/dev-api/develop": {
+                target: "http://localhost:3000/", // 代理的目标地址-本地
+                // target: "https://api.quick.ainiteam.com/", // 代理的目标地址-线上
+                changeOrigin: true, // 开发模式，默认的origin是真实的 origin:localhost:3102 代理服务会把origin修改为目标地址
+                secure: true, // 是否https接
+                ws: false, // 是否代理websockets
+                rewrite: (path) => path.replace(/^\/dev-api\/develop/, "") // 路径重写
+            },
+            "/dev-api": {
+                // target: "http://localhost:3101/", // 代理的目标地址-本地
+                target: "https://api.quick.ainiteam.com/", // 代理的目标地址-线上
+                changeOrigin: true, // 开发模式，默认的origin是真实的 origin:localhost:3102 代理服务会把origin修改为目标地址
+                secure: true, // 是否https接
+                ws: false, // 是否代理websockets
+                rewrite: (path) => path.replace(/^\/dev-api/, "") // 路径重写
+            }
+        }
     },
     preview: {
-      https: false, // 运行服务是否以https方式
-      host: true,
-      port: 3103,
-      open: false,
-      proxy: {
-        [VITE_APP_BASE_URL]: {
-          // target: 'http://localhost:3103/', // 代理的目标地址-本地
-          // target: 'https://api.quick.ainiteam.com/', // 代理的目标地址-线上
-          changeOrigin: false, // 开发模式，默认的origin是真实的 origin:localhost:3000 代理服务会把origin修改为目标地址
-          secure: false, // 是否https接口
-          ws: false, // 是否代理websockets
-          rewrite: (path) => path.replace(/^\/prod-api/, ''), // 路径重写
-        },
-      },
-    },
-  }
-}
+        https: false, // 运行服务是否以https方式
+        host: true,
+        port: 3100,
+        open: false,
+        proxy: {
+            "/prod-api": {
+                target: "http://localhost:3101/", // 代理的目标地址-本地
+                // target: 'https://api.quick.ainiteam.com/', // 代理的目标地址-线上
+                changeOrigin: true, // 开发模式，默认的origin是真实的 origin:localhost:3000 代理服务会把origin修改为目标地址
+                secure: false, // 是否https接口
+                ws: false, // 是否代理websockets
+                rewrite: (path) => path.replace(/^\/prod-api/, "") // 路径重写
+            }
+        }
+    }
+});

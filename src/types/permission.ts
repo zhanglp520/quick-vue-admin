@@ -1,8 +1,9 @@
-import { PermissionButton } from '@ainiteam/quick-vue3-ui'
+import { IPermissionButton } from "@ainiteam/quick-vue3-ui";
 
-export interface AssignUserButton extends PermissionButton {
-  assignUser?: boolean
+export interface IAssignUserButton extends IPermissionButton {
+    assignUser?: boolean;
 }
-export interface RolePermissionButton extends PermissionButton {
-  assignPermission?: boolean
+
+export interface IRole1PermissionButton extends IPermissionButton {
+    assignPermission?: boolean;
 }

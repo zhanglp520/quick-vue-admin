@@ -1,0 +1,13 @@
+version: "3.0"
+services:
+    quick-web:
+        container_name: quick-web
+        image: nginx:latest
+        ports:
+            - 80:80
+            - 443:443
+        volumes:
+            - /ainiteam/quick/web/nginx/conf.d:/etc/nginx/conf.d
+            - /ainiteam/quick/web/nginx/html:/usr/share/nginx/html
+            - /ainiteam/quick/web/nginx/logs:/var/log/nginx
+            - /ainiteam/quick/web/nginx/ssl:/etc/nginx/ssl

@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { io } from 'socket.io-client'
+import { io } from "socket.io-client";
 
-import { onMounted } from 'vue'
+import { onMounted } from "vue";
 
-let client: any = null
+let client: any = null;
 
 onMounted(() => {
-  client = io('http://localhost:3000')
-  // client.emit('events', (res: any) => {
-  //   console.log('res', res)
-  // })
-  // client.emit('events', (res: any) => {
-  //   console.log('res', res)
-  // })
-})
+    client = io("http://localhost:3000");
+    // client.emit('events', (res: any) => {
+    //   console.log('res', res)
+    // })
+    // client.emit('events', (res: any) => {
+    //   console.log('res', res)
+    // })
+});
 // client.on('connect', () => {
 //   console.log('socket connect success')
 //   const content = {
@@ -23,10 +23,10 @@ onMounted(() => {
 //   console.log('开始登录', content)
 //   client.emit('events', content)
 // })
-client.on('message', (data: any) => {
-  console.log('message', data)
-})
+client.on("message", (data: any) => {
+    console.log("message", data);
+});
 </script>
 <template>
-  <div>聊天</div>
+    <div>聊天</div>
 </template>

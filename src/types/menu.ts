@@ -1,21 +1,25 @@
-export interface Menu {
-  id: string | undefined
-  menuId: string
-  menuName: string
-  path: string
-  viewPath: string
-  menuType: number
-  icon: string
-  sort: number
-  pId: string
-  link: number
-  linkUrl: string
-  enabled: boolean
-  status: boolean
+import { IPermissionButton } from "@ainiteam/quick-vue3-ui";
+
+export interface IMenu {
+    id?: number | string;
+    menuId: string;
+    menuName: string;
+    path: string;
+    viewPath?: string;
+    menuType?: number;
+    icon?: string;
+    sort?: number;
+    pId?: number;
+    link?: number;
+    linkUrl?: string;
+    enabled?: boolean;
+    status?: boolean;
+    cache: boolean;
 }
-export interface MenuTree extends Menu {
-  children: MenuTree[]
+export interface IMenuTree extends IMenu {
+    children: IMenuTree[];
 }
-export interface Menubar extends Menu {
-  children: Menubar[]
+export interface IMenubar extends IMenu {
+    children: IMenubar[];
 }
+export interface IMenuPermissionButton extends IPermissionButton {}
