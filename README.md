@@ -98,7 +98,7 @@ pnpm install
 pnpm run dev
 ```
 
-运行命令执行服务启动后，浏览器输入：http://localhost:3102/
+运行命令执行服务启动后，浏览器输入：http://localhost:3101/
 
 -   eslint 检测
 

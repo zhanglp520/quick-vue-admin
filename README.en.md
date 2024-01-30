@@ -34,7 +34,7 @@ quick-vue3-admin is a free and open source framework for quickly building middle
 
 ## Preview
 
--   [quick-vue3-admin]（ https://quick.ainiteam.com/ ）- Framework Demo Version 2.0
+-   [quick-vue3-admin]（ https://vue3.quick.ainiteam.com/ ）- Framework Demo Version 2.0
 
 -   [quick-vue3-admin]（ https://v1.quick.ainiteam.com/ ）- Framework Demo Version 1.0
 
@@ -111,7 +111,7 @@ pnpm run dev
 
 ```
 
-After running the command execution service, the browser enters: http://localhost:3102/
+After running the command execution service, the browser enters: http://localhost:3101/
 
 -   Eslint detection
 
